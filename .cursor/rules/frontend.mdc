@@ -1,0 +1,57 @@
+---
+globs: frontend/src/*.vue,frontend/src/*.ts
+alwaysApply: false
+---
+
+# Frontend Rules for CoachFlow
+
+These rules are specific to the Vue.js frontend.
+
+## Project Structure
+
+- `src/components/` – reusable presentational components
+- `src/views/` – route-level components (pages)
+- `src/composables/` – reusable logic (Composition API)
+- `src/stores/` – Pinia stores by domain
+- `src/lib/` – utilities (formatters, helpers)
+- `src/assets/` – static assets
+- `src/router/` – Vue Router setup
+- `src/styles/` – Tailwind base, components, utilities and tokens
+
+## Build Tool: Vite
+
+- Use Vite for development and building.
+- Configure aliases in vite.config.ts for easier imports (e.g., @ for src/).
+- Use `import.meta.env` for runtime config (only `VITE_` prefixed vars are exposed).
+- Lazy-load route views via dynamic imports to split chunks.
+
+## Styling: Tailwind CSS
+
+- Use Tailwind classes directly in components.
+- Extend Tailwind config for custom themes.
+- Avoid inline styles; use Tailwind utilities.
+- Use CSS variables (design tokens) for theming; keep `<style scoped>` minimal.
+
+## Components Library: shadcn-vue
+
+- Use shadcn-vue for UI components.
+- Install and import components as needed.
+- Customize components via the shadcn config.
+- Ensure accessibility (roles/aria, focus states) and keyboard navigation.
+
+## AI Guidelines
+
+- Generate responsive components.
+- Ensure accessibility (ARIA attributes).
+- Optimize for performance (lazy loading where possible).
+- Prefer small, composable components and typed props/emit.
+
+## API Client & Data Fetching
+
+- Centralize API calls in `src/lib/api` or composables like `useApi`.
+- Use `fetch`/`axios`; handle loading/error/success explicitly.
+- Consider TanStack Query (Vue Query) for caching and revalidation.
+
+## Routing
+
+- Use Vue Router 4, define routes per view, and guard protected routes.

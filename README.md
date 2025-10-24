@@ -1,212 +1,122 @@
 # CoachFlow
 
-Aplikacja internetowa (MVP) do usprawnienia interakcji pomiędzy trenerami personalnymi a ich klientami.
+A modern SaaS platform designed to help personal trainers and coaches manage their clients, schedules, and progress tracking in one centralized application.
 
-## 📋 Opis projektu
+## Table of Contents
 
-CoachFlow to platforma, która centralizuje kluczowe procesy w relacji trener-klient:
+- [Tech Stack](#tech-stack)
+- [Getting Started Locally](#getting-started-locally)
+- [Available Scripts](#available-scripts)
+- [Project Scope](#project-scope)
+- [Project Status](#project-status)
+- [License](#license)
 
-- Tworzenie i zarządzanie ofertą trenera
-- Rezerwacja terminów sesji treningowych
-- Wspólny kalendarz dla trenera i klienta
-- System powiadomień e-mail
-- Dedykowane dashboardy dla obu ról
-
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 
 - **Framework**: Vue.js 3
-- **Język**: TypeScript 5
-- **Build Tool**: Vite
+- **Language**: TypeScript 5
 - **Styling**: Tailwind CSS 4
-- **Komponenty UI**: shadcn-vue (radix-vue)
-- **State Management**: Pinia
-- **Routing**: Vue Router 4
-- **HTTP Client**: Axios
+- **Component Library**: shadcn-vue
+- **Build Tool**: Vite
 
 ### Backend
 
 - **Framework**: NestJS
-- **Język**: TypeScript 5
-- **Baza danych**: PostgreSQL (do konfiguracji)
-- **ORM**: Prisma (do konfiguracji)
-- **Autoryzacja**: JWT, Passport, Bcrypt
-- **Walidacja**: class-validator, class-transformer
+- **Database**: PostgreSQL
+- **ORM**: Prisma
 
-### Narzędzia
+### AI
+
+- **Gateway**: Openrouter.ai
+
+### CI/CD & Hosting
 
 - **CI/CD**: GitHub Actions
-- **Hosting**: DigitalOcean (Docker)
-- **Version Control**: Git
-- **Node.js**: v22.14.0
+- **Hosting**: DigitalOcean (with Docker)
 
-## 📁 Struktura projektu
+## Getting Started Locally
 
-```
-coachflow/
-├── .ai/                    # Dokumentacja projektu
-│   ├── prd.md             # Product Requirements Document
-│   ├── tech-stack.md      # Szczegóły tech stacku
-│   └── starter-requirements.md
-├── backend/               # Backend NestJS
-│   ├── src/
-│   ├── test/
-│   └── package.json
-├── frontend/              # Frontend Vue.js
-│   ├── src/
-│   ├── public/
-│   └── package.json
-├── .gitignore
-├── .nvmrc                 # Node.js v22.14.0
-└── README.md
-```
+Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
 
-## 🚀 Rozpoczęcie pracy
+### Prerequisites
 
-### Wymagania
+- **Node.js**: `v22.14.0` (it's recommended to use a version manager like `nvm` and run `nvm use`).
+- **npm** or another package manager.
+- **PostgreSQL**: A running instance of PostgreSQL.
 
-- Node.js v22.14.0 (użyj `nvm use` jeśli masz zainstalowany nvm)
-- npm lub pnpm
-- Docker & Docker Compose (dla bazy danych PostgreSQL)
+### Backend Setup
 
-### Instalacja
+1.  Navigate to the backend directory:
+    ```bash
+    cd backend
+    ```
+2.  Install the dependencies:
+    ```bash
+    npm install
+    ```
+3.  Set up your environment variables. Create a `.env` file in the `backend` directory. You can copy the `.env.example` if it exists. At a minimum, you will need to provide the `DATABASE_URL`:
+    ```env
+    DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
+    ```
+4.  Run database migrations to set up your database schema:
+    ```bash
+    npx prisma migrate dev
+    ```
+5.  Start the development server:
+    ```bash
+    npm run start:dev
+    ```
+    The backend server will be running on `http://localhost:3000`.
 
-1. **Sklonuj repozytorium**
+### Frontend Setup
 
-```bash
-git clone <repository-url>
-cd coachflow
-```
+1.  Navigate to the frontend directory:
+    ```bash
+    cd frontend
+    ```
+2.  Install the dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start the development server:
+    ```bash
+    npm run dev
+    ```
+    The frontend application will be running on `http://localhost:5173`.
 
-2. **Użyj właściwej wersji Node.js**
+## Available Scripts
 
-```bash
-nvm use
-```
+### Backend (`/backend`)
 
-3. **Backend - Instalacja zależności**
+- `npm run start:dev`: Starts the development server with hot-reloading.
+- `npm run build`: Compiles the TypeScript code into JavaScript.
+- `npm run test`: Runs unit tests.
+- `npm run lint`: Lints the codebase.
+- `npm run format`: Formats the codebase with Prettier.
 
-```bash
-cd backend
-npm install
-```
+### Frontend (`/frontend`)
 
-4. **Frontend - Instalacja zależności**
+- `npm run dev`: Starts the Vite development server.
+- `npm run build`: Builds the application for production.
+- `npm run preview`: Serves the production build locally for preview.
+- `npm run lint`: Lints the codebase.
+- `npm run format`: Formats the codebase with Prettier.
 
-```bash
-cd frontend
-npm install
-```
+## Project Scope
 
-5. **Konfiguracja zmiennych środowiskowych**
+The goal of CoachFlow is to provide a comprehensive tool for coaches. Key features include:
 
-Backend (`.env`):
+- **Client Management**: Keep track of all client information and history.
+- **Scheduling**: Manage appointments and training sessions.
+- **Progress Tracking**: Monitor client progress with metrics and notes.
+- **Communication**: A centralized place for coach-client communication.
 
-```env
-NODE_ENV=development
-PORT=3000
-JWT_SECRET=your-secret-key
-JWT_EXPIRATION=7d
-# DATABASE_URL będzie dodane później
-```
+## Project Status
 
-Frontend (`.env`):
+This project is currently **in development**.
 
-```env
-VITE_API_URL=http://localhost:3000
-VITE_API_PREFIX=api
-VITE_APP_ENV=development
-```
+## License
 
-### Uruchomienie aplikacji
-
-**Backend** (port 3000):
-
-```bash
-cd backend
-npm run start:dev
-```
-
-**Frontend** (port 5173):
-
-```bash
-cd frontend
-npm run dev
-```
-
-Aplikacja będzie dostępna pod adresem: http://localhost:5173
-
-## 📝 Dostępne skrypty
-
-### Backend
-
-- `npm run start:dev` - uruchomienie w trybie development z hot-reload
-- `npm run build` - build produkcyjny
-- `npm run start:prod` - uruchomienie wersji produkcyjnej
-- `npm run lint` - linting kodu
-- `npm run format` - formatowanie kodu (Prettier)
-- `npm run test` - uruchomienie testów
-
-### Frontend
-
-- `npm run dev` - uruchomienie dev servera (Vite)
-- `npm run build` - build produkcyjny
-- `npm run preview` - podgląd wersji produkcyjnej
-- `npm run lint` - linting kodu
-- `npm run format` - formatowanie kodu (Prettier)
-
-## 🗄️ Baza danych (PostgreSQL)
-
-> **Uwaga**: Konfiguracja Prisma i PostgreSQL zostanie dodana w późniejszych etapach projektu.
-
-Planowane uruchomienie przez Docker Compose:
-
-```bash
-docker compose up -d
-```
-
-## 📚 Dokumentacja
-
-Więcej informacji znajdziesz w folderze `.ai/`:
-
-- **[PRD](.ai/prd.md)** - Pełny dokument wymagań produktu
-- **[Tech Stack](.ai/tech-stack.md)** - Szczegółowy opis technologii
-- **[Starter Requirements](.ai/starter-requirements.md)** - Wymagania do rozpoczęcia pracy
-
-## 🎯 Status projektu
-
-**Aktualny status**: 🟢 Inicjalizacja zakończona
-
-### ✅ Zakończone
-
-- [x] Inicjalizacja projektu backend (NestJS)
-- [x] Inicjalizacja projektu frontend (Vue.js + Vite)
-- [x] Instalacja wszystkich wymaganych zależności
-- [x] Konfiguracja Tailwind CSS
-- [x] Konfiguracja ESLint i Prettier
-- [x] Setup podstawowy plików `.gitignore` i `.nvmrc`
-- [x] Instalacja bibliotek: Vue Router, Pinia, Axios
-- [x] Instalacja zależności dla shadcn-vue (radix-vue, etc.)
-
-### ⏸️ Do zrobienia później
-
-- [ ] Konfiguracja Prisma ORM
-- [ ] Setup Docker Compose dla PostgreSQL
-- [ ] Konfiguracja @nestjs/config z plikami .env
-- [ ] Implementacja komponentów shadcn-vue
-- [ ] Implementacja systemu autoryzacji (JWT)
-- [ ] Implementacja modeli bazy danych
-- [ ] Integracja z OpenRouter.ai (późniejsza faza)
-
-## 👥 Zespół
-
-CoachFlow MVP Development Team
-
-## 📄 Licencja
-
-UNLICENSED - Projekt prywatny
-
----
-
-_Dokument stworzony: 2025-10-23_
+This project is currently **UNLICENSED**.
