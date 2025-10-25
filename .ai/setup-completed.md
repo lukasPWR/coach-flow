@@ -59,7 +59,9 @@ coachflow/
 - `bcrypt` ^6.0.0 - hashowanie haseł
 - `class-transformer` ^0.5.1 - transformacja obiektów
 - `class-validator` ^0.14.2 - walidacja DTO
-- `@prisma/client` ^6.18.0 - ORM client
+- `@nestjs/typeorm` ^10.0.2 - integracja z TypeORM
+- `typeorm` ^0.3.20 - ORM
+- `pg` ^8.12.0 - sterownik PostgreSQL
 - `reflect-metadata` ^0.2.2
 - `rxjs` ^7.8.1
 
@@ -68,7 +70,6 @@ coachflow/
 - `@nestjs/cli` ^11.0.0
 - `@nestjs/schematics` ^11.0.0
 - `@nestjs/testing` ^11.0.1
-- `prisma` ^6.18.0 - ORM CLI
 - `@types/bcrypt` ^6.0.0
 - `@types/passport-jwt` ^4.0.1
 - `typescript` ^5.7.3
@@ -83,7 +84,7 @@ coachflow/
 - ✅ Prettier skonfigurowany (`.prettierrc`)
 - ✅ TypeScript skonfigurowany (`tsconfig.json`)
 - ✅ Jest dla testów
-- ⏸️ Prisma (gotowe do konfiguracji, ale nie uruchomione)
+- ⏸️ TypeORM (gotowe do konfiguracji, ale nie uruchomione)
 - ⏸️ Zmienne środowiskowe (plik `.env` do ręcznego utworzenia)
 
 ### Dostępne skrypty:
@@ -230,7 +231,7 @@ npm run dev
 
 ### Backend:
 
-1. **Konfiguracja Prisma** - plik `schema.prisma` i migracje bazy danych
+1. **Konfiguracja TypeORM** - konfiguracja połączenia i encje
 2. **Docker Compose** - uruchomienie PostgreSQL w kontenerze
 3. **Plik `.env`** - należy utworzyć ręcznie z właściwymi wartościami:
    ```env
@@ -272,7 +273,7 @@ npm run dev
 - [x] Instalacja @nestjs/jwt, @nestjs/passport, passport, passport-jwt
 - [x] Instalacja bcrypt + @types/bcrypt
 - [x] Instalacja class-validator, class-transformer
-- [x] Instalacja Prisma i @prisma/client
+- [x] Instalacja @nestjs/typeorm, typeorm, pg
 - [x] Konfiguracja ESLint
 - [x] Konfiguracja Prettier
 
@@ -318,7 +319,7 @@ npm run dev
 1. **Setup bazy danych**
 
    - Skonfigurować Docker Compose dla PostgreSQL
-   - Skonfigurować Prisma schema
+   - Skonfigurować połączenie TypeORM i stworzyć encje
    - Uruchomić pierwsze migracje
 
 2. **Implementacja autoryzacji**
@@ -352,7 +353,7 @@ npm run dev
 ## 💡 Notatki
 
 - **shadcn-vue**: Biblioteka jest gotowa do użycia, ale komponenty należy dodawać w miarę potrzeb (np. Button, Card, Input, etc.)
-- **Prisma**: Narzędzie jest zainstalowane, ale wymaga konfiguracji `schema.prisma` i połączenia z bazą
+- **TypeORM**: Narzędzia są zainstalowane, ale wymagają konfiguracji połączenia z bazą i stworzenia encji
 - **ESLint/Prettier**: Działa out-of-the-box, ale można dostosować reguły do własnych potrzeb
 - **TypeScript**: Strict mode jest włączony w obu projektach dla maksymalnego bezpieczeństwa typów
 

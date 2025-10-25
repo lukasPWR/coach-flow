@@ -56,9 +56,6 @@ Te paczki mogą być zainstalowane globalnie dla wygody, ale mogą też być uż
 # NestJS CLI (dla generowania kodu backendu)
 npm install -g @nestjs/cli
 
-# Prisma CLI (dla zarządzania bazą danych)
-npm install -g prisma
-
 # TypeScript (dla globalnego użycia tsc)
 npm install -g typescript
 
@@ -121,9 +118,10 @@ npm install -g vite
 
 ### Dodatkowo do zainstalowania:
 
-- **Prisma**: ORM dla PostgreSQL
-  - `@prisma/client`: Klient Prisma
-  - `prisma`: CLI i narzędzia deweloperskie
+- **TypeORM**: ORM dla PostgreSQL
+  - `@nestjs/typeorm`: Integracja TypeORM z NestJS
+  - `typeorm`: Główna biblioteka TypeORM
+  - `pg`: Sterownik dla PostgreSQL
 - **@nestjs/config**: Do zarządzania konfiguracją (zmienne środowiskowe)
 - **@nestjs/jwt** i **@nestjs/passport**: Do autoryzacji
 - **bcrypt**: Do hashowania haseł
@@ -165,7 +163,6 @@ npm install -g vite
 - **Vue - Official** (Vue Language Features)
 - **TypeScript Vue Plugin (Volar)**
 - **Tailwind CSS IntelliSense**
-- **Prisma** (Prisma syntax highlighting)
 - **ESLint**
 - **Prettier - Code formatter**
 - **GitLens** (opcjonalnie)
@@ -191,7 +188,7 @@ npm install -g vite
 3. **Setup Backend**: `nest new backend`
 4. **Konfiguracja Tailwind CSS**: W projekcie frontend
 5. **Instalacja shadcn-vue**: W projekcie frontend
-6. **Setup Prisma**: W projekcie backend
+6. **Setup TypeORM**: W projekcie backend
 7. **Konfiguracja ESLint i Prettier**: W rocie projektu
 8. **Konfiguracja zmiennych środowiskowych**: Pliki `.env` dla frontend i backend
 9. **Setup Docker Compose**: Dla lokalnego developmentu (PostgreSQL + aplikacje)
@@ -232,4 +229,4 @@ Przykładowe pliki `.env` na start:
 ---
 
 _Dokument stworzony: 2025-10-23_
-_Tech Stack: Vue.js 3 + TypeScript + Tailwind CSS + shadcn-vue + Vite | NestJS + PostgreSQL + Prisma_
+_Tech Stack: Vue.js 3 + TypeScript + Tailwind CSS + shadcn-vue + Vite | NestJS + PostgreSQL + TypeORM_

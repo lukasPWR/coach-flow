@@ -14,7 +14,7 @@
 
 - **Baza danych - PostgreSQL**: Potężny, open-source'owy, obiektowo-relacyjny system baz danych, ceniony za swoją stabilność, wydajność i bogaty zestaw funkcji.
 
-- **ORM - Prisma**: Nowoczesny ORM (Object-Relational Mapper) dla Node.js i TypeScript, który ułatwia pracę z bazą danych dzięki w pełni typowanemu API i intuicyjnym narzędziom do migracji schematu.
+- **ORM - TypeORM**: Dojrzały i wszechstronny ORM (Object-Relational Mapper) dla TypeScript i JavaScript, który wspiera zarówno Active Record jak i Data Mapper. Umożliwia pracę z bazą danych przy użyciu dekoratorów i klas.
 
 #### AI - Openrouter.ai (bez zmian)
 
