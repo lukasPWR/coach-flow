@@ -1,0 +1,197 @@
+// ASSUMPTIONS:
+// - UUID as primary keys (gen_random_uuid())
+// - Soft delete for users and services (deleted_at)
+// - TIMESTAMPTZ for all temporal data
+// - RLS policies implemented at application/DB level (not in DBML)
+// - Service duration fixed at 60 minutes per MVP requirements
+// - Booking auto-rejection after 24h handled by application logic
+// - Email notifications handled by application layer
+
+// OPEN_QUESTIONS:
+// - Should booking_bans have soft delete?
+// - Should unavailabilities support recurring patterns?
+// - Price range vs single price for services?
+
+Project CoachFlow {
+  database_type: "PostgreSQL"
+  Note: 'MVP platform for personal trainers and clients - booking and scheduling system'
+}
+
+Enum user_role {
+  TRAINER
+  CLIENT
+  ADMIN
+}
+
+Enum booking_status {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+Table users {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  name varchar(255) [not null]
+  email varchar(255) [not null, unique]
+  password_hash varchar(255) [not null]
+  role user_role [not null, default: 'CLIENT']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  deleted_at timestamptz
+  
+  Note: 'Core user authentication and profile data'
+  
+  indexes {
+    email [unique]
+    role
+  }
+}
+
+Table trainer_profiles {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  user_id uuid [not null, unique]
+  description text
+  city varchar(255)
+  profile_picture_url varchar(255)
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  
+  Note: 'Extended profile information for trainers'
+  
+  indexes {
+    user_id [unique]
+  }
+}
+
+Table specializations {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  name varchar(255) [not null, unique]
+  
+  Note: 'Dictionary table for trainer specializations (e.g., Strength Training, Yoga)'
+  
+  indexes {
+    name [unique]
+  }
+}
+
+Table trainer_specializations {
+  trainer_profile_id uuid [not null]
+  specialization_id uuid [not null]
+  
+  Note: 'Many-to-many relationship between trainers and specializations'
+  
+  indexes {
+    (trainer_profile_id, specialization_id) [pk]
+  }
+}
+
+Table service_types {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  name varchar(255) [not null, unique]
+  
+  Note: 'Dictionary table for service types (3-4 predefined: Personal Training, Nutrition Consultation, etc.)'
+  
+  indexes {
+    name [unique]
+  }
+}
+
+Table services {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  trainer_id uuid [not null]
+  service_type_id uuid [not null]
+  price decimal(10,2) [not null, note: 'Price in PLN, must be >= 0']
+  duration_minutes integer [not null, default: 60, note: 'Fixed at 60 minutes for MVP']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  deleted_at timestamptz
+  
+  Note: 'Services offered by trainers with pricing and duration'
+  
+  indexes {
+    trainer_id
+    service_type_id
+    (trainer_id, service_type_id)
+  }
+}
+
+Table bookings {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  client_id uuid [not null]
+  trainer_id uuid [not null]
+  service_id uuid [not null]
+  start_time timestamptz [not null]
+  end_time timestamptz [not null]
+  status booking_status [not null, default: 'PENDING']
+  reminder_sent_at timestamptz
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  
+  Note: 'Main transactional table for booking requests and confirmed sessions'
+  
+  indexes {
+    client_id
+    trainer_id
+    service_id
+    start_time
+    status
+    (trainer_id, start_time)
+    (client_id, start_time)
+  }
+}
+
+Table unavailabilities {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  trainer_id uuid [not null]
+  start_time timestamptz [not null]
+  end_time timestamptz [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  
+  Note: 'Trainer-defined unavailable time blocks (vacations, breaks, etc.)'
+  
+  indexes {
+    trainer_id
+    (trainer_id, start_time)
+  }
+}
+
+Table booking_bans {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  client_id uuid [not null]
+  trainer_id uuid [not null]
+  banned_until timestamptz [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  
+  Note: '7-day booking ban for clients who cancel < 12h before session'
+  
+  indexes {
+    (client_id, trainer_id)
+    banned_until
+  }
+}
+
+Ref: trainer_profiles.user_id > users.id [delete: cascade, update: cascade]
+
+Ref: trainer_specializations.trainer_profile_id > trainer_profiles.id [delete: cascade, update: cascade]
+
+Ref: trainer_specializations.specialization_id > specializations.id [delete: cascade, update: cascade]
+
+Ref: services.trainer_id > users.id [delete: cascade, update: cascade]
+
+Ref: services.service_type_id > service_types.id [delete: restrict, update: cascade]
+
+Ref: bookings.client_id > users.id [delete: restrict, update: cascade]
+
+Ref: bookings.trainer_id > users.id [delete: restrict, update: cascade]
+
+Ref: bookings.service_id > services.id [delete: restrict, update: cascade]
+
+Ref: unavailabilities.trainer_id > users.id [delete: cascade, update: cascade]
+
+Ref: booking_bans.client_id > users.id [delete: cascade, update: cascade]
+
+Ref: booking_bans.trainer_id > users.id [delete: cascade, update: cascade]
+
