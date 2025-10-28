@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: coachflow-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-1StrongPwd!}
+      POSTGRES_DB: postgres
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - ./backend/docker/postgres/.env
+    networks:
+      - coachflow-network
+
+  configurator:
+    image: postgres:16-alpine
+    container_name: coachflow-postgres-configurator
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: ${DB_PASSWORD:-1StrongPwd!}
+    command: >
+      sh -c "
+        echo 'Waiting for PostgreSQL to be ready...';
+        sleep 5;
+        echo 'PostgreSQL is ready. Database initialization complete.';
+      "
+    env_file:
+      - ./backend/docker/postgres/.env
+    networks:
+      - coachflow-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  coachflow-network:
+    driver: bridge
+
