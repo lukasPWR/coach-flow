@@ -61,10 +61,9 @@ Tabela łącząca dla relacji N:M między `trainer_profiles` a `specializations`
 
 Tabela słownikowa dla typów usług.
 
-| Nazwa Kolumny | Typ Danych     | Ograniczenia                               | Opis                         |
-| ------------- | -------------- | ------------------------------------------ | ---------------------------- |
-| `id`          | `UUID`         | `PRIMARY KEY`, `DEFAULT gen_random_uuid()` | Unikalny identyfikator typu. |
-| `name`        | `VARCHAR(255)` | `NOT NULL`, `UNIQUE`                       | Nazwa typu usługi.           |
+| Nazwa Kolumny | Typ Danych | Ograniczenia                               | Opis                         |
+| ------------- | ---------- | ------------------------------------------ | ---------------------------- |
+| `id`          | `UUID`     | `PRIMARY KEY`, `DEFAULT gen_random_uuid()` | Unikalny identyfikator typu. |
 
 ### Tabela: `services`
 
