@@ -1,0 +1,362 @@
+# Plan Interfejsu API REST
+
+Ten dokument przedstawia projekt interfejsu API REST dla aplikacji CoachFlow, oparty na schemacie bazy danych projektu, wymaganiach produktu i stosie technologicznym.
+
+## 1. Zasoby
+
+API jest zbudowane wokół następujących głównych zasobów:
+
+| Zasób                | Tabela w Bazie Danych       | Opis                                                                                  |
+| -------------------- | --------------------------- | ------------------------------------------------------------------------------------- |
+| **Uwierzytelnianie** | `users`                     | Obsługuje rejestrację, logowanie i zarządzanie sesją użytkownika.                     |
+| **Użytkownicy**      | `users`                     | Zarządza danymi użytkownika. Głównie do pobierania informacji o bieżącym użytkowniku. |
+| **Trenerzy**         | `users`, `trainer_profiles` | Reprezentuje publiczne profile trenerów i umożliwia ich wyszukiwanie/listowanie.      |
+| **Profil Trenera**   | `trainer_profiles`          | Zagnieżdżony zasób dla trenera do zarządzania szczegółami własnego profilu.           |
+| **Usługi**           | `services`                  | Reprezentuje usługi oferowane przez trenerów. Zarządzane przez trenera.               |
+| **Specjalizacje**    | `specializations`           | Lista tylko do odczytu dostępnych specjalizacji, które trenerzy mogą wybrać.          |
+| **Rezerwacje**       | `bookings`                  | Zarządza żądaniami rezerwacji, potwierdzeniami i anulowaniami.                        |
+| **Niedostępności**   | `unavailabilities`          | Umożliwia trenerom zarządzanie swoimi niedostępnymi terminami.                        |
+
+---
+
+## 2. Punkty końcowe (Endpoints)
+
+### 2.1. Uwierzytelnianie
+
+#### `POST /auth/register`
+
+- **Opis**: Rejestruje nowego użytkownika (Klienta lub Trenera).
+- **Ciało Żądania (Request Body)**:
+  ```json
+  {
+    "name": "Jan Kowalski",
+    "email": "jan.kowalski@example.com",
+    "password": "mocnehaslo123",
+    "role": "CLIENT"
+  }
+  ```
+- **Ciało Odpowiedzi (Response Body)**:
+  ```json
+  {
+    "accessToken": "ey...",
+    "user": {
+      "id": "a1b2c3d4-...",
+      "name": "Jan Kowalski",
+      "email": "jan.kowalski@example.com",
+      "role": "CLIENT"
+    }
+  }
+  ```
+- **Sukces**: `201 Created`
+- **Błąd**: `400 Bad Request` (Błąd walidacji), `409 Conflict` (Email już istnieje)
+
+#### `POST /auth/login`
+
+- **Opis**: Uwierzytelnia użytkownika i zwraca token JWT.
+- **Ciało Żądania**:
+  ```json
+  {
+    "email": "jan.kowalski@example.com",
+    "password": "mocnehaslo123"
+  }
+  ```
+- **Ciało Odpowiedzi**:
+  ```json
+  {
+    "accessToken": "ey...",
+    "user": {
+      "id": "a1b2c3d4-...",
+      "name": "Jan Kowalski",
+      "email": "jan.kowalski@example.com",
+      "role": "CLIENT"
+    }
+  }
+  ```
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized` (Nieprawidłowe dane uwierzytelniające)
+
+---
+
+### 2.2. Użytkownicy
+
+#### `GET /users/me`
+
+- **Opis**: Pobiera profil aktualnie uwierzytelnionego użytkownika.
+- **Uwierzytelnianie**: Wymagane.
+- **Ciało Odpowiedzi**:
+  ```json
+  {
+    "id": "a1b2c3d4-...",
+    "name": "Jan Kowalski",
+    "email": "jan.kowalski@example.com",
+    "role": "CLIENT",
+    "createdAt": "2023-10-27T10:00:00Z"
+  }
+  ```
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`
+
+---
+
+### 2.3. Trenerzy (Publiczne)
+
+#### `GET /trainers`
+
+- **Opis**: Pobiera paginowaną listę wszystkich publicznych profili trenerów.
+- **Parametry Zapytania (Query Params)**:
+  - `page` (number, opcjonalnie, domyślnie: 1)
+  - `limit` (number, opcjonalnie, domyślnie: 10)
+  - `city` (string, opcjonalnie): Filtruj po mieście.
+  - `specializationId` (UUID, opcjonalnie): Filtruj po specjalizacji.
+- **Ciało Odpowiedzi**:
+  ```json
+  {
+    "data": [
+      {
+        "id": "b1c2d3e4-...",
+        "name": "Anna Nowak",
+        "city": "Warszawa",
+        "description": "Certyfikowany trener personalny...",
+        "profilePictureUrl": "http://...",
+        "specializations": [{ "id": "s1...", "name": "Utrata wagi" }]
+      }
+    ],
+    "meta": {
+      "total": 1,
+      "page": 1,
+      "limit": 10
+    }
+  }
+  ```
+- **Sukces**: `200 OK`
+
+#### `GET /trainers/:id`
+
+- **Opis**: Pobiera pojedynczy publiczny profil trenera na podstawie jego ID użytkownika.
+- **Ciało Odpowiedzi**:
+  ```json
+  {
+    "id": "b1c2d3e4-...",
+    "name": "Anna Nowak",
+    "city": "Warszawa",
+    "description": "Certyfikowany trener personalny...",
+    "profilePictureUrl": "http://...",
+    "specializations": [{ "id": "s1...", "name": "Utrata wagi" }],
+    "services": [
+      {
+        "id": "svc1...",
+        "name": "Trening personalny",
+        "price": 50.0,
+        "durationMinutes": 60
+      }
+    ]
+  }
+  ```
+- **Sukces**: `200 OK`
+- **Błąd**: `404 Not Found`
+
+---
+
+### 2.4. Profil Trenera (Zarządzanie Prywatne)
+
+#### `GET /trainer-profile/me`
+
+- **Opis**: Pobiera własny profil uwierzytelnionego trenera.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Ciało Odpowiedzi**: (Takie samo jak `GET /trainers/:id`)
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`
+
+#### `PATCH /trainer-profile/me`
+
+- **Opis**: Aktualizuje profil uwierzytelnionego trenera.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Ciało Żądania**:
+  ```json
+  {
+    "description": "Zaktualizowany opis.",
+    "city": "Kraków",
+    "profilePictureUrl": "http://...",
+    "specializationIds": ["s1...", "s2..."]
+  }
+  ```
+- **Ciało Odpowiedzi**: Zaktualizowany profil trenera.
+- **Sukces**: `200 OK`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`
+
+---
+
+### 2.5. Usługi (Zarządzane przez Trenera)
+
+#### `POST /services`
+
+- **Opis**: Tworzy nową usługę dla uwierzytelnionego trenera.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Ciało Żądania**:
+  ```json
+  {
+    "serviceTypeId": "st1...",
+    "price": 60.0,
+    "durationMinutes": 60
+  }
+  ```
+- **Ciało Odpowiedzi**: Nowo utworzony obiekt usługi.
+- **Sukces**: `201 Created`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`
+
+#### `PATCH /services/:id`
+
+- **Opis**: Aktualizuje jedną z własnych usług trenera.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Ciało Żądania**:
+  ```json
+  {
+    "price": 65.0
+  }
+  ```
+- **Ciało Odpowiedzi**: Zaktualizowany obiekt usługi.
+- **Sukces**: `200 OK`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+#### `DELETE /services/:id`
+
+- **Opis**: Usuwa (miękko) jedną z własnych usług trenera.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Sukces**: `204 No Content`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+---
+
+### 2.6. Specjalizacje (Publiczne)
+
+#### `GET /specializations`
+
+- **Opis**: Pobiera listę wszystkich dostępnych specjalizacji.
+- **Ciało Odpowiedzi**:
+  ```json
+  [
+    {
+      "id": "s1...",
+      "name": "Utrata wagi"
+    },
+    {
+      "id": "s2...",
+      "name": "Trening siłowy"
+    }
+  ]
+  ```
+- **Sukces**: `200 OK`
+
+---
+
+### 2.7. Rezerwacje
+
+#### `GET /bookings`
+
+- **Opis**: Pobiera listę rezerwacji dla uwierzytelnionego użytkownika (klienta lub trenera).
+- **Uwierzytelnianie**: Wymagane.
+- **Parametry Zapytania**:
+  - `status` (string, opcjonalnie): Filtruj po `PENDING`, `ACCEPTED`, `REJECTED`, `CANCELLED`.
+  - `role` (string, opcjonalnie): Dla użytkownika będącego jednocześnie klientem i trenerem, filtruj widok `client` lub `trainer`.
+  - `page`, `limit`
+- **Ciało Odpowiedzi**: Paginowana lista obiektów rezerwacji.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`
+
+#### `POST /bookings`
+
+- **Opis**: Klient tworzy nowe żądanie rezerwacji u trenera.
+- **Uwierzytelnianie**: Wymagane (Rola: CLIENT).
+- **Ciało Żądania**:
+  ```json
+  {
+    "trainerId": "b1c2d3e4-...",
+    "serviceId": "svc1...",
+    "startTime": "2023-11-15T14:00:00Z"
+  }
+  ```
+- **Ciało Odpowiedzi**: Nowo utworzony obiekt rezerwacji ze statusem `PENDING`.
+- **Sukces**: `201 Created`
+- **Błąd**: `400 Bad Request` (np. termin niedostępny), `401 Unauthorized`, `403 Forbidden`
+
+#### `POST /bookings/:id/approve`
+
+- **Opis**: Trener akceptuje oczekujące żądanie rezerwacji.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Ciało Odpowiedzi**: Zaktualizowany obiekt rezerwacji ze statusem `ACCEPTED`.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`, `409 Conflict` (Rezerwacja nie jest w stanie `PENDING`).
+
+#### `POST /bookings/:id/reject`
+
+- **Opis**: Trener odrzuca oczekujące żądanie rezerwacji.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Ciało Odpowiedzi**: Zaktualizowany obiekt rezerwacji ze statusem `REJECTED`.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`, `409 Conflict`.
+
+#### `POST /bookings/:id/cancel`
+
+- **Opis**: Użytkownik (klient lub trener) anuluje zaakceptowaną rezerwację.
+- **Uwierzytelnianie**: Wymagane.
+- **Logika Biznesowa**: Jeśli klient anuluje rezerwację mniej niż 12 godzin przed `startTime`, tworzony jest `booking_ban`.
+- **Ciało Odpowiedzi**: Zaktualizowany obiekt rezerwacji ze statusem `CANCELLED`.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`, `409 Conflict`.
+
+---
+
+### 2.8. Niedostępności
+
+#### `GET /unavailabilities`
+
+- **Opis**: Pobiera listę niedostępności dla uwierzytelnionego trenera. Można filtrować według zakresu dat.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Parametry Zapytania**:
+  - `from` (Data ISO8601)
+  - `to` (Data ISO8601)
+- **Ciało Odpowiedzi**: Tablica obiektów niedostępności.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`
+
+#### `POST /unavailabilities`
+
+- **Opis**: Tworzy nowy blok niedostępności dla trenera.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Ciało Żądania**:
+  ```json
+  {
+    "startTime": "2023-12-24T09:00:00Z",
+    "endTime": "2023-12-26T17:00:00Z"
+  }
+  ```
+- **Ciało Odpowiedzi**: Nowo utworzony obiekt niedostępności.
+- **Sukces**: `201 Created`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `409 Conflict` (Nakłada się na istniejącą rezerwację).
+
+#### `DELETE /unavailabilities/:id`
+
+- **Opis**: Usuwa blok niedostępności.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Sukces**: `204 No Content`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+---
+
+## 3. Uwierzytelnianie i Autoryzacja
+
+- **Uwierzytelnianie**: API będzie używać tokenów JWT (JSON Web Tokens). Klient otrzyma `accessToken` po pomyślnym zalogowaniu, który musi być wysyłany w nagłówku `Authorization` kolejnych żądań jako token Bearer (`Authorization: Bearer <token>`).
+- **Autoryzacja**: Autoryzacja jest oparta na rolach.
+  - Punkty końcowe wymagające określonej roli (np. `TRAINER`) będą chronione przez strażnika (guard), który sprawdza pole `role` w payloadzie JWT.
+  - W przypadku dostępu na poziomie zasobów (np. trener modyfikujący tylko własne usługi), logika aplikacji zweryfikuje własność, porównując `trainer_id` zasobu z ID uwierzytelnionego użytkownika z JWT. Odzwierciedla to polityki RLS zdefiniowane w schemacie bazy danych.
+
+---
+
+## 4. Walidacja i Logika Biznesowa
+
+- **Walidacja Danych Wejściowych**: Wszystkie przychodzące ciała żądań (`POST`, `PATCH`) będą walidowane przy użyciu pakietów `class-validator` i `class-transformer` z NestJS. Zdefiniowane zostaną DTO (Data Transfer Objects) dla każdego payloadu z dekoratorami odpowiadającymi ograniczeniom schematu bazy danych (`@IsEmail`, `@MinLength`, `@IsUUID`, `@IsNumber` itp.). Zapobiega to dotarciu nieprawidłowych danych do warstwy logiki biznesowej.
+- **Implementacja Logiki Biznesowej**:
+  - **Wygasanie Rezerwacji**: Zaplanowane zadanie (np. przy użyciu cron job) będzie okresowo uruchamiane w celu wyszukiwania rezerwacji w stanie `PENDING` starszych niż 24 godziny i automatycznej zmiany ich statusu na `REJECTED`.
+  - **Kary za Anulowanie**: Endpoint `POST /bookings/:id/cancel` będzie zawierał logikę sprawdzającą, czy żądanie pochodzi od `CLIENT` i czy do `startTime` pozostało mniej niż 12 godzin. Jeśli oba warunki są spełnione, utworzy nowy wpis w tabeli `booking_bans` dla tego klienta i trenera na 7 dni.
+  - **Sprawdzanie Dostępności**: Endpointy `POST /bookings` i `POST /unavailabilities` będą przeprowadzać sprawdzanie konfliktów. Przed utworzeniem nowego rekordu, serwis sprawdzi, czy istnieją już zaakceptowane rezerwacje lub niedostępności dla danego trenera, które nakładają się na żądany termin. W przypadku znalezienia konfliktu, zwrócony zostanie błąd `409 Conflict`.
+  - **Miękkie Usuwanie (Soft Deletes)**: Endpoint `DELETE /services/:id` wykona miękkie usunięcie, ustawiając znacznik czasu `deleted_at`. Wszystkie zapytania `GET` dotyczące usług będą domyślnie zawierały warunek `WHERE deleted_at IS NULL`.
