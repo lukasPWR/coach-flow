@@ -1,14 +1,12 @@
-import { IsNumber, Min, IsInt, IsOptional } from 'class-validator';
+import { PartialType } from "@nestjs/swagger";
+import { CreateServiceDto } from "./create-service.dto";
 
-export class UpdateServiceDto {
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  readonly price?: number;
-
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  readonly durationMinutes?: number;
-}
-
+/**
+ * DTO for updating an existing service
+ *
+ * Uses PartialType to make all fields from CreateServiceDto optional,
+ * allowing partial updates (PATCH semantics).
+ *
+ * All validation rules from CreateServiceDto still apply when fields are provided.
+ */
+export class UpdateServiceDto extends PartialType(CreateServiceDto) {}
