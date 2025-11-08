@@ -44,6 +44,13 @@ alwaysApply: false
 - Global `ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true })`.
 - Never trust input; type responses (Response DTOs).
 
+### Data Access (Repositories)
+
+- Use the Repository pattern for all database interactions.
+- Inject TypeORM repositories (`@InjectRepository(Entity)`) into services.
+- Encapsulate complex queries or reusable database logic in custom repositories.
+- Services should not contain raw SQL or complex Query Builder logic; this should be moved to a custom repository.
+
 ### Configuration
 
 - Use `@nestjs/config` as a global config module.
