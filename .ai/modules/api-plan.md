@@ -188,6 +188,23 @@ API jest zbudowane wokół następujących głównych zasobów:
 
 ### 2.5. Usługi (Zarządzane przez Trenera)
 
+#### `GET /services`
+
+- **Opis**: Pobiera listę wszystkich usług w systemie (prawdopodobnie dla Administratora).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Parametry Zapytania**: `page`, `limit`.
+- **Ciało Odpowiedzi**: Paginowana lista obiektów usług.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`
+
+#### `GET /services/:id`
+
+- **Opis**: Pobiera pojedynczą usługę (prawdopodobnie dla Administratora).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Ciało Odpowiedzi**: Obiekt usługi.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
 #### `POST /services`
 
 - **Opis**: Tworzy nową usługę dla uwierzytelnionego trenera.
@@ -247,9 +264,114 @@ API jest zbudowane wokół następujących głównych zasobów:
   ```
 - **Sukces**: `200 OK`
 
+#### `POST /specializations`
+
+- **Opis**: Tworzy nową specjalizację (prawdopodobnie dla Administratora).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Ciało Żądania**:
+  ```json
+  {
+    "name": "Nowa specjalizacja"
+  }
+  ```
+- **Ciało Odpowiedzi**: Nowo utworzony obiekt specjalizacji.
+- **Sukces**: `201 Created`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`
+
+#### `PATCH /specializations/:id`
+
+- **Opis**: Aktualizuje istniejącą specjalizację (prawdopodobnie dla Administratora).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Ciało Żądania**:
+  ```json
+  {
+    "name": "Zaktualizowana nazwa specjalizacji"
+  }
+  ```
+- **Ciało Odpowiedzi**: Zaktualizowany obiekt specjalizacji.
+- **Sukces**: `200 OK`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+#### `DELETE /specializations/:id`
+
+- **Opis**: Usuwa specjalizację (prawdopodobnie dla Administratora).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Sukces**: `204 No Content`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
 ---
 
-### 2.7. Rezerwacje
+### 2.7. Typy Usług (Słownikowe)
+
+#### `GET /service-types`
+
+- **Opis**: Pobiera listę wszystkich dostępnych typów usług.
+- **Ciało Odpowiedzi**:
+  ```json
+  [
+    {
+      "id": "st1...",
+      "name": "Trening personalny"
+    },
+    {
+      "id": "st2...",
+      "name": "Konsultacja dietetyczna"
+    }
+  ]
+  ```
+- **Sukces**: `200 OK`
+
+#### `GET /service-types/:id`
+
+- **Opis**: Pobiera pojedynczy typ usługi.
+- **Ciało Odpowiedzi**:
+  ```json
+  {
+    "id": "st1...",
+    "name": "Trening personalny"
+  }
+  ```
+- **Sukces**: `200 OK`
+- **Błąd**: `404 Not Found`
+
+#### `POST /service-types`
+
+- **Opis**: Tworzy nowy typ usługi (prawdopodobnie dla Administratora).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Ciało Żądania**:
+  ```json
+  {
+    "name": "Nowy typ usługi"
+  }
+  ```
+- **Ciało Odpowiedzi**: Nowo utworzony obiekt typu usługi.
+- **Sukces**: `201 Created`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`
+
+#### `PATCH /service-types/:id`
+
+- **Opis**: Aktualizuje istniejący typ usługi (prawdopodobnie dla Administratora).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Ciało Żądania**:
+  ```json
+  {
+    "name": "Zaktualizowana nazwa"
+  }
+  ```
+- **Ciało Odpowiedzi**: Zaktualizowany obiekt typu usługi.
+- **Sukces**: `200 OK`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+#### `DELETE /service-types/:id`
+
+- **Opis**: Usuwa typ usługi (prawdopodobnie dla Administratora).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Sukces**: `204 No Content`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+---
+
+### 2.8. Rezerwacje
 
 #### `GET /bookings`
 
@@ -306,7 +428,7 @@ API jest zbudowane wokół następujących głównych zasobów:
 
 ---
 
-### 2.8. Niedostępności
+### 2.9. Niedostępności
 
 #### `GET /unavailabilities`
 
@@ -338,6 +460,166 @@ API jest zbudowane wokół następujących głównych zasobów:
 
 - **Opis**: Usuwa blok niedostępności.
 - **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Sukces**: `204 No Content`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+---
+
+### 2.10. Blokady Rezerwacji (Booking Bans)
+
+#### `GET /booking-bans`
+
+- **Opis**: Pobiera listę wszystkich blokad rezerwacji (prawdopodobnie dla Administratora).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Parametry Zapytania**: `page`, `limit`.
+- **Ciało Odpowiedzi**: Paginowana lista obiektów blokad.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`
+
+#### `POST /booking-bans`
+
+- **Opis**: Tworzy nową blokadę rezerwacji (prawdopodobnie dla Administratora).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Ciało Żądania**:
+  ```json
+  {
+    "clientId": "a1b2c3d4-...",
+    "trainerId": "b1c2d3e4-...",
+    "bannedUntil": "2024-01-01T00:00:00Z"
+  }
+  ```
+- **Ciało Odpowiedzi**: Nowo utworzony obiekt blokady.
+- **Sukces**: `201 Created`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`
+
+#### `GET /booking-bans/:id`
+
+- **Opis**: Pobiera pojedynczą blokadę (prawdopodobnie dla Administratora).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Ciało Odpowiedzi**: Obiekt blokady.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+#### `PATCH /booking-bans/:id`
+
+- **Opis**: Aktualizuje blokadę, np. zmieniając datę `bannedUntil` (prawdopodobnie dla Administratora).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Ciało Żądania**:
+  ```json
+  {
+    "bannedUntil": "2024-02-01T00:00:00Z"
+  }
+  ```
+- **Ciało Odpowiedzi**: Zaktualizowany obiekt blokady.
+- **Sukces**: `200 OK`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+#### `DELETE /booking-bans/:id`
+
+- **Opis**: Usuwa blokadę (prawdopodobnie dla Administratora).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Sukces**: `204 No Content`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+---
+
+### 2.11. Zarządzanie Użytkownikami (Admin)
+
+#### `GET /users`
+
+- **Opis**: Pobiera paginowaną listę wszystkich użytkowników.
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Parametry Zapytania**: `page`, `limit`.
+- **Ciało Odpowiedzi**: Paginowana lista obiektów użytkowników.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`
+
+#### `GET /users/:id`
+
+- **Opis**: Pobiera pojedynczego użytkownika.
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Ciało Odpowiedzi**: Obiekt użytkownika.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+#### `PATCH /users/:id`
+
+- **Opis**: Aktualizuje użytkownika.
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Ciało Żądania**:
+  ```json
+  {
+    "name": "Nowe Imię",
+    "role": "TRAINER"
+  }
+  ```
+- **Ciało Odpowiedzi**: Zaktualizowany obiekt użytkownika.
+- **Sukces**: `200 OK`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+#### `DELETE /users/:id`
+
+- **Opis**: Usuwa (miękko) użytkownika.
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Sukces**: `204 No Content`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+---
+
+### 2.12. Zarządzanie Profilami Trenerów (Admin)
+
+#### `GET /trainer-profiles`
+
+- **Opis**: Pobiera listę wszystkich profili trenerów.
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Parametry Zapytania**: `page`, `limit`.
+- **Ciało Odpowiedzi**: Paginowana lista profili.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`
+
+#### `POST /trainer-profiles`
+
+- **Opis**: Tworzy nowy profil trenera (dla istniejącego użytkownika).
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Ciało Żądania**:
+  ```json
+  {
+    "userId": "a1b2c3d4-...",
+    "description": "Opis profilu.",
+    "city": "Miasto",
+    "specializationIds": ["s1..."]
+  }
+  ```
+- **Ciało Odpowiedzi**: Nowo utworzony profil.
+- **Sukces**: `201 Created`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`
+
+#### `GET /trainer-profiles/:id`
+
+- **Opis**: Pobiera pojedynczy profil trenera po jego ID profilu.
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Ciało Odpowiedzi**: Obiekt profilu trenera.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+#### `PATCH /trainer-profiles/:id`
+
+- **Opis**: Aktualizuje profil trenera.
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Ciało Żądania**:
+  ```json
+  {
+    "city": "Nowe Miasto"
+  }
+  ```
+- **Ciało Odpowiedzi**: Zaktualizowany profil.
+- **Sukces**: `200 OK`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+#### `DELETE /trainer-profiles/:id`
+
+- **Opis**: Usuwa profil trenera.
+- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
 - **Sukces**: `204 No Content`
 - **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
 
