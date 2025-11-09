@@ -119,6 +119,18 @@ Poniższe kwestie wymagają dalszej analizy i zostaną rozważone w przyszłych 
 
 ## 5. Historyjki użytkowników
 
+### 5.0. Główna strona (Home Page)
+
+- ID: US-000
+- Tytuł: Przeglądanie głównej strony aplikacji
+- Opis: Jako gość, chcę zobaczyć główną stronę aplikacji, aby zrozumieć jej wartość, kluczowe korzyści dla obu ról (trenera i użytkownika) oraz zostać zachęconym do rejestracji lub przeglądania trenerów.
+- Kryteria akceptacji:
+  1. Główna strona wyświetla propozycję wartości aplikacji (np. centralizacja komunikacji, zarządzania kalendarzem i rezerwacjami).
+  2. Prezentowane są kluczowe korzyści dla trenerów (np. łatwe zarządzanie grafikiem, prezentacja oferty) i użytkowników (np. prosty proces rezerwacji, przejrzysty kalendarz).
+  3. Widoczne są przyciski Call-to-Action (CTA): "Znajdź trenera" (dla użytkowników) i "Zostań trenerem" (dla trenerów).
+  4. Strona jest responsywna i zachęca do szybkiej akcji (rejestracja lub przeglądanie).
+  5. Nawigacja prowadzi do odpowiednich sekcji aplikacji po kliknięciu CTA.
+
 ### 5.1. Zarządzanie kontem
 
 - ID: US-001
