@@ -70,15 +70,7 @@ CoachFlow adresuje te problemy, tworząc transparentny i ustrukturyzowany ekosys
 - Każda rola ma dedykowany dashboard.
 - Dashboard wyświetla listę nadchodzących wizyt i statusy bieżących rezerwacji.
 
-### 3.8. System powiadomień (E-mail)
-
-- System wysyła automatyczne powiadomienia e-mail w kluczowych momentach:
-  1.  Nowe zgłoszenie rezerwacyjne (do trenera).
-  2.  Akceptacja lub odrzucenie rezerwacji (do użytkownika).
-  3.  Prośba o zmianę terminu (do drugiej strony).
-  4.  Przypomnienie o nadchodzącej wizycie na 24 godziny przed jej terminem (do obu stron).
-
-### 3.9. Zgodność z RODO
+### 3.8. Zgodność z RODO
 
 - System wymaga od użytkowników akceptacji regulaminu i polityki prywatności podczas rejestracji.
 - Zbierane dane są ograniczone do minimum niezbędnego do funkcjonowania aplikacji.
@@ -93,7 +85,6 @@ CoachFlow adresuje te problemy, tworząc transparentny i ustrukturyzowany ekosys
 - System przypisywania podopiecznych do trenerów poprzez mechanizm rezerwacji.
 - Kalendarz z widokiem dziennym, tygodniowym, miesięcznym oraz zarządzaniem dostępnością.
 - Podstawowe dashboardy dla użytkownika i trenera.
-- Powiadomienia e-mail o kluczowych zdarzeniach.
 - W pełni responsywny interfejs webowy.
 
 ### 4.2. Funkcjonalności poza zakresem MVP
@@ -102,6 +93,7 @@ CoachFlow adresuje te problemy, tworząc transparentny i ustrukturyzowany ekosys
 - Wewnętrzny komunikator (chat).
 - System recenzji i ocen trenerów.
 - Śledzenie statystyk i postępów użytkowników (w UI mogą pojawić się zapowiedzi "wkrótce").
+- Powiadomienia e-mail o kluczowych zdarzeniach.
 - Integracja z zewnętrznymi kalendarzami (np. Google Calendar).
 - Zaawansowane definiowanie planów treningowych (multimedia, AI).
 - Zaawansowany panel administracyjny do zarządzania systemem.
@@ -197,11 +189,10 @@ Poniższe kwestie wymagają dalszej analizy i zostaną rozważone w przyszłych 
 - Tytuł: Zarządzanie wnioskami o rezerwację
 - Opis: Jako trener, chcę otrzymywać i zarządzać wnioskami o rezerwację, aby kontrolować swój grafik.
 - Kryteria akceptacji:
-  1.  Otrzymuję powiadomienie e-mail o nowym wniosku o rezerwację.
-  2.  Na moim dashboardzie widzę listę oczekujących wniosków.
-  3.  Mogę zaakceptować lub odrzucić wniosek.
-  4.  Po podjęciu decyzji, użytkownik otrzymuje powiadomienie e-mail.
-  5.  Jeśli nie podejmę akcji w ciągu 24h, wniosek jest automatycznie odrzucany.
+  1.  Na moim dashboardzie widzę listę oczekujących wniosków.
+  2.  Mogę zaakceptować lub odrzucić wniosek.
+  3.  Po podjęciu decyzji, użytkownik jest informowany o statusie rezerwacji na swoim dashboardzie.
+  4.  Jeśli nie podejmę akcji w ciągu 24h, wniosek jest automatycznie odrzucany.
 
 ### 5.3. Funkcjonalności Użytkownika (Klienta)
 
@@ -221,30 +212,9 @@ Poniższe kwestie wymagają dalszej analizy i zostaną rozważone w przyszłych 
   1.  Na profilu trenera widzę jego kalendarz z dostępnymi slotami czasowymi (60 min).
   2.  Po wybraniu usługi i terminu, mogę wysłać wniosek o rezerwację.
   3.  Status mojego wniosku ("oczekujący") jest widoczny na moim dashboardzie.
-  4.  Otrzymuję e-mail z potwierdzeniem akceptacji lub odrzucenia wniosku.
 
 - ID: US-010
 - Tytuł: Przeglądanie kalendarza i dashboardu
-- Opis: Jako użytkownik, chcę mieć dostęp do swojego kalendarza i dashboardu, aby śledzić nadchodzące i przeszłe sesje.
-- Kryteria akceptacji:
-
-  1.  Mój dashboard pokazuje listę nadchodzących, potwierdzonych sesji.
-  2.  Mój kalendarz pokazuje wszystkie potwierdzone sesje.
-  3.  Widzę statusy moich rezerwacji (oczekująca, potwierdzona, odrzucona, anulowana).
-
-- ID: US-011
-- Tytuł: Anulowanie rezerwacji
-- Opis: Jako użytkownik, chcę móc anulować zaplanowaną sesję, znając konsekwencje tej akcji.
-- Kryteria akceptacji:
-  1.  Mogę anulować potwierdzoną rezerwację z poziomu mojego dashboardu.
-  2.  Jeśli anuluję sesję na 12 godzin lub więcej przed jej rozpoczęciem, nie ponoszę konsekwencji.
-  3.  Jeśli anuluję sesję na mniej niż 12 godzin przed jej rozpoczęciem, system informuje mnie o nałożeniu 7-dniowej blokady na rezerwacje u tego trenera.
-  4.  Po potwierdzeniu anulowania, blokada jest aktywowana, a trener otrzymuje powiadomienie.
-
-### 5.4. Funkcjonalności wspólne
-
-- ID: US-012
-- Tytuł: Prośba o zmianę terminu
 - Opis: Jako trener lub użytkownik, chcę móc zaproponować nowy termin dla już potwierdzonej sesji, aby elastycznie zarządzać grafikiem.
 - Kryteria akceptacji:
 
@@ -252,13 +222,6 @@ Poniższe kwestie wymagają dalszej analizy i zostaną rozważone w przyszłych 
   2.  Po kliknięciu mogę wybrać nowy, dostępny termin i wysłać propozycję do drugiej strony.
   3.  Druga strona otrzymuje powiadomienie i może zaakceptować lub odrzucić propozycję.
   4.  Po akceptacji, termin w kalendarzach obu stron jest aktualizowany.
-
-- ID: US-013
-- Tytuł: Otrzymywanie przypomnień
-- Opis: Jako trener lub użytkownik, chcę otrzymać e-mail z przypomnieniem na 24 godziny przed zaplanowaną sesją, aby o niej nie zapomnieć.
-- Kryteria akceptacji:
-  1.  System automatycznie wysyła e-mail do obu stron na 24 godziny przed terminem sesji.
-  2.  E-mail zawiera szczegóły sesji (data, godzina, usługa, dane drugiej strony).
 
 ## 6. Metryki sukcesu
 
