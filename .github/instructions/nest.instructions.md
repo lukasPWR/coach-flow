@@ -1,0 +1,72 @@
+---
+applyTo: 'backend/src/*'
+---
+
+# NestJS Rules for CoachFlow Backend
+
+### General principles
+
+- Use English in code and documentation.
+- Type all parameters and return values; avoid `any`.
+- Create meaningful types/DTOs and keep one level of abstraction per function.
+- Prefer short, single-purpose functions and early returns over deep nesting.
+
+### Naming
+
+- PascalCase for classes, camelCase for variables/methods, kebab-case for files.
+- Prefer full words; standard abbreviations (API, URL, req, res, ctx) are acceptable.
+- Avoid magic numbers; use constants and enums.
+
+### Data and classes
+
+- Prefer immutability; encapsulate data in rich types.
+- Follow SOLID; favor composition over inheritance.
+- Interfaces/types define public contracts.
+
+### Exceptions
+
+- Throw exceptions for unexpected errors; add context when catching.
+- Use global exception filters to standardize responses.
+
+## NestJS specifics
+
+### Architecture and modules
+
+- Modular architecture: one module per domain (e.g., `users`, `auth`).
+- Thin controllers (I/O, auth); business logic in services/providers.
+- `CommonModule`/`src/common` for shared providers, exceptions, and utils.
+- Enable API versioning (URI or Header) for public releases.
+
+### DTOs and validation
+
+- Use DTOs with `class-validator` and `class-transformer`.
+- Global `ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true })`.
+- Never trust input; type responses (Response DTOs).
+
+### Data Access (Repositories)
+
+- Use the Repository pattern for all database interactions.
+- Inject TypeORM repositories (`@InjectRepository(Entity)`) into services.
+- Encapsulate complex queries or reusable database logic in custom repositories.
+- Services should not contain raw SQL or complex Query Builder logic; this should be moved to a custom repository.
+
+### Configuration
+
+- Use `@nestjs/config` as a global config module.
+- Validate environment variables (e.g., Zod or class-validator schema).
+- Separate `.env` files per environment; do not commit secrets.
+
+### Security
+
+- Enable CORS (explicit origins) and `helmet` for security headers.
+
+### Interceptors, filters, middleware
+
+- Logging and Transform interceptors; optionally Timeout.
+- Global `HttpExceptionFilter` for consistent errors.
+- Middleware for request correlation (request-id) and metrics.
+
+### Documentation and API contract
+
+- Use `@nestjs/swagger` for OpenAPI; annotate DTOs and controllers.
+- Maintain versioning and endpoint descriptions.

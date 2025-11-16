@@ -1,0 +1,43 @@
+---
+applyTo: '**'
+---
+
+# Shared Rules for CoachFlow Project
+
+These rules apply across both frontend and backend.
+
+## TypeScript Usage
+
+- Always use TypeScript for all code.
+- Enable strict mode in tsconfig.json.
+- Use explicit types for function parameters and returns.
+
+## Naming Conventions
+
+- Variables and functions: camelCase
+- Classes and components: PascalCase
+- Constants: UPPER_CASE
+- Interfaces: PascalCase with 'I' prefix if needed, but prefer without.
+
+## Git Practices
+
+- Use conventional commits for commit messages (e.g., feat: add new feature).
+- Branch naming: feature/branch-name, bugfix/branch-name.
+
+## Error Handling
+
+- Always handle errors gracefully.
+- Use try-catch for async operations.
+- Log errors with context.
+
+## Code Style
+
+- Use ESLint and Prettier for code formatting.
+- Limit line length to 100 characters.
+- Prefer async/await over promises.
+
+## AI Development Guidelines
+
+- When generating code, ensure it integrates with existing stack (Vue 3, NestJS, Prisma).
+- Prefer modular code and separation of concerns.
+- Include comments for complex logic.

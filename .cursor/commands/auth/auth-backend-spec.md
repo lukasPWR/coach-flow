@@ -1,11 +1,10 @@
-<implementation_plan_nest_auth>
 Jesteś seniorem backend / NestJS odpowiedzialnym za zaplanowanie kompletnej implementacji modułu autentykacji i autoryzacji w aktualnym projekcie.
 
 ## Kontekst i źródła wiedzy
 
 Masz dostęp do:
 
-- dokumentacji autentykacji: @auth-spec.md
+- dokumentacji autentykacji:
 - opisu stacku technologicznego: @tech-stack.md
 - dokumentu z wymaganiami biznesowymi / PRD: @prd.md
 - aktualnego kodu projektu (moduły NestJS, encje TypeORM, konfiguracje, middleware, guardy itp.)
@@ -114,4 +113,3 @@ Zanim wygenerujesz plan:
 3. Dopiero po uzyskaniu odpowiedzi wygeneruj kompletny plan implementacji według powyższych wytycznych.
 
 Jeśli jakieś informacje są całkowicie nieznane i nie da się ich wywnioskować z kontekstu, jasno je zaznacz w sekcji „Założenia” na początku planu.
-</implementation_plan_nest_auth>
