@@ -123,9 +123,35 @@ Przechowuje informacje o blokadach rezerwacji dla klientów.
 | `created_at`   | `TIMESTAMPTZ` | `NOT NULL`, `DEFAULT now()`                | Czas utworzenia rekordu.             |
 | `updated_at`   | `TIMESTAMPTZ` | `NOT NULL`, `DEFAULT now()`                | Czas ostatniej modyfikacji rekordu.  |
 
+### Tabela: `refresh_tokens`
+
+Przechowuje tokeny odświeżające sesje użytkowników.
+
+| Nazwa Kolumny | Typ Danych     | Ograniczenia                               | Opis                            |
+| ------------- | -------------- | ------------------------------------------ | ------------------------------- |
+| `id`          | `UUID`         | `PRIMARY KEY`, `DEFAULT gen_random_uuid()` | Unikalny identyfikator tokenu.  |
+| `user_id`     | `UUID`         | `NOT NULL`, `FK to users(id)`              | Klucz obcy do użytkownika.      |
+| `token_hash`  | `VARCHAR(255)` | `NOT NULL`, `UNIQUE`                       | Zahaszowany token odświeżający. |
+| `expires_at`  | `TIMESTAMPTZ`  | `NOT NULL`                                 | Czas wygaśnięcia tokenu.        |
+| `created_at`  | `TIMESTAMPTZ`  | `NOT NULL`, `DEFAULT now()`                | Czas utworzenia rekordu.        |
+
+### Tabela: `password_reset_tokens`
+
+Przechowuje tokeny do resetowania hasła.
+
+| Nazwa Kolumny | Typ Danych     | Ograniczenia                               | Opis                                 |
+| ------------- | -------------- | ------------------------------------------ | ------------------------------------ |
+| `id`          | `UUID`         | `PRIMARY KEY`, `DEFAULT gen_random_uuid()` | Unikalny identyfikator tokenu.       |
+| `user_id`     | `UUID`         | `NOT NULL`, `FK to users(id)`              | Klucz obcy do użytkownika.           |
+| `token_hash`  | `VARCHAR(255)` | `NOT NULL`, `UNIQUE`                       | Zahaszowany token resetowania hasła. |
+| `expires_at`  | `TIMESTAMPTZ`  | `NOT NULL`                                 | Czas wygaśnięcia tokenu.             |
+| `created_at`  | `TIMESTAMPTZ`  | `NOT NULL`, `DEFAULT now()`                | Czas utworzenia rekordu.             |
+
 ## 2. Relacje Między Tabelami
 
 - **`users` 1-do-1 `trainer_profiles`**: Każdy profil trenera jest powiązany z dokładnie jednym użytkownikiem.
+- **`users` 1-do-N `refresh_tokens`**: Użytkownik może mieć wiele aktywnych tokenów odświeżających.
+- **`users` 1-do-N `password_reset_tokens`**: Użytkownik może mieć wiele tokenów do resetowania hasła (chociaż zazwyczaj tylko jeden jest aktywny).
 - **`users` (jako trener) 1-do-N `services`**: Trener może oferować wiele usług.
 - **`users` (jako trener) 1-do-N `unavailabilities`**: Trener może mieć wiele bloków niedostępności.
 - **`service_types` 1-do-N `services`**: Każda usługa musi mieć jeden, predefiniowany typ.
@@ -146,6 +172,12 @@ W celu optymalizacji wydajności zapytań, zaleca się utworzenie następującyc
 -- Tabela `users`
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_role ON users(role);
+
+-- Tabela `refresh_tokens`
+CREATE INDEX idx_refresh_tokens_user_id ON refresh_tokens(user_id);
+
+-- Tabela `password_reset_tokens`
+CREATE INDEX idx_password_reset_tokens_user_id ON password_reset_tokens(user_id);
 
 -- Tabela `trainer_profiles`
 CREATE INDEX idx_trainer_profiles_user_id ON trainer_profiles(user_id);
