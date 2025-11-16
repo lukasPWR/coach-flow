@@ -299,6 +299,19 @@ API jest zbudowane wokół następujących głównych zasobów:
 - **Sukces**: `204 No Content`
 - **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
 
+#### `GET /specializations/:id`
+
+- **Opis**: Pobiera pojedynczą specjalizację.
+- **Ciało Odpowiedzi**:
+  ```json
+  {
+    "id": "s1...",
+    "name": "Utrata wagi"
+  }
+  ```
+- **Sukces**: `200 OK`
+- **Błąd**: `404 Not Found`
+
 ---
 
 ### 2.7. Typy Usług (Słownikowe)
@@ -426,6 +439,14 @@ API jest zbudowane wokół następujących głównych zasobów:
 - **Sukces**: `200 OK`
 - **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`, `409 Conflict`.
 
+#### `GET /bookings/:id`
+
+- **Opis**: Pobiera szczegóły pojedynczej rezerwacji.
+- **Uwierzytelnianie**: Wymagane. Użytkownik musi być klientem lub trenerem powiązanym z rezerwacją.
+- **Ciało Odpowiedzi**: Obiekt rezerwacji.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
 ---
 
 ### 2.9. Niedostępności
@@ -462,6 +483,29 @@ API jest zbudowane wokół następujących głównych zasobów:
 - **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
 - **Sukces**: `204 No Content`
 - **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+#### `GET /unavailabilities/:id`
+
+- **Opis**: Pobiera pojedynczy blok niedostępności.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Ciało Odpowiedzi**: Obiekt niedostępności.
+- **Sukces**: `200 OK`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+#### `PATCH /unavailabilities/:id`
+
+- **Opis**: Aktualizuje blok niedostępności.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Ciało Żądania**:
+  ```json
+  {
+    "startTime": "2023-12-24T10:00:00Z",
+    "endTime": "2023-12-26T18:00:00Z"
+  }
+  ```
+- **Ciało Odpowiedzi**: Zaktualizowany obiekt niedostępności.
+- **Sukces**: `200 OK`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
 
 ---
 
@@ -597,7 +641,6 @@ API jest zbudowane wokół następujących głównych zasobów:
 #### `GET /trainer-profiles/:id`
 
 - **Opis**: Pobiera pojedynczy profil trenera po jego ID profilu.
-- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
 - **Ciało Odpowiedzi**: Obiekt profilu trenera.
 - **Sukces**: `200 OK`
 - **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
@@ -619,7 +662,6 @@ API jest zbudowane wokół następujących głównych zasobów:
 #### `DELETE /trainer-profiles/:id`
 
 - **Opis**: Usuwa profil trenera.
-- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
 - **Sukces**: `204 No Content`
 - **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
 
