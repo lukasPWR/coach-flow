@@ -1,29 +1,34 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { AlertCircle, Loader2 } from 'lucide-vue-next'
+import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle, Loader2 } from "lucide-vue-next";
+import { useAuthStore } from "@/stores/auth";
 
 interface LoginFormData {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 interface FormErrors {
-  email?: string
-  password?: string
-  general?: string
+  email?: string;
+  password?: string;
+  general?: string;
 }
 
-const formData = reactive<LoginFormData>({
-  email: '',
-  password: '',
-})
+const router = useRouter();
+const authStore = useAuthStore();
 
-const errors = ref<FormErrors>({})
-const isLoading = ref(false)
+const formData = reactive<LoginFormData>({
+  email: "",
+  password: "",
+});
+
+const errors = ref<FormErrors>({});
+const isLoading = ref(false);
 
 const validateForm = (): boolean => {
   const newErrors: FormErrors = {}
@@ -46,31 +51,38 @@ const validateForm = (): boolean => {
 
 const handleSubmit = async () => {
   if (!validateForm()) {
-    return
+    return;
   }
 
-  isLoading.value = true
-  errors.value = {}
+  isLoading.value = true;
+  errors.value = {};
 
   try {
-    // TODO: Call authStore.login() when implemented
-    await new Promise(resolve => setTimeout(resolve, 1500)) // Simulate API call
-    
-    // Placeholder for success handling
-    console.log('Login successful:', {
+    await authStore.login({
       email: formData.email,
-    })
+      password: formData.password,
+    });
+
+    // Redirect based on user role
+    if (authStore.isTrainer) {
+      router.push("/trainer/dashboard");
+    } else {
+      router.push("/dashboard");
+    }
   } catch (error: any) {
     // Handle API errors
     if (error.response?.status === 401) {
-      errors.value.general = 'Nieprawidłowy e-mail lub hasło.'
+      errors.value.general = "Nieprawidłowy e-mail lub hasło.";
+    } else if (error.response?.data?.message) {
+      const message = error.response.data.message;
+      errors.value.general = Array.isArray(message) ? message[0] : message;
     } else {
-      errors.value.general = 'Wystąpił błąd podczas logowania. Spróbuj ponownie.'
+      errors.value.general = "Wystąpił błąd podczas logowania. Spróbuj ponownie.";
     }
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const clearError = (field: keyof FormErrors) => {
   if (errors.value[field]) {

@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { APP_GUARD } from "@nestjs/core";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { DatabaseModule } from "./database/database.module";
@@ -11,6 +12,8 @@ import { ServiceTypesModule } from "./service-types/service-types.module";
 import { ServicesModule } from "./services/services.module";
 import { BookingsModule } from "./bookings/bookings.module";
 import { UnavailabilitiesModule } from "./unavailabilities/unavailabilities.module";
+import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
+import { RolesGuard } from "./common/guards/roles.guard";
 
 @Module({
   imports: [
@@ -29,6 +32,16 @@ import { UnavailabilitiesModule } from "./unavailabilities/unavailabilities.modu
     UnavailabilitiesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

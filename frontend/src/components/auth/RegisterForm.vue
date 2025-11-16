@@ -1,44 +1,49 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { AlertCircle, Loader2 } from 'lucide-vue-next'
+import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle, Loader2 } from "lucide-vue-next";
+import { useAuthStore } from "@/stores/auth";
+import type { UserRole } from "@/lib/api/types";
 
-type UserRole = 'TRAINER' | 'USER'
+type FormUserRole = "TRAINER" | "CLIENT";
 
 interface RegisterFormData {
-  name: string
-  email: string
-  password: string
-  confirmPassword: string
-  role: UserRole
-  termsAccepted: boolean
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  role: FormUserRole;
+  termsAccepted: boolean;
 }
 
 interface FormErrors {
-  name?: string
-  email?: string
-  password?: string
-  confirmPassword?: string
-  termsAccepted?: string
-  general?: string
+  name?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  termsAccepted?: string;
+  general?: string;
 }
 
-const formData = reactive<RegisterFormData>({
-  name: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-  role: 'USER',
-  termsAccepted: false,
-})
+const router = useRouter();
+const authStore = useAuthStore();
 
-const errors = ref<FormErrors>({})
-const isLoading = ref(false)
+const formData = reactive<RegisterFormData>({
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  role: "CLIENT",
+  termsAccepted: false,
+});
+
+const errors = ref<FormErrors>({});
+const isLoading = ref(false);
 
 const validateForm = (): boolean => {
   const newErrors: FormErrors = {}
@@ -57,11 +62,14 @@ const validateForm = (): boolean => {
     newErrors.email = 'Proszę podać poprawny adres e-mail.'
   }
 
-  // Password validation
+  // Password validation (zgodnie z wymaganiami backendu)
   if (!formData.password) {
-    newErrors.password = 'Pole jest wymagane.'
+    newErrors.password = "Pole jest wymagane.";
   } else if (formData.password.length < 8) {
-    newErrors.password = 'Hasło musi mieć co najmniej 8 znaków.'
+    newErrors.password = "Hasło musi mieć co najmniej 8 znaków.";
+  } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(formData.password)) {
+    newErrors.password =
+      "Hasło musi zawierać wielką literę, małą literę, cyfrę i znak specjalny.";
   }
 
   // Confirm password validation
@@ -81,34 +89,49 @@ const validateForm = (): boolean => {
 }
 
 const handleSubmit = async () => {
+  console.log('Submit clicked!', formData);
+  console.log('termsAccepted value:', formData.termsAccepted, 'type:', typeof formData.termsAccepted);
+  
   if (!validateForm()) {
-    return
+    console.log('Validation failed:', errors.value);
+    return;
   }
 
-  isLoading.value = true
-  errors.value = {}
+  console.log('Validation passed, starting registration...');
+  isLoading.value = true;
+  errors.value = {};
 
   try {
-    // TODO: Call authStore.register() when implemented
-    await new Promise(resolve => setTimeout(resolve, 1500)) // Simulate API call
-    
-    // Placeholder for success handling
-    console.log('Registration successful:', {
+    console.log('Calling authStore.register...');
+    await authStore.register({
       name: formData.name,
       email: formData.email,
-      role: formData.role,
-    })
+      password: formData.password,
+      role: formData.role as UserRole,
+    });
+
+    console.log('Registration successful!');
+    // Redirect based on user role
+    if (authStore.isTrainer) {
+      router.push("/trainer/dashboard");
+    } else {
+      router.push("/dashboard");
+    }
   } catch (error: any) {
+    console.error('Registration error:', error);
     // Handle API errors
     if (error.response?.status === 409) {
-      errors.value.general = 'Adres e-mail jest już zajęty.'
+      errors.value.general = "Adres e-mail jest już zajęty.";
+    } else if (error.response?.data?.message) {
+      const message = error.response.data.message;
+      errors.value.general = Array.isArray(message) ? message[0] : message;
     } else {
-      errors.value.general = 'Wystąpił błąd podczas rejestracji. Spróbuj ponownie.'
+      errors.value.general = "Wystąpił błąd podczas rejestracji. Spróbuj ponownie.";
     }
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const clearError = (field: keyof FormErrors) => {
   if (errors.value[field]) {
@@ -196,8 +219,8 @@ const clearError = (field: keyof FormErrors) => {
         <Label>Wybierz typ konta</Label>
         <RadioGroup v-model="formData.role">
           <div class="flex items-center space-x-2">
-            <RadioGroupItem id="role-user" value="USER" />
-            <Label for="role-user" class="font-normal cursor-pointer">
+            <RadioGroupItem id="role-client" value="CLIENT" />
+            <Label for="role-client" class="font-normal cursor-pointer">
               Użytkownik (Klient)
             </Label>
           </div>
@@ -213,14 +236,16 @@ const clearError = (field: keyof FormErrors) => {
       <!-- Terms acceptance -->
       <div class="space-y-2">
         <div class="flex items-start space-x-2">
-          <Checkbox
+          <input
+            type="checkbox"
             id="terms"
-            :checked="formData.termsAccepted"
-            @update:checked="(checked) => {
-              formData.termsAccepted = checked as boolean
-              clearError('termsAccepted')
+            v-model="formData.termsAccepted"
+            @change="() => {
+              console.log('Checkbox changed:', formData.termsAccepted);
+              clearError('termsAccepted');
             }"
-            :class="{ 'border-destructive': errors.termsAccepted }"
+            class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+            :class="{ 'border-red-500': errors.termsAccepted }"
           />
           <Label for="terms" class="text-sm font-normal leading-none cursor-pointer">
             Akceptuję
