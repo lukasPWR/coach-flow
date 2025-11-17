@@ -96,9 +96,10 @@ Dokument ten zawiera podsumowanie wszystkich wygenerowanych DTOs (Data Transfer 
 
 **Przeznaczenie:** Tworzenie profilu trenera
 
+**Uwaga:** `userId` jest automatycznie pobierany z JWT tokenu uwierzytelnionego użytkownika i nie jest częścią DTO.
+
 **Pola:**
 
-- `userId: string` - UUID powiązanego użytkownika (wymagane)
 - `description?: string` - Opis profilu (opcjonalne)
 - `city?: string` - Miasto (opcjonalne)
 - `profilePictureUrl?: string` - URL zdjęcia profilowego (opcjonalne, walidacja URL)
@@ -106,7 +107,6 @@ Dokument ten zawiera podsumowanie wszystkich wygenerowanych DTOs (Data Transfer 
 
 **Dekoratory walidacji:**
 
-- `@IsUUID()` dla `userId`
 - `@IsOptional()`, `@IsString()` dla `description` i `city`
 - `@IsOptional()`, `@IsUrl()` dla `profilePictureUrl`
 - `@IsOptional()`, `@IsArray()`, `@IsUUID('4', { each: true })` dla `specializationIds`

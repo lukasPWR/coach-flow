@@ -6,8 +6,10 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   OneToOne,
+  OneToMany,
 } from "typeorm";
 import { TrainerProfile } from "../../trainer-profiles/entities/trainer-profile.entity";
+import { Service } from "../../services/entities/service.entity";
 
 export enum UserRole {
   CLIENT = "CLIENT",
@@ -40,6 +42,9 @@ export class User {
     nullable: true,
   })
   trainerProfile: TrainerProfile;
+
+  @OneToMany(() => Service, (service) => service.trainer)
+  services: Service[];
 
   @CreateDateColumn()
   createdAt: Date;

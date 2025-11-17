@@ -159,18 +159,35 @@ API jest zbudowane wokół następujących głównych zasobów:
 
 ### 2.4. Profil Trenera (Zarządzanie Prywatne)
 
-#### `GET /trainer-profile/me`
+#### `POST /trainers`
 
-- **Opis**: Pobiera własny profil uwierzytelnionego trenera.
+- **Opis**: Tworzy nowy profil trenera dla uwierzytelnionego użytkownika.
 - **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
-- **Ciało Odpowiedzi**: (Takie samo jak `GET /trainers/:id`)
+- **Ciało Żądania**:
+  ```json
+  {
+    "description": "Opis profilu.",
+    "city": "Warszawa",
+    "profilePictureUrl": "http://...",
+    "specializationIds": ["s1...", "s2..."]
+  }
+  ```
+- **Ciało Odpowiedzi**: Utworzony profil trenera.
+- **Sukces**: `201 Created`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `409 Conflict` (profil już istnieje)
+
+#### `GET /trainers/me`
+
+- **Opis**: Pobiera własny profil uwierzytelnionego trenera, w tym dane użytkownika, specjalizacje i usługi.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Ciało Odpowiedzi**: Pełny profil trenera (z email i szczegółami użytkownika).
 - **Sukces**: `200 OK`
-- **Błąd**: `401 Unauthorized`, `403 Forbidden`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
 
-#### `PATCH /trainer-profile/me`
+#### `PATCH /trainers/:id`
 
-- **Opis**: Aktualizuje profil uwierzytelnionego trenera.
-- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
+- **Opis**: Aktualizuje profil trenera po ID profilu (nie userId). Dostępne dla właściciela profilu lub ADMIN.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER lub ADMIN).
 - **Ciało Żądania**:
   ```json
   {
@@ -182,7 +199,14 @@ API jest zbudowane wokół następujących głównych zasobów:
   ```
 - **Ciało Odpowiedzi**: Zaktualizowany profil trenera.
 - **Sukces**: `200 OK`
-- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
+
+#### `DELETE /trainers/:id`
+
+- **Opis**: Usuwa profil trenera po ID profilu. Dostępne dla właściciela profilu lub ADMIN.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER lub ADMIN).
+- **Sukces**: `204 No Content`
+- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
 
 ---
 
@@ -612,23 +636,31 @@ API jest zbudowane wokół następujących głównych zasobów:
 
 ### 2.12. Zarządzanie Profilami Trenerów (Admin)
 
-#### `GET /trainer-profiles`
+**Uwaga:** Endpointy zarządzania profilami trenerów przez ADMIN są wspólne z endpointami w sekcji 2.3 i 2.4, z odpowiednią autoryzacją opartą na rolach.
 
-- **Opis**: Pobiera listę wszystkich profili trenerów.
-- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
-- **Parametry Zapytania**: `page`, `limit`.
-- **Ciało Odpowiedzi**: Paginowana lista profili.
+#### `GET /trainers`
+
+- **Opis**: Pobiera paginowaną listę publicznych profili trenerów (z możliwością filtrowania).
+- **Uwierzytelnianie**: Nie wymagane (publiczny endpoint).
+- **Parametry Zapytania**: `page`, `limit`, `city`, `specializationId`.
+- **Ciało Odpowiedzi**: Paginowana lista publicznych profili.
 - **Sukces**: `200 OK`
-- **Błąd**: `401 Unauthorized`, `403 Forbidden`
 
-#### `POST /trainer-profiles`
+#### `GET /trainers/:id`
 
-- **Opis**: Tworzy nowy profil trenera (dla istniejącego użytkownika).
-- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Opis**: Pobiera publiczny profil trenera po userId, w tym specjalizacje i usługi.
+- **Uwierzytelnianie**: Nie wymagane (publiczny endpoint).
+- **Ciało Odpowiedzi**: Pełny publiczny profil trenera.
+- **Sukces**: `200 OK`
+- **Błąd**: `404 Not Found`
+
+#### `POST /trainers`
+
+- **Opis**: Tworzy nowy profil trenera dla uwierzytelnionego użytkownika TRAINER.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER).
 - **Ciało Żądania**:
   ```json
   {
-    "userId": "a1b2c3d4-...",
     "description": "Opis profilu.",
     "city": "Miasto",
     "specializationIds": ["s1..."]
@@ -636,32 +668,27 @@ API jest zbudowane wokół następujących głównych zasobów:
   ```
 - **Ciało Odpowiedzi**: Nowo utworzony profil.
 - **Sukces**: `201 Created`
-- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`
+- **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `409 Conflict`
 
-#### `GET /trainer-profiles/:id`
+#### `PATCH /trainers/:id`
 
-- **Opis**: Pobiera pojedynczy profil trenera po jego ID profilu.
-- **Ciało Odpowiedzi**: Obiekt profilu trenera.
-- **Sukces**: `200 OK`
-- **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
-
-#### `PATCH /trainer-profiles/:id`
-
-- **Opis**: Aktualizuje profil trenera.
-- **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
+- **Opis**: Aktualizuje profil trenera. Dostępne dla właściciela (TRAINER) lub ADMIN.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER lub ADMIN).
 - **Ciało Żądania**:
   ```json
   {
-    "city": "Nowe Miasto"
+    "city": "Nowe Miasto",
+    "description": "Nowy opis"
   }
   ```
 - **Ciało Odpowiedzi**: Zaktualizowany profil.
 - **Sukces**: `200 OK`
 - **Błąd**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
 
-#### `DELETE /trainer-profiles/:id`
+#### `DELETE /trainers/:id`
 
-- **Opis**: Usuwa profil trenera.
+- **Opis**: Usuwa profil trenera. Dostępne dla właściciela (TRAINER) lub ADMIN.
+- **Uwierzytelnianie**: Wymagane (Rola: TRAINER lub ADMIN).
 - **Sukces**: `204 No Content`
 - **Błąd**: `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
 

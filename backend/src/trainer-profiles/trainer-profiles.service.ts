@@ -14,6 +14,14 @@ import { Service } from "../services/entities/service.entity";
 import { CreateTrainerProfileDto } from "./dto/create-trainer-profile.dto";
 import { UpdateTrainerProfileDto } from "./dto/update-trainer-profile.dto";
 import { TrainerProfileResponseDto, SpecializationDto, ServiceDto } from "./dto/trainer-profile-response.dto";
+import { FindTrainersQueryDto } from "./dto/find-trainers-query.dto";
+import { PaginatedTrainersResponseDto, PaginationMetaDto } from "./dto/paginated-trainers.response.dto";
+import { TrainerPublicProfileResponseDto } from "./dto/trainer-public-profile.response.dto";
+import {
+  PublicTrainerProfileResponseDto,
+  ServiceResponseDto,
+  SpecializationDto as PublicSpecializationDto,
+} from "./dto/public-trainer-profile.response.dto";
 import { UserRole } from "../users/interfaces/user-role.enum";
 
 @Injectable()
@@ -30,11 +38,17 @@ export class TrainerProfilesService {
   ) {}
 
   /**
-   * Creates a new trainer profile.
+   * Creates a new trainer profile for the authenticated user.
    * Validates user existence, role, and prevents duplicate profiles.
+   * @param createTrainerProfileDto - Profile data (without userId)
+   * @param userId - ID of the authenticated user from JWT token
+   * @returns Created TrainerProfile with relations
+   * @throws NotFoundException if user doesn't exist
+   * @throws BadRequestException if user is not a trainer
+   * @throws ConflictException if profile already exists
    */
-  async create(createTrainerProfileDto: CreateTrainerProfileDto): Promise<TrainerProfile> {
-    const { userId, specializationIds, description, city, profilePictureUrl } = createTrainerProfileDto;
+  async create(createTrainerProfileDto: CreateTrainerProfileDto, userId: string): Promise<TrainerProfile> {
+    const { specializationIds, description, city, profilePictureUrl } = createTrainerProfileDto;
 
     // 1. Validate user exists and has TRAINER role
     const user = await this.userRepository.findOne({
@@ -96,6 +110,129 @@ export class TrainerProfilesService {
     }
 
     return profileWithRelations;
+  }
+
+  /**
+   * Retrieves a paginated and filtered list of public trainer profiles.
+   * Public endpoint - no authentication required.
+   * Supports filtering by city and specialization, with pagination.
+   *
+   * @param query - Query parameters for filtering and pagination
+   * @returns PaginatedTrainersResponseDto with trainer list and metadata
+   */
+  async findAllPublic(query: FindTrainersQueryDto): Promise<PaginatedTrainersResponseDto> {
+    const { page, limit, city, specializationId } = query;
+
+    // Calculate pagination offset
+    const skip = (page - 1) * limit;
+
+    // Build query using QueryBuilder for complex joins and filtering
+    const queryBuilder = this.trainerProfileRepository
+      .createQueryBuilder("profile")
+      .innerJoin("profile.user", "user")
+      .leftJoinAndSelect("profile.specializations", "specialization")
+      .select([
+        "profile.id",
+        "profile.city",
+        "profile.description",
+        "profile.profilePictureUrl",
+        "user.id",
+        "user.name",
+        "specialization.id",
+        "specialization.name",
+      ]);
+
+    // Apply city filter if provided (case-insensitive)
+    if (city) {
+      queryBuilder.andWhere("LOWER(profile.city) = LOWER(:city)", { city });
+    }
+
+    // Apply specialization filter if provided
+    if (specializationId) {
+      queryBuilder.andWhere("specialization.id = :specializationId", { specializationId });
+    }
+
+    // Apply pagination
+    queryBuilder.skip(skip).take(limit);
+
+    // Execute query and count total
+    const [profiles, total] = await queryBuilder.getManyAndCount();
+
+    // Map entities to public DTOs
+    const data: TrainerPublicProfileResponseDto[] = profiles.map((profile) => ({
+      id: profile.user.id,
+      name: profile.user.name,
+      city: profile.city ?? undefined,
+      description: profile.description ?? undefined,
+      profilePictureUrl: profile.profilePictureUrl ?? undefined,
+      specializations: (profile.specializations || []).map((spec) => ({
+        id: spec.id,
+        name: spec.name,
+      })),
+    }));
+
+    // Build pagination metadata
+    const meta: PaginationMetaDto = {
+      total,
+      page,
+      limit,
+    };
+
+    return { data, meta };
+  }
+
+  /**
+   * Retrieves public profile details of a single trainer by user ID.
+   * Includes user data, trainer profile, specializations, and services.
+   * This is a public endpoint - no authentication required.
+   * @param userId - UUID of the user (must have TRAINER role)
+   * @returns PublicTrainerProfileResponseDto with full trainer details
+   * @throws NotFoundException if user doesn't exist or is not a trainer
+   */
+  async findPublicProfileByUserId(userId: string): Promise<PublicTrainerProfileResponseDto> {
+    // 1. Build optimized query with all required joins
+    const result = await this.userRepository
+      .createQueryBuilder("user")
+      .leftJoinAndSelect("user.trainerProfile", "profile")
+      .leftJoinAndSelect("profile.specializations", "specialization")
+      .leftJoinAndSelect("user.services", "service")
+      .leftJoinAndSelect("service.serviceType", "serviceType")
+      .where("user.id = :userId", { userId })
+      .andWhere("user.role = :role", { role: UserRole.TRAINER })
+      .andWhere("service.deletedAt IS NULL")
+      .getOne();
+
+    // 2. Validate trainer exists
+    if (!result || !result.trainerProfile) {
+      throw new NotFoundException(`Trainer with ID ${userId} not found or user does not have a trainer profile`);
+    }
+
+    // 3. Map to response DTO
+    const profile = result.trainerProfile;
+
+    const specializations: PublicSpecializationDto[] = (profile.specializations || []).map((spec) => ({
+      id: spec.id,
+      name: spec.name,
+    }));
+
+    const services: ServiceResponseDto[] = (result.services || [])
+      .filter((service) => !service.deletedAt)
+      .map((service) => ({
+        id: service.id,
+        name: service.serviceType?.name || "",
+        price: Number(service.price),
+        durationMinutes: service.durationMinutes,
+      }));
+
+    return {
+      id: result.id,
+      name: result.name,
+      city: profile.city ?? undefined,
+      description: profile.description ?? undefined,
+      profilePictureUrl: profile.profilePictureUrl ?? undefined,
+      specializations,
+      services,
+    };
   }
 
   /**

@@ -115,8 +115,8 @@ Moduł do zarządzania profilami trenerów.
 #### 2. DTOs (Data Transfer Objects)
 
 - **`create-trainer-profile.dto.ts`**
+  - **Uwaga:** `userId` jest automatycznie pobierany z JWT tokenu uwierzytelnionego użytkownika, nie jest częścią DTO.
   - **Pola:**
-    - `userId: string` (`@IsUUID()`)
     - `description: string` (`@IsString()`, `@IsOptional()`)
     - `city: string` (`@IsString()`, `@IsOptional()`)
     - `profilePictureUrl: string` (`@IsUrl()`, `@IsOptional()`)
@@ -130,22 +130,24 @@ Moduł do zarządzania profilami trenerów.
 
 #### 3. Kontroler (`trainer-profiles.controller.ts`)
 
-- **Ścieżka bazowa:** `/trainer-profiles`
+- **Ścieżka bazowa:** `/trainers`
 - **Endpointy:**
-  - `POST /` - Tworzy nowy profil trenera.
-  - `GET /` - Zwraca listę wszystkich profili.
-  - `GET /:id` - Zwraca pojedynczy profil.
-  - `PATCH /:id` - Aktualizuje profil.
-  - `DELETE /:id` - Usuwa profil.
+  - `GET /` - Zwraca paginowaną listę publicznych profili trenerów (filtrowanie po city, specializationId). **Publiczny endpoint.**
+  - `GET /:id` - Zwraca publiczny profil trenera po userId, w tym specjalizacje i usługi. **Publiczny endpoint.**
+  - `POST /` - Tworzy nowy profil trenera dla uwierzytelnionego użytkownika. **Wymaga TRAINER role.**
+  - `GET /me` - Zwraca pełny profil własny uwierzytelnionego trenera (z danymi użytkownika). **Wymaga TRAINER role.**
+  - `PATCH /:id` - Aktualizuje profil trenera po ID profilu. **Wymaga TRAINER/ADMIN role.**
+  - `DELETE /:id` - Usuwa profil trenera po ID profilu. **Wymaga TRAINER/ADMIN role.**
 
 #### 4. Serwis (`trainer-profiles.service.ts`)
 
 - **Metody:**
-  - `create(dto: CreateTrainerProfileDto)`
-  - `findAll()`
-  - `findOne(id: string)`
-  - `update(id: string, dto: UpdateTrainerProfileDto)`
-  - `remove(id: string)`
+  - `create(dto: CreateTrainerProfileDto, userId: string)` - Tworzy profil dla uwierzytelnionego użytkownika
+  - `findAllPublic(query: FindTrainersQueryDto)` - Zwraca paginowaną listę publicznych profili z filtrowaniem
+  - `findPublicProfileByUserId(userId: string)` - Zwraca publiczny profil trenera po userId (z usługami)
+  - `findMyProfileByUserId(userId: string)` - Zwraca pełny profil własny trenera (z danymi użytkownika)
+  - `update(id: string, dto: UpdateTrainerProfileDto, userId: string)` - Aktualizuje profil po ID profilu
+  - `remove(id: string, userId: string)` - Usuwa profil po ID profilu
 
 ---
 
