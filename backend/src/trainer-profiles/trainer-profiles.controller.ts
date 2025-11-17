@@ -10,6 +10,7 @@ import {
   HttpStatus,
   UseGuards,
   ParseUUIDPipe,
+  Request,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth, ApiParam } from "@nestjs/swagger";
 import { TrainerProfilesService } from "./trainer-profiles.service";
@@ -23,6 +24,7 @@ import { JwtAuthGuard } from "../common/guards/jwt-auth.guard";
 import { RolesGuard } from "../common/guards/roles.guard";
 import { User } from "../users/entities/user.entity";
 import { UserRole } from "../users/interfaces/user-role.enum";
+import type { IRequestApp } from "src/common/interfaces/request-app.interface";
 
 @ApiTags("trainer-profiles")
 @Controller("trainer-profiles")
@@ -212,8 +214,9 @@ export class TrainerProfilesController {
       },
     },
   })
-  async getMyProfile(@GetUser() user: User): Promise<TrainerProfileResponseDto> {
-    return this.trainerProfilesService.findMyProfileByUserId(user.id);
+  async getMyProfile(@Request() request: IRequestApp): Promise<TrainerProfileResponseDto> {
+    const userId = request.user.userId;
+    return this.trainerProfilesService.findMyProfileByUserId(userId);
   }
 
   @Get(":id")
@@ -408,9 +411,10 @@ export class TrainerProfilesController {
   async update(
     @Param("id", ParseUUIDPipe) id: string,
     @Body() updateTrainerProfileDto: UpdateTrainerProfileDto,
-    @GetUser() user: User
+    @Request() request: IRequestApp
   ) {
-    return this.trainerProfilesService.update(id, updateTrainerProfileDto, user);
+    const userId = request.user.userId;
+    return this.trainerProfilesService.update(id, updateTrainerProfileDto, userId);
   }
 
   @Delete(":id")
@@ -487,7 +491,8 @@ export class TrainerProfilesController {
       },
     },
   })
-  async remove(@Param() { id }: TrainerProfileIdParamDto, @GetUser() user: User): Promise<void> {
-    return this.trainerProfilesService.remove(id, user);
+  async remove(@Param() { id }: TrainerProfileIdParamDto, @Request() request: IRequestApp): Promise<void> {
+    const userId = request.user.userId;
+    return this.trainerProfilesService.remove(id, userId);
   }
 }

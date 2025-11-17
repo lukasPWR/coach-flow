@@ -26,10 +26,16 @@ export class ServicesService {
    * @returns The newly created service entity
    * @throws NotFoundException if trainer or service type doesn't exist
    */
-  async create(createServiceDto: CreateServiceDto): Promise<Service> {
+  async create(createServiceDto: CreateServiceDto, userId: string): Promise<Service> {
     const { serviceTypeId, price, durationMinutes } = createServiceDto;
 
-    // TODO:Verify that the trainer exists
+    const trainer = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!trainer) {
+      throw new NotFoundException(`Trainer with ID '${userId}' not found`);
+    }
 
     // Verify that the service type exists
     const serviceType = await this.serviceTypeRepository.findOne({
@@ -42,6 +48,7 @@ export class ServicesService {
 
     // Create new service entity
     const service = this.serviceRepository.create({
+      trainerId: userId,
       serviceTypeId,
       price,
       durationMinutes,

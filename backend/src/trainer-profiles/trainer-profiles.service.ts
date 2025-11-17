@@ -125,13 +125,13 @@ export class TrainerProfilesService {
    * Only provided fields will be updated.
    * @param id - UUID of the trainer profile to update
    * @param updateTrainerProfileDto - Partial update data
-   * @param user - Authenticated user (for ownership verification)
+   * @param userId - Authenticated user's ID (for ownership verification)
    * @returns Updated TrainerProfile entity with relations
    * @throws NotFoundException if profile doesn't exist
    * @throws ForbiddenException if user is not the owner and not an admin
    * @throws BadRequestException if specialization IDs are invalid
    */
-  async update(id: string, updateTrainerProfileDto: UpdateTrainerProfileDto, user: User): Promise<TrainerProfile> {
+  async update(id: string, updateTrainerProfileDto: UpdateTrainerProfileDto, userId: string): Promise<TrainerProfile> {
     const { specializationIds, description, city, profilePictureUrl } = updateTrainerProfileDto;
 
     // 1. Find existing profile with specializations
@@ -145,7 +145,7 @@ export class TrainerProfilesService {
     }
 
     // 2. Verify ownership (only profile owner or admin can update)
-    if (user.role !== UserRole.ADMIN && profile.userId !== user.id) {
+    if (profile.userId !== userId) {
       throw new ForbiddenException("You do not have permission to update this trainer profile");
     }
 
@@ -243,7 +243,7 @@ export class TrainerProfilesService {
    * @throws NotFoundException if profile does not exist
    * @throws ForbiddenException if user lacks permission to delete the profile
    */
-  async remove(id: string, user: User): Promise<void> {
+  async remove(id: string, userId: string): Promise<void> {
     // 1. Find the trainer profile
     const profile = await this.trainerProfileRepository.findOne({
       where: { id },
@@ -254,10 +254,9 @@ export class TrainerProfilesService {
     }
 
     // 2. Check authorization: user must be profile owner or admin
-    const isOwner = user.id === profile.userId;
-    const isAdmin = user.role === UserRole.ADMIN;
+    const isOwner = userId === profile.userId;
 
-    if (!isOwner && !isAdmin) {
+    if (!isOwner) {
       throw new ForbiddenException("You do not have permission to delete this trainer profile");
     }
 

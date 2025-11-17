@@ -34,6 +34,7 @@ import { RolesGuard } from "../common/guards/roles.guard";
 import { Roles } from "../common/decorators/roles.decorator";
 import { Public } from "../common/decorators/public.decorator";
 import { UserRole } from "../users/interfaces/user-role.enum";
+import type { IRequestApp } from "src/common/interfaces/request-app.interface";
 
 @ApiTags("services")
 @Controller("services")
@@ -119,8 +120,9 @@ export class ServicesController {
       },
     },
   })
-  async create(@Body() createServiceDto: CreateServiceDto, @Request() req: any): Promise<Service> {
-    return await this.servicesService.create(createServiceDto);
+  async create(@Body() createServiceDto: CreateServiceDto, @Request() request: IRequestApp): Promise<Service> {
+    const userId = request.user.userId;
+    return await this.servicesService.create(createServiceDto, userId);
   }
 
   /**
@@ -299,9 +301,9 @@ export class ServicesController {
   async update(
     @Param("id", ParseUUIDPipe) id: string,
     @Body() updateServiceDto: UpdateServiceDto,
-    @Request() req: any
+    @Request() request: IRequestApp
   ): Promise<ServiceResponseDto> {
-    const userId = req.user.userId;
+    const userId = request.user.userId;
     return await this.servicesService.update(id, userId, updateServiceDto);
   }
 
@@ -387,8 +389,8 @@ export class ServicesController {
       },
     },
   })
-  async remove(@Param("id", ParseUUIDPipe) id: string, @Request() req: any): Promise<void> {
-    const userId = req.user.userId;
+  async remove(@Param("id", ParseUUIDPipe) id: string, @Request() request: IRequestApp): Promise<void> {
+    const userId = request.user.userId;
     await this.servicesService.remove(id, userId);
   }
 }
