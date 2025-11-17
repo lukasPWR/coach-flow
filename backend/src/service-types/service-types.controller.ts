@@ -29,11 +29,11 @@ import { CreateServiceTypeDto } from "./dto/create-service-type.dto";
 import { UpdateServiceTypeDto } from "./dto/update-service-type.dto";
 import { ServiceType } from "./entities/service-type.entity";
 import { ServiceTypeDto } from "./dto/service-type.dto";
-// TODO: Import guards when auth module is fully implemented
-// import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-// import { RolesGuard } from '../auth/guards/roles.guard';
-// import { Roles } from '../auth/decorators/roles.decorator';
-// import { UserRole } from '../users/entities/user.entity';
+import { JwtAuthGuard } from "../common/guards/jwt-auth.guard";
+import { RolesGuard } from "../common/guards/roles.guard";
+import { Roles } from "../common/decorators/roles.decorator";
+import { Public } from "../common/decorators/public.decorator";
+import { UserRole } from "../users/interfaces/user-role.enum";
 
 /**
  * Controller for managing service types (dictionary module)
@@ -41,12 +41,14 @@ import { ServiceTypeDto } from "./dto/service-type.dto";
  * Provides endpoints for CRUD operations on service types.
  * Service types are used to categorize services offered by trainers.
  *
- * NOTE: Authentication and authorization guards are commented out
- * until the auth module is fully implemented. This endpoint should
- * be protected with JwtAuthGuard and RolesGuard (ADMIN only).
+ * Protected with JwtAuthGuard and RolesGuard.
+ * POST/PATCH/DELETE operations require ADMIN role.
+ * GET operations are publicly accessible.
  */
 @ApiTags("service-types")
 @Controller("service-types")
+@UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth()
 export class ServiceTypesController {
   constructor(private readonly serviceTypesService: ServiceTypesService) {}
 
@@ -62,11 +64,8 @@ export class ServiceTypesController {
    * @returns The newly created service type
    */
   @Post()
+  @Roles(UserRole.ADMIN)
   @HttpCode(HttpStatus.CREATED)
-  // TODO: Uncomment when auth module is ready
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles(UserRole.ADMIN)
-  @ApiBearerAuth()
   @ApiOperation({
     summary: "Create a new service type",
     description:
@@ -177,6 +176,7 @@ export class ServiceTypesController {
    * @returns Array of all service types
    */
   @Get()
+  @Public()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: "Get all service types",
@@ -235,6 +235,7 @@ export class ServiceTypesController {
    * @returns The service type with the specified ID
    */
   @Get(":id")
+  @Public()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: "Get a service type by ID",
@@ -310,11 +311,8 @@ export class ServiceTypesController {
    * @returns The updated service type
    */
   @Patch(":id")
+  @Roles(UserRole.ADMIN)
   @HttpCode(HttpStatus.OK)
-  // TODO: Uncomment when auth module is ready
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles(UserRole.ADMIN)
-  @ApiBearerAuth()
   @ApiOperation({
     summary: "Update a service type",
     description:
@@ -434,11 +432,8 @@ export class ServiceTypesController {
    * @returns No content (204) on success
    */
   @Delete(":id")
+  @Roles(UserRole.ADMIN)
   @HttpCode(HttpStatus.NO_CONTENT)
-  // TODO: Uncomment when auth module is ready
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles(UserRole.ADMIN)
-  @ApiBearerAuth()
   @ApiOperation({
     summary: "Delete a service type",
     description:

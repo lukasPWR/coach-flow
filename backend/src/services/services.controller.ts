@@ -8,8 +8,9 @@ import {
   Param,
   HttpCode,
   HttpStatus,
-  // UseGuards,
+  UseGuards,
   ParseUUIDPipe,
+  Request,
 } from "@nestjs/common";
 import {
   ApiTags,
@@ -28,11 +29,16 @@ import { CreateServiceDto } from "./dto/create-service.dto";
 import { UpdateServiceDto } from "./dto/update-service.dto";
 import { ServiceResponseDto } from "./dto/service-response.dto";
 import { Service } from "./entities/service.entity";
-// TODO: Uncomment when JwtAuthGuard is implemented
-// import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { JwtAuthGuard } from "../common/guards/jwt-auth.guard";
+import { RolesGuard } from "../common/guards/roles.guard";
+import { Roles } from "../common/decorators/roles.decorator";
+import { Public } from "../common/decorators/public.decorator";
+import { UserRole } from "../users/interfaces/user-role.enum";
 
 @ApiTags("services")
 @Controller("services")
+@UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth()
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
@@ -45,13 +51,14 @@ export class ServicesController {
    * @returns The newly created service
    */
   @Post()
+  @Roles(UserRole.TRAINER)
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: "Create a new service",
     description:
       "Creates a new service that can be offered by a trainer. " +
       "Requires valid trainerId and serviceTypeId. " +
-      "This endpoint is currently public and does not require authentication.",
+      "This endpoint requires TRAINER role.",
   })
   @ApiBody({
     type: CreateServiceDto,
@@ -112,7 +119,7 @@ export class ServicesController {
       },
     },
   })
-  async create(@Body() createServiceDto: CreateServiceDto): Promise<Service> {
+  async create(@Body() createServiceDto: CreateServiceDto, @Request() req: any): Promise<Service> {
     return await this.servicesService.create(createServiceDto);
   }
 
@@ -127,13 +134,13 @@ export class ServicesController {
    * TODO: Add @UseGuards(JwtAuthGuard) when authentication is implemented
    */
   @Get(":id")
-  // @UseGuards(JwtAuthGuard) // TODO: Uncomment when JwtAuthGuard is implemented
+  @Public()
   @ApiOperation({
     summary: "Get a single service by ID",
     description:
       "Retrieves detailed information about a specific service including " +
       "related trainer and service type data. " +
-      "Authentication will be required once JWT guard is implemented.",
+      "This endpoint is publicly accessible.",
   })
   @ApiParam({
     name: "id",
@@ -203,16 +210,14 @@ export class ServicesController {
    * TODO: Extract user from JWT token and pass to service
    */
   @Patch(":id")
-  // @UseGuards(JwtAuthGuard, RolesGuard) // TODO: Uncomment when guards are implemented
-  // @Roles(UserRole.TRAINER) // TODO: Uncomment when roles decorator is implemented
-  // @ApiBearerAuth() // TODO: Uncomment when authentication is implemented
+  @Roles(UserRole.TRAINER)
   @ApiOperation({
     summary: "Update a service (partial update)",
     description:
       "Allows a trainer to update one of their own services. " +
       "Supports partial updates (PATCH semantics) - only provided fields are updated. " +
       "The operation is secured - only the service owner can update it. " +
-      "Authentication and authorization will be enforced once JWT and Roles guards are implemented.",
+      "Requires TRAINER role.",
   })
   @ApiParam({
     name: "id",
@@ -293,12 +298,10 @@ export class ServicesController {
   })
   async update(
     @Param("id", ParseUUIDPipe) id: string,
-    @Body() updateServiceDto: UpdateServiceDto
+    @Body() updateServiceDto: UpdateServiceDto,
+    @Request() req: any
   ): Promise<ServiceResponseDto> {
-    // TODO: Extract userId from JWT token when authentication is implemented
-    // For now, we'll pass a placeholder that will be replaced once auth is ready
-    // const userId = req.user.id;
-    const userId = "placeholder-user-id"; // This will be replaced with actual user ID from JWT
+    const userId = req.user.userId;
     return await this.servicesService.update(id, userId, updateServiceDto);
   }
 
@@ -315,17 +318,15 @@ export class ServicesController {
    * TODO: Extract user from JWT token and pass to service
    */
   @Delete(":id")
-  // @UseGuards(JwtAuthGuard, RolesGuard) // TODO: Uncomment when guards are implemented
-  // @Roles(UserRole.TRAINER) // TODO: Uncomment when roles decorator is implemented
+  @Roles(UserRole.TRAINER)
   @HttpCode(HttpStatus.NO_CONTENT)
-  // @ApiBearerAuth() // TODO: Uncomment when authentication is implemented
   @ApiOperation({
     summary: "Delete a service (soft delete)",
     description:
       "Allows a trainer to soft delete one of their own services. " +
       "The operation is idempotent and secured - only the service owner can delete it. " +
       "Deletion sets the deletedAt timestamp, preserving data for archival purposes. " +
-      "Authentication and authorization will be enforced once JWT and Roles guards are implemented.",
+      "Requires TRAINER role.",
   })
   @ApiParam({
     name: "id",
@@ -386,11 +387,8 @@ export class ServicesController {
       },
     },
   })
-  async remove(@Param("id", ParseUUIDPipe) id: string): Promise<void> {
-    // TODO: Extract userId from JWT token when authentication is implemented
-    // For now, we'll pass a placeholder that will be replaced once auth is ready
-    // const userId = req.user.id;
-    const userId = "placeholder-user-id"; // This will be replaced with actual user ID from JWT
+  async remove(@Param("id", ParseUUIDPipe) id: string, @Request() req: any): Promise<void> {
+    const userId = req.user.userId;
     await this.servicesService.remove(id, userId);
   }
 }
