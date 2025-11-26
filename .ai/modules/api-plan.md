@@ -214,7 +214,7 @@ API jest zbudowane wokół następujących głównych zasobów:
 
 #### `GET /services`
 
-- **Opis**: Pobiera listę wszystkich usług w systemie (prawdopodobnie dla Administratora).
+- **Opis**: Pobiera listę wszystkich usług w systemie
 - **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
 - **Parametry Zapytania**: `page`, `limit`.
 - **Ciało Odpowiedzi**: Paginowana lista obiektów usług.
@@ -223,7 +223,7 @@ API jest zbudowane wokół następujących głównych zasobów:
 
 #### `GET /services/:id`
 
-- **Opis**: Pobiera pojedynczą usługę (prawdopodobnie dla Administratora).
+- **Opis**: Pobiera pojedynczą usługę
 - **Uwierzytelnianie**: Wymagane (Rola: ADMIN - do zdefiniowania).
 - **Ciało Odpowiedzi**: Obiekt usługi.
 - **Sukces**: `200 OK`
