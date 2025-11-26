@@ -1,4 +1,4 @@
-import {
+﻿import {
   Controller,
   Post,
   Get,
@@ -84,7 +84,7 @@ export class SpecializationsController {
       strengthTraining: {
         summary: "Strength training",
         value: {
-          name: "Trening siłowy",
+          name: "Trening siĹ‚owy",
         },
       },
       cardioTraining: {
@@ -107,7 +107,7 @@ export class SpecializationsController {
     schema: {
       example: {
         id: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-        name: "Trening siłowy",
+        name: "Trening siĹ‚owy",
       },
     },
   })
@@ -191,7 +191,7 @@ export class SpecializationsController {
       example: [
         {
           id: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-          name: "Trening siłowy",
+          name: "Trening siĹ‚owy",
         },
         {
           id: "b2c3d4e5-f6g7-8901-2345-678901bcdef0",
@@ -251,7 +251,7 @@ export class SpecializationsController {
     schema: {
       example: {
         id: "e8e1f3b3-f3b3-4f3b-8f3b-3b3f3b3f3b3f",
-        name: "Trening siłowy",
+        name: "Trening siĹ‚owy",
       },
     },
   })
@@ -327,7 +327,7 @@ export class SpecializationsController {
       strengthTraining: {
         summary: "Update to strength training",
         value: {
-          name: "Trening siłowy",
+          name: "Trening siĹ‚owy",
         },
       },
       cardioTraining: {
@@ -344,7 +344,7 @@ export class SpecializationsController {
     schema: {
       example: {
         id: "e8e1f3b3-f3b3-4f3b-8f3b-3b3f3b3f3b3f",
-        name: "Trening siłowy",
+        name: "Trening siĹ‚owy",
       },
     },
   })
@@ -392,7 +392,7 @@ export class SpecializationsController {
     schema: {
       example: {
         statusCode: 409,
-        message: "Specialization with name 'Trening siłowy' already exists",
+        message: "Specialization with name 'Trening siĹ‚owy' already exists",
         error: "Conflict",
       },
     },

@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+﻿import { ApiProperty } from "@nestjs/swagger";
 
 /**
  * DTO for returning specialization data in API responses
@@ -16,7 +16,7 @@ export class SpecializationDto {
 
   @ApiProperty({
     description: "Name of the specialization",
-    example: "Trening siłowy",
+    example: "Trening siĹ‚owy",
     maxLength: 255,
   })
   readonly name: string;
