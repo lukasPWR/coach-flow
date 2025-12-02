@@ -7,4 +7,3 @@ export interface TrainerProfileInterface {
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
-

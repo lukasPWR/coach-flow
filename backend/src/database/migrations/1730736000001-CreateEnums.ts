@@ -2,11 +2,11 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 
 /**
  * Migration: Create ENUM Types
- * 
+ *
  * Creates PostgreSQL ENUM types used across the application:
  * - user_role: Defines user roles (CLIENT, TRAINER, ADMIN)
  * - booking_status: Defines booking statuses (PENDING, CONFIRMED, CANCELLED, COMPLETED)
- * 
+ *
  * This migration must run first as these ENUMs are referenced by other tables.
  */
 export class CreateEnums1730736000001 implements MigrationInterface {
@@ -28,4 +28,3 @@ export class CreateEnums1730736000001 implements MigrationInterface {
     await queryRunner.query(`DROP TYPE IF EXISTS "user_role"`);
   }
 }
-

@@ -2,16 +2,16 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 
 /**
  * Migration: Create Services Table
- * 
+ *
  * Creates the services table where trainers define their offered services.
- * 
+ *
  * Fields:
  * - price: Service price (DECIMAL with CHECK constraint >= 0)
  * - durationMinutes: Duration in minutes (CHECK constraint > 0)
  * - trainerId: Foreign key to users (trainer)
  * - serviceTypeId: Foreign key to service_types
  * - Soft delete support (deletedAt)
- * 
+ *
  * Indexes:
  * - trainerId (for querying trainer's services)
  * - serviceTypeId (for filtering by service type)
@@ -84,4 +84,3 @@ export class CreateServicesTable1730736000006 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE IF EXISTS "services"`);
   }
 }
-

@@ -12,9 +12,9 @@ import { Service } from "../../services/entities/service.entity";
 
 export enum BookingStatus {
   PENDING = "PENDING",
-  CONFIRMED = "CONFIRMED",
+  ACCEPTED = "ACCEPTED",
+  REJECTED = "REJECTED",
   CANCELLED = "CANCELLED",
-  COMPLETED = "COMPLETED",
 }
 
 @Entity({ name: "bookings" })

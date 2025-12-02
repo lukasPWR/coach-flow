@@ -2,10 +2,10 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 
 /**
  * Migration: Create Specializations Table
- * 
+ *
  * Creates the specializations dictionary table for trainer specializations.
  * This is a simple lookup table with unique names.
- * 
+ *
  * Examples: "Personal Training", "Yoga", "CrossFit", "Nutrition", etc.
  */
 export class CreateSpecializationsTable1730736000003 implements MigrationInterface {
@@ -24,4 +24,3 @@ export class CreateSpecializationsTable1730736000003 implements MigrationInterfa
     await queryRunner.query(`DROP TABLE IF EXISTS "specializations"`);
   }
 }
-

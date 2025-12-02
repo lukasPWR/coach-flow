@@ -2,16 +2,16 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 
 /**
  * Migration: Create Trainer Profiles Table
- * 
+ *
  * Creates the trainer_profiles table with extended information for trainers.
  * Has a 1-to-1 relationship with users table.
- * 
+ *
  * Fields:
  * - description: Text description of the trainer
  * - city: Location where trainer operates
  * - profilePictureUrl: URL to profile picture
  * - userId: Foreign key to users table (UNIQUE for 1-to-1 relationship)
- * 
+ *
  * Also creates the trainer_specializations join table for many-to-many
  * relationship between trainers and specializations.
  */
@@ -102,4 +102,3 @@ export class CreateTrainerProfilesTable1730736000004 implements MigrationInterfa
     await queryRunner.query(`DROP TABLE IF EXISTS "trainer_profiles"`);
   }
 }
-

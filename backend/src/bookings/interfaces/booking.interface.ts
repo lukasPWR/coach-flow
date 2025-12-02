@@ -1,4 +1,4 @@
-import { BookingStatus } from './booking-status.enum';
+import { BookingStatus } from "./booking-status.enum";
 
 export interface BookingInterface {
   readonly id: string;
@@ -12,4 +12,3 @@ export interface BookingInterface {
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
-

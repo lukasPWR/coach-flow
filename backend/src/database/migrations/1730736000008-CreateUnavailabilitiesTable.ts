@@ -2,15 +2,15 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 
 /**
  * Migration: Create Unavailabilities Table
- * 
+ *
  * Creates the unavailabilities table for managing trainer unavailable time blocks.
  * Trainers can define periods when they are not available for bookings.
- * 
+ *
  * Fields:
  * - startTime: Start of unavailable period (TIMESTAMPTZ)
  * - endTime: End of unavailable period (TIMESTAMPTZ)
  * - trainerId: Foreign key to users (trainer)
- * 
+ *
  * Indexes:
  * - Composite index on (trainerId, startTime) for efficient queries
  *   when checking trainer availability
@@ -62,4 +62,3 @@ export class CreateUnavailabilitiesTable1730736000008 implements MigrationInterf
     await queryRunner.query(`DROP TABLE IF EXISTS "unavailabilities"`);
   }
 }
-

@@ -1,5 +1,5 @@
-import { IsString, IsNotEmpty, IsEmail, MinLength, IsEnum, IsOptional } from 'class-validator';
-import { UserRole } from '../interfaces/user-role.enum';
+import { IsString, IsNotEmpty, IsEmail, MinLength, IsEnum, IsOptional } from "class-validator";
+import { UserRole } from "../interfaces/user-role.enum";
 
 export class UpdateUserDto {
   @IsOptional()
@@ -20,4 +20,3 @@ export class UpdateUserDto {
   @IsEnum(UserRole)
   readonly role?: UserRole;
 }
-

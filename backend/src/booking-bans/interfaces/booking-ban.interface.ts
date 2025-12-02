@@ -6,4 +6,3 @@ export interface BookingBanInterface {
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
-

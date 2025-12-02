@@ -8,4 +8,3 @@ export interface ServiceInterface {
   readonly updatedAt: Date;
   readonly deletedAt?: Date;
 }
-

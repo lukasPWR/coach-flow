@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsUrl, IsArray, IsUUID } from 'class-validator';
+import { IsString, IsOptional, IsUrl, IsArray, IsUUID } from "class-validator";
 
 export class UpdateTrainerProfileDto {
   @IsOptional()
@@ -15,7 +15,6 @@ export class UpdateTrainerProfileDto {
 
   @IsOptional()
   @IsArray()
-  @IsUUID('4', { each: true })
+  @IsUUID("4", { each: true })
   readonly specializationIds?: string[];
 }
-

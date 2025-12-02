@@ -6,4 +6,3 @@ export interface UnavailabilityInterface {
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
-

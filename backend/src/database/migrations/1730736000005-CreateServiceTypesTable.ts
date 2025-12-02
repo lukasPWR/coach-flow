@@ -2,10 +2,10 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 
 /**
  * Migration: Create Service Types Table
- * 
+ *
  * Creates the service_types dictionary table.
  * This is a simple lookup table with unique names.
- * 
+ *
  * Examples: "Personal Training Session", "Group Class", "Online Consultation", etc.
  */
 export class CreateServiceTypesTable1730736000005 implements MigrationInterface {
@@ -24,4 +24,3 @@ export class CreateServiceTypesTable1730736000005 implements MigrationInterface 
     await queryRunner.query(`DROP TABLE IF EXISTS "service_types"`);
   }
 }
-

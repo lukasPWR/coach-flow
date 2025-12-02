@@ -2,9 +2,9 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 
 /**
  * Migration: Create Bookings Table
- * 
+ *
  * Creates the bookings table for managing training session reservations.
- * 
+ *
  * Fields:
  * - startTime: Booking start time (TIMESTAMPTZ)
  * - endTime: Booking end time (TIMESTAMPTZ)
@@ -13,7 +13,7 @@ import { MigrationInterface, QueryRunner } from "typeorm";
  * - clientId: Foreign key to users (client)
  * - trainerId: Foreign key to users (trainer)
  * - serviceId: Foreign key to services
- * 
+ *
  * Indexes:
  * - clientId (for client's bookings)
  * - trainerId (for trainer's bookings)
@@ -110,4 +110,3 @@ export class CreateBookingsTable1730736000007 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE IF EXISTS "bookings"`);
   }
 }
-

@@ -1,4 +1,4 @@
-import { IsUUID, IsDateString } from 'class-validator';
+import { IsUUID, IsDateString } from "class-validator";
 
 export class CreateBookingBanDto {
   @IsUUID()
@@ -10,4 +10,3 @@ export class CreateBookingBanDto {
   @IsDateString()
   readonly bannedUntil: Date;
 }
-

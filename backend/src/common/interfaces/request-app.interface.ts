@@ -1,5 +1,5 @@
-import { Request } from 'express';
-import { AuthUserInterface } from './auth-user.interface';
+import { Request } from "express";
+import { AuthUserInterface } from "./auth-user.interface";
 
 /**
  * Request extending interface with a logged-in user data

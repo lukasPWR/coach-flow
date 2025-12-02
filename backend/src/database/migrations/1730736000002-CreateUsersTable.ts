@@ -2,14 +2,14 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 
 /**
  * Migration: Create Users Table
- * 
+ *
  * Creates the core users table with:
  * - UUID primary key
  * - Authentication fields (email, password)
  * - Role field using user_role ENUM
  * - Soft delete support (deletedAt)
  * - Automatic timestamps (createdAt, updatedAt)
- * 
+ *
  * Indexes:
  * - email (for login lookups)
  * - role (for role-based queries)
@@ -50,4 +50,3 @@ export class CreateUsersTable1730736000002 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE IF EXISTS "users"`);
   }
 }
-

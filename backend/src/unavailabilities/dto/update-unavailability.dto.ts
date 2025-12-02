@@ -1,4 +1,4 @@
-import { IsDateString, IsOptional } from 'class-validator';
+import { IsDateString, IsOptional } from "class-validator";
 
 export class UpdateUnavailabilityDto {
   @IsOptional()
@@ -9,4 +9,3 @@ export class UpdateUnavailabilityDto {
   @IsDateString()
   readonly endTime?: Date;
 }
-

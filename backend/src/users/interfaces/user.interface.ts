@@ -1,4 +1,4 @@
-import { UserRole } from './user-role.enum';
+import { UserRole } from "./user-role.enum";
 
 export interface UserInterface {
   readonly id: string;
@@ -10,4 +10,3 @@ export interface UserInterface {
   readonly updatedAt: Date;
   readonly deletedAt?: Date;
 }
-

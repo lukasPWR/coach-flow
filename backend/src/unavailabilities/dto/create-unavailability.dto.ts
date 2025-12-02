@@ -1,4 +1,4 @@
-import { IsUUID, IsDateString } from 'class-validator';
+import { IsUUID, IsDateString } from "class-validator";
 
 export class CreateUnavailabilityDto {
   @IsUUID()
@@ -10,4 +10,3 @@ export class CreateUnavailabilityDto {
   @IsDateString()
   readonly endTime: Date;
 }
-
