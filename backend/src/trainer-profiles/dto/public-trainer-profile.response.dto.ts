@@ -1,26 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { SpecializationDto } from "../../specializations/dto/specialization.dto";
 
-/**
- * Specialization details for public trainer profiles.
- */
-export class SpecializationDto {
-  @ApiProperty({
-    description: "Unique identifier of the specialization",
-    example: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-  })
-  readonly id: string;
-
-  @ApiProperty({
-    description: "Name of the specialization",
-    example: "Trening siłowy",
-  })
-  readonly name: string;
-}
+// Re-export for convenience
+export { SpecializationDto };
 
 /**
  * Service details for public trainer profiles.
  */
-export class ServiceResponseDto {
+export class TrainerServiceDto {
   @ApiProperty({
     description: "Unique identifier of the service",
     example: "svc1c3d4-e5f6-7890-1234-567890abcdef",
@@ -89,7 +76,7 @@ export class PublicTrainerProfileResponseDto {
 
   @ApiProperty({
     description: "List of services offered by the trainer",
-    type: [ServiceResponseDto],
+    type: [TrainerServiceDto],
   })
-  readonly services: ServiceResponseDto[];
+  readonly services: TrainerServiceDto[];
 }

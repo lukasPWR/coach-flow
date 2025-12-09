@@ -1,21 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { SpecializationDto } from "../../specializations/dto/specialization.dto";
 
-/**
- * Specialization details for public trainer profiles.
- */
-export class SpecializationDto {
-  @ApiProperty({
-    description: "Unique identifier of the specialization",
-    example: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-  })
-  readonly id: string;
-
-  @ApiProperty({
-    description: "Name of the specialization",
-    example: "Trening siłowy",
-  })
-  readonly name: string;
-}
+// Re-export for convenience
+export { SpecializationDto };
 
 /**
  * Public trainer profile response DTO.

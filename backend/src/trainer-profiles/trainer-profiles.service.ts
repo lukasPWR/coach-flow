@@ -19,7 +19,7 @@ import { PaginatedTrainersResponseDto, PaginationMetaDto } from "./dto/paginated
 import { TrainerPublicProfileResponseDto } from "./dto/trainer-public-profile.response.dto";
 import {
   PublicTrainerProfileResponseDto,
-  ServiceResponseDto,
+  TrainerServiceDto,
   SpecializationDto as PublicSpecializationDto,
 } from "./dto/public-trainer-profile.response.dto";
 import { UserRole } from "../users/interfaces/user-role.enum";
@@ -215,7 +215,7 @@ export class TrainerProfilesService {
       name: spec.name,
     }));
 
-    const services: ServiceResponseDto[] = (result.services || [])
+    const services: TrainerServiceDto[] = (result.services || [])
       .filter((service) => !service.deletedAt)
       .map((service) => ({
         id: service.id,

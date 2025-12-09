@@ -12,6 +12,7 @@ import { ServiceTypesModule } from "./service-types/service-types.module";
 import { ServicesModule } from "./services/services.module";
 import { BookingsModule } from "./bookings/bookings.module";
 import { UnavailabilitiesModule } from "./unavailabilities/unavailabilities.module";
+import { BookingBansModule } from "./booking-bans/booking-bans.module";
 import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { RolesGuard } from "./common/guards/roles.guard";
 
@@ -30,6 +31,7 @@ import { RolesGuard } from "./common/guards/roles.guard";
     ServicesModule,
     BookingsModule,
     UnavailabilitiesModule,
+    BookingBansModule,
   ],
   controllers: [AppController],
   providers: [

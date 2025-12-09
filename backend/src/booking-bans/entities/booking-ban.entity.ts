@@ -14,7 +14,7 @@ export class BookingBan {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column({ type: "timestamp" })
+  @Column({ type: "timestamptz" })
   bannedUntil: Date;
 
   @Column({ type: "uuid" })

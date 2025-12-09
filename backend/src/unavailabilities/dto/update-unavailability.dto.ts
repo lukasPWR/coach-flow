@@ -1,11 +1,9 @@
-import { IsDateString, IsOptional } from "class-validator";
+import { PartialType } from "@nestjs/swagger";
+import { CreateUnavailabilityDto } from "./create-unavailability.dto";
 
-export class UpdateUnavailabilityDto {
-  @IsOptional()
-  @IsDateString()
-  readonly startTime?: Date;
-
-  @IsOptional()
-  @IsDateString()
-  readonly endTime?: Date;
-}
+/**
+ * DTO for updating an existing unavailability period.
+ * All fields are optional - only provided fields will be updated.
+ * The trainerId cannot be changed and is verified from the JWT token.
+ */
+export class UpdateUnavailabilityDto extends PartialType(CreateUnavailabilityDto) {}

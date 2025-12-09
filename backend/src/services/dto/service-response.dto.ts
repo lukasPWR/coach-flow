@@ -1,22 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-
-/**
- * DTO representing service type information in service responses
- */
-export class ServiceTypeDto {
-  @ApiProperty({
-    description: "Unique identifier of the service type",
-    example: "c0a8f8a0-4b3f-4c9e-8b1a-0e9e6a3e4b3c",
-    format: "uuid",
-  })
-  id: string;
-
-  @ApiProperty({
-    description: "Name of the service type",
-    example: "Trening personalny",
-  })
-  name: string;
-}
+import { ServiceTypeDto } from "../../service-types/dto/service-type.dto";
 
 /**
  * DTO representing trainer information in service responses
