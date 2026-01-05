@@ -1,13 +1,13 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios'
 import type { ApiError } from './types'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 
 // Token storage keys
 const ACCESS_TOKEN_KEY = 'coachflow_access_token'
 const REFRESH_TOKEN_KEY = 'coachflow_refresh_token'
 
-class ApiClient {
+export class ApiClient {
   private client: AxiosInstance
   private isRefreshing = false
   private refreshSubscribers: Array<(token: string) => void> = []
@@ -17,6 +17,9 @@ class ApiClient {
       baseURL: API_BASE_URL,
       headers: {
         'Content-Type': 'application/json',
+      },
+      paramsSerializer: {
+        indexes: null, // This avoids brackets [] in array params (status=ACCEPTED&status=PENDING)
       },
     })
 
@@ -137,4 +140,6 @@ class ApiClient {
 
 // Export singleton instance
 export const apiClient = new ApiClient()
+// Re-export specific methods/properties to maintain compatibility if needed, 
+// but primarily export the axios instance.
 export const api = apiClient.getInstance()

@@ -1,11 +1,13 @@
 import { ref, reactive, watch } from 'vue'
 import { bookingsApi } from '@/lib/api/bookings'
 import type { BookingDto, BookingViewModel, PaginationMeta, BookingStatus } from '@/types/bookings'
+import { mockBookings } from '@/mocks/bookings'
 
 interface UseBookingsParams {
   role?: 'client' | 'trainer'
   initialStatus?: BookingStatus[]
   initialTimeFilter?: 'upcoming' | 'past'
+  useMock?: boolean // Add this flag
 }
 
 export function useBookings(params: UseBookingsParams) {
@@ -60,15 +62,49 @@ export function useBookings(params: UseBookingsParams) {
   const fetchBookings = async () => {
     isLoading.value = true
     try {
-      const response = await bookingsApi.getBookings({
-        role: params.role,
-        status: filters.status,
-        timeFilter: filters.timeFilter,
-        page: filters.page,
-        limit: filters.limit,
-      })
+      let data: BookingDto[] = []
+      let meta: PaginationMeta | undefined
 
-      bookings.value = response.data.map(formatBooking)
+      if (params.useMock) {
+        // Simulate API delay
+        await new Promise((resolve) => setTimeout(resolve, 800))
+
+        // Filter mocks based on params
+        data = mockBookings.filter((b) => {
+          const statusMatch = params.initialStatus?.length
+            ? params.initialStatus.includes(b.status)
+            : true
+
+          const timeMatch =
+            params.initialTimeFilter === 'upcoming'
+              ? new Date(b.startTime) > new Date()
+              : params.initialTimeFilter === 'past'
+              ? new Date(b.startTime) < new Date() || ['REJECTED', 'CANCELLED'].includes(b.status)
+              : true
+
+          return statusMatch && timeMatch
+        })
+
+        meta = {
+          totalItems: data.length,
+          itemCount: data.length,
+          itemsPerPage: 10,
+          totalPages: 1,
+          currentPage: 1,
+        }
+      } else {
+        const response = await bookingsApi.getBookings({
+          role: params.role,
+          status: filters.status,
+          timeFilter: filters.timeFilter,
+          page: filters.page,
+          limit: filters.limit,
+        })
+        data = response.data
+        meta = response.meta
+      }
+
+      bookings.value = data.map(formatBooking)
 
       // Sort by date: Descending for history (past), Ascending for others
       bookings.value.sort((a, b) => {
@@ -81,8 +117,8 @@ export function useBookings(params: UseBookingsParams) {
       })
 
       // Update pagination
-      if (response.meta) {
-        pagination.value = response.meta
+      if (meta) {
+        pagination.value = meta
       }
     } catch (error) {
       console.error('Failed to fetch bookings:', error)

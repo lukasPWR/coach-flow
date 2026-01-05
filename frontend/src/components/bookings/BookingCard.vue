@@ -1,8 +1,8 @@
 <template>
-  <Card>
+  <Card class="overflow-hidden transition-all hover:shadow-md">
     <CardContent class="p-6">
-      <div class="flex items-start justify-between">
-        <div class="space-y-4">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div class="space-y-4 flex-1">
           <div class="flex flex-wrap items-center gap-2">
             <Badge variant="outline" class="font-normal">
               {{ booking.service.name }}
@@ -11,7 +11,9 @@
           </div>
 
           <div class="flex items-center gap-4">
-            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <div
+              class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"
+            >
               <Calendar class="h-6 w-6" />
             </div>
             <div>
@@ -24,7 +26,10 @@
 
           <div class="flex items-center gap-3 pt-1">
             <Avatar class="h-8 w-8">
-              <AvatarImage :src="booking.trainer.profilePictureUrl" :alt="booking.trainer.name" />
+              <AvatarImage
+                :src="booking.trainer.profilePictureUrl || undefined"
+                :alt="booking.trainer.name"
+              />
               <AvatarFallback>{{ initials }}</AvatarFallback>
             </Avatar>
             <div class="text-sm">
@@ -34,7 +39,7 @@
           </div>
         </div>
 
-        <div v-if="booking.canCancel || booking.canReschedule" class="ml-2">
+        <div v-if="booking.canCancel || booking.canReschedule" class="flex justify-end sm:ml-2">
           <BookingActionsMenu
             :can-cancel="booking.canCancel"
             :can-reschedule="booking.canReschedule"
@@ -76,4 +81,3 @@ const initials = computed(() => {
     .slice(0, 2)
 })
 </script>
-

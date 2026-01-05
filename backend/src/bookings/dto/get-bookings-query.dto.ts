@@ -1,5 +1,5 @@
-import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
-import { Type } from "class-transformer";
+import { IsEnum, IsInt, IsOptional, Min, IsArray } from "class-validator";
+import { Type, Transform } from "class-transformer";
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { BookingStatus } from "../interfaces/booking-status.enum";
 
@@ -13,6 +13,14 @@ export enum UserBookingRole {
 }
 
 /**
+ * Enum for time-based filtering.
+ */
+export enum TimeFilter {
+  UPCOMING = "upcoming",
+  PAST = "past",
+}
+
+/**
  * DTO for validating query parameters in GET /bookings endpoint.
  *
  * Provides filtering by status and role, along with pagination support.
@@ -20,16 +28,39 @@ export enum UserBookingRole {
 export class GetBookingsQueryDto {
   /**
    * Filter bookings by status.
+   * Accepts single status or array of statuses.
    * @example "PENDING"
    */
   @ApiPropertyOptional({
     enum: BookingStatus,
+    isArray: true,
     description: "Filter bookings by status",
-    example: BookingStatus.PENDING,
+    example: [BookingStatus.PENDING],
   })
   @IsOptional()
-  @IsEnum(BookingStatus)
-  readonly status?: BookingStatus;
+  @IsEnum(BookingStatus, { each: true })
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      // Handle comma-separated string
+      return value.split(',');
+    }
+    // Ensure value is array
+    return Array.isArray(value) ? value : [value];
+  })
+  readonly status?: BookingStatus[];
+
+  /**
+   * Filter bookings by time (upcoming or past).
+   * @example "upcoming"
+   */
+  @ApiPropertyOptional({
+    enum: TimeFilter,
+    description: "Filter bookings by time (upcoming or past)",
+    example: TimeFilter.UPCOMING,
+  })
+  @IsOptional()
+  @IsEnum(TimeFilter)
+  readonly timeFilter?: TimeFilter;
 
   /**
    * Specify the perspective for users who are both client and trainer.

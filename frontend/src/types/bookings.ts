@@ -59,3 +59,5 @@ export interface UpdateBookingDto {
   startTime?: string
 }
 
+export type BookingTab = 'upcoming' | 'pending' | 'history'
+

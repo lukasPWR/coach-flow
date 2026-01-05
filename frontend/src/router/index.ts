@@ -61,6 +61,12 @@ const router = createRouter({
       component: () => import('@/views/ProfilePage.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      path: '/my-bookings',
+      name: 'my-bookings',
+      component: () => import('@/views/MyBookingsView.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
 })
 

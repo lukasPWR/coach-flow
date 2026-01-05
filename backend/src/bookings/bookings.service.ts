@@ -15,7 +15,7 @@ import { User } from "../users/entities/user.entity";
 import { BookingBan } from "../booking-bans/entities/booking-ban.entity";
 import { Unavailability } from "../unavailabilities/entities/unavailability.entity";
 import { CreateBookingDto } from "./dto/create-booking.dto";
-import { GetBookingsQueryDto, UserBookingRole } from "./dto/get-bookings-query.dto";
+import { GetBookingsQueryDto, UserBookingRole, TimeFilter } from "./dto/get-bookings-query.dto";
 import {
   PaginatedBookingsResponseDto,
   createPaginationMeta,
@@ -239,7 +239,7 @@ export class BookingsService {
    * @throws InternalServerErrorException if database query fails
    */
   async findUserBookings(userId: string, queryDto: GetBookingsQueryDto): Promise<PaginatedBookingsResponseDto> {
-    const { status, role, page = 1, limit = 10 } = queryDto;
+    const { status, role, timeFilter, page = 1, limit = 10 } = queryDto;
     const skip = (page - 1) * limit;
 
     try {
@@ -254,12 +254,29 @@ export class BookingsService {
       this.applyUserFilter(queryBuilder, userId, role);
 
       // Apply status filter if provided
-      if (status) {
-        queryBuilder.andWhere("booking.status = :status", { status });
+      if (status && status.length > 0) {
+        // Fix: Use brackets to correctly bind array parameter for IN clause
+        queryBuilder.andWhere("booking.status IN (:...status)", { status });
       }
 
-      // Order by start time descending (most recent first)
-      queryBuilder.orderBy("booking.startTime", "DESC");
+      // Apply time filter
+      if (timeFilter) {
+        const now = new Date();
+        if (timeFilter === TimeFilter.UPCOMING) {
+          queryBuilder.andWhere("booking.startTime > :now", { now });
+        } else if (timeFilter === TimeFilter.PAST) {
+          queryBuilder.andWhere("booking.startTime < :now", { now });
+        }
+      }
+
+      // Order by start time
+      // For upcoming: Ascending (nearest first)
+      // For past/history: Descending (most recent past first)
+      if (timeFilter === TimeFilter.UPCOMING) {
+        queryBuilder.orderBy("booking.startTime", "ASC");
+      } else {
+        queryBuilder.orderBy("booking.startTime", "DESC");
+      }
 
       // Apply pagination
       queryBuilder.skip(skip).take(limit);
