@@ -207,7 +207,7 @@ export class ServiceTypesService {
       const servicesCount = await this.serviceRepository.count({
         where: {
           serviceTypeId: id,
-          deletedAt: null as any, // TypeORM requires explicit null for checking IS NULL
+          deletedAt: null as any,
         },
       });
 

@@ -10,6 +10,16 @@ const router = createRouter({
       component: () => import('@/views/HomePage.vue'),
     },
     {
+      path: '/trainers',
+      name: 'trainers-list',
+      component: () => import('@/views/TrainerDirectoryView.vue'),
+    },
+    {
+      path: '/trainer/:id',
+      name: 'trainer-profile',
+      component: () => import('@/views/TrainerProfileView.vue'),
+    },
+    {
       path: '/register',
       name: 'register',
       component: () => import('@/views/RegisterPage.vue'),
