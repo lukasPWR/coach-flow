@@ -65,8 +65,8 @@ Struktura opiera się na następujących filarach:
 - **Ścieżka:** `/dashboard`
 - **Główny Cel:** Zapewnienie szybkiego wglądu w nadchodzące sesje i statusy rezerwacji.
 - **Kluczowe Informacje:** Lista nadchodzących spotkań, lista rezerwacji oczekujących na potwierdzenie.
-- **Kluczowe Komponenty:** `UpcomingBookingList`, `PendingRequestList`.
-- **Uwagi (UX, A11y, Bezpieczeństwo):** Chroniony strażnikiem (route guard). Dane pobierane dla zalogowanego użytkownika.
+- **Kluczowe Komponenty:** `UpcomingBookingList`, `PendingRequestList`, Przycisk CTA "Znajdź trenera" (szczególnie widoczny przy pustych listach).
+- **Uwagi (UX, A11y, Bezpieczeństwo):** Chroniony strażnikiem (route guard). Dane pobierane dla zalogowanego użytkownika. Puste stany list powinny kierować użytkownika do katalogu trenerów.
 
 #### **2. Moje Rezerwacje (My Bookings)**
 
