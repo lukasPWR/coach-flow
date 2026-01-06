@@ -15,7 +15,7 @@ const quickActions = [
     title: 'Usługi',
     description: 'Edytuj ofertę i cennik swoich usług',
     icon: '💪',
-    route: '/services',
+    route: '/trainer/services',
     color: 'success' as const,
   },
   {

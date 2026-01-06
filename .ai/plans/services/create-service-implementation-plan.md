@@ -24,7 +24,7 @@ Ten punkt końcowy umożliwia tworzenie nowych usług, które mogą być oferowa
     - `trainerId: string` (UUID) - Identyfikator istniejącego trenera.
     - `serviceTypeId: string` (UUID) - Identyfikator istniejącego typu usługi.
     - `price: number` - Cena usługi, nie może być ujemna.
-    - `durationMinutes: number` (integer) - Czas trwania usługi w minutach, musi być liczbą dodatnią.
+    - `durationMinutes: number` (integer) - Czas trwania usługi w minutach (15-180, wielokrotność 15).
   - **Opcjonalne**: Brak.
 
 ## 3. Wykorzystywane typy

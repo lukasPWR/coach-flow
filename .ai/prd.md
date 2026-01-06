@@ -42,7 +42,7 @@ CoachFlow adresuje te problemy, tworząc transparentny i ustrukturyzowany ekosys
 
 - Trener może tworzyć, edytować i usuwać usługi.
 - Katalog usług jest ograniczony do 3-4 predefiniowanych typów (np. "Trening personalny", "Konsultacja dietetyczna").
-- Każda usługa ma zdefiniowaną długość (domyślnie 60 minut) oraz cenę lub widełki cenowe.
+- Każda usługa ma zdefiniowaną długość (15-180 minut, wielokrotność 15 minut) oraz cenę lub widełki cenowe.
 
 ### 3.4. System rezerwacji
 
@@ -171,8 +171,8 @@ Poniższe kwestie wymagają dalszej analizy i zostaną rozważone w przyszłych 
 - Kryteria akceptacji:
 
   1.  Mogę dodać nową usługę, wybierając jej typ z predefiniowanej listy (3-4 opcje).
-  2.  Dla każdej usługi mogę zdefiniować cenę (lub widełki cenowe). Długość usługi jest stała (60 min).
-  3.  Mogę edytować istniejącą usługę.
+  2.  Dla każdej usługi mogę zdefiniować cenę (lub widełki cenowe) oraz czas trwania (15-180 minut, wielokrotność 15 minut).
+  3.  Mogę edytować istniejącą usługę, w tym zmienić jej cenę i czas trwania.
   4.  Mogę usunąć usługę.
 
 - ID: US-006
@@ -209,7 +209,7 @@ Poniższe kwestie wymagają dalszej analizy i zostaną rozważone w przyszłych 
 - Opis: Jako użytkownik, chcę móc wybrać usługę i termin u trenera, aby złożyć wniosek o rezerwację sesji.
 - Kryteria akceptacji:
 
-  1.  Na profilu trenera widzę jego kalendarz z dostępnymi slotami czasowymi (60 min).
+  1.  Na profilu trenera widzę jego kalendarz z dostępnymi slotami czasowymi (długość slotu zależy od wybranej usługi).
   2.  Po wybraniu usługi i terminu, mogę wysłać wniosek o rezerwację.
   3.  Status mojego wniosku ("oczekujący") jest widoczny na moim dashboardzie.
 
