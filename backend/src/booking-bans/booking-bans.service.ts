@@ -166,7 +166,7 @@ export class BookingBansService {
       // Validate bannedUntil if provided
       if (updateDto.bannedUntil) {
         const bannedUntilDate = new Date(updateDto.bannedUntil);
-        
+
         if (Number.isNaN(bannedUntilDate.getTime())) {
           throw new BadRequestException("bannedUntil must be a valid date");
         }
@@ -189,9 +189,11 @@ export class BookingBansService {
         relations: ["client", "trainer"],
       });
 
-      this.logger.log(
-        `Booking ban updated: ID ${id}, new bannedUntil: ${updatedBookingBan.bannedUntil.toISOString()}`
-      );
+      if (!updatedBookingBan) {
+        throw new NotFoundException(`Booking ban with ID ${id} not found after update`);
+      }
+
+      this.logger.log(`Booking ban updated: ID ${id}, new bannedUntil: ${updatedBookingBan.bannedUntil.toISOString()}`);
 
       // Map to response DTO
       return {
@@ -262,9 +264,7 @@ export class BookingBansService {
       // Create pagination metadata
       const meta = new PaginationMetaDto(totalItems, limit, page);
 
-      this.logger.log(
-        `Retrieved ${data.length} booking bans (page ${page}, total: ${totalItems})`
-      );
+      this.logger.log(`Retrieved ${data.length} booking bans (page ${page}, total: ${totalItems})`);
 
       return new PaginatedBookingBansResponseDto(data, meta);
     } catch (error) {

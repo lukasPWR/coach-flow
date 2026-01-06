@@ -91,9 +91,17 @@ export class ApiClient {
             }
             return this.client(originalRequest)
           } catch (refreshError) {
-            // Refresh failed - clear tokens and redirect to login
+            // Refresh failed - clear tokens and redirect to home
             this.clearTokens()
-            window.location.href = '/login'
+            // Only redirect if not already on a public page
+            if (
+              window.location.pathname.startsWith('/trainer') ||
+              window.location.pathname.startsWith('/dashboard') ||
+              window.location.pathname.startsWith('/profile') ||
+              window.location.pathname.startsWith('/my-bookings')
+            ) {
+              window.location.href = '/login'
+            }
             return Promise.reject(refreshError)
           } finally {
             this.isRefreshing = false
@@ -140,6 +148,6 @@ export class ApiClient {
 
 // Export singleton instance
 export const apiClient = new ApiClient()
-// Re-export specific methods/properties to maintain compatibility if needed, 
+// Re-export specific methods/properties to maintain compatibility if needed,
 // but primarily export the axios instance.
 export const api = apiClient.getInstance()

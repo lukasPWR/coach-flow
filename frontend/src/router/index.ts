@@ -67,12 +67,24 @@ const router = createRouter({
       component: () => import('@/views/MyBookingsView.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      path: '/onboarding',
+      name: 'trainer-onboarding',
+      component: () => import('@/views/TrainerOnboardingView.vue'),
+      meta: { requiresAuth: true, requiresRole: 'TRAINER' },
+    },
   ],
 })
 
 // Navigation guards
-router.beforeEach((to: RouteLocationNormalized, _from: RouteLocationNormalized, next) => {
+router.beforeEach(async (to: RouteLocationNormalized, _from: RouteLocationNormalized, next) => {
   const authStore = useAuthStore()
+
+  // Wait for auth store to initialize before checking auth state
+  if (!authStore.isInitialized) {
+    await authStore.initialize()
+  }
+
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
   const requiresGuest = to.matched.some((record) => record.meta.requiresGuest)
   const requiresRole = to.meta.requiresRole as string | undefined
@@ -97,6 +109,25 @@ router.beforeEach((to: RouteLocationNormalized, _from: RouteLocationNormalized, 
   if (requiresRole && authStore.userRole !== requiresRole) {
     next({ name: 'home' })
     return
+  }
+
+  // Trainer Onboarding Logic
+  if (authStore.isTrainer && requiresAuth) {
+    if (to.name === 'trainer-onboarding') {
+      // If trainer has profile, redirect to dashboard (skip onboarding)
+      // Unless we want to allow re-visiting, but typically onboarding is once.
+      if (authStore.hasTrainerProfile) {
+        next({ name: 'trainer-dashboard' })
+        return
+      }
+    } else {
+      // If accessing other protected routes but profile is missing
+      // Redirect to onboarding
+      if (!authStore.hasTrainerProfile && to.name !== 'trainer-onboarding' && to.name !== 'login') {
+        next({ name: 'trainer-onboarding' })
+        return
+      }
+    }
   }
 
   next()

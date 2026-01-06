@@ -22,19 +22,22 @@ import { TrainerProfileIdParamDto } from "./dto/trainer-profile-id-param.dto";
 import { FindTrainersQueryDto } from "./dto/find-trainers-query.dto";
 import { PaginatedTrainersResponseDto } from "./dto/paginated-trainers.response.dto";
 import { PublicTrainerProfileResponseDto } from "./dto/public-trainer-profile.response.dto";
-import { GetUser } from "../common/decorators/get-user.decorator";
 import { Roles } from "../common/decorators/roles.decorator";
 import { JwtAuthGuard } from "../common/guards/jwt-auth.guard";
 import { RolesGuard } from "../common/guards/roles.guard";
-import { User } from "../users/entities/user.entity";
 import { UserRole } from "../users/interfaces/user-role.enum";
 import type { IRequestApp } from "src/common/interfaces/request-app.interface";
 import { Public } from "src/common/decorators/public.decorator";
+import { UnavailabilitiesService } from "../unavailabilities/unavailabilities.service";
+import { UnavailabilityResponseDto } from "../unavailabilities/dto/unavailability-response.dto";
 
 @ApiTags("trainer-profiles")
 @Controller("trainers")
 export class TrainerProfilesController {
-  constructor(private readonly trainerProfilesService: TrainerProfilesService) {}
+  constructor(
+    private readonly trainerProfilesService: TrainerProfilesService,
+    private readonly unavailabilitiesService: UnavailabilitiesService
+  ) {}
 
   /**
    * Public endpoint to get a paginated and filtered list of trainers.
@@ -127,6 +130,83 @@ export class TrainerProfilesController {
   })
   async findAll(@Query() query: FindTrainersQueryDto): Promise<PaginatedTrainersResponseDto> {
     return this.trainerProfilesService.findAllPublic(query);
+  }
+
+  @Get("me")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.TRAINER)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: "Get authenticated trainer's profile",
+    description:
+      "Retrieves the complete profile of the authenticated trainer user, including personal details, specializations, and offered services. Only accessible by users with TRAINER role.",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Trainer profile successfully retrieved",
+    type: TrainerProfileResponseDto,
+    schema: {
+      example: {
+        id: "p1a2b3c4-e5f6-7890-1234-567890abcdef",
+        userId: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+        trainerName: "Anna Nowak",
+        email: "anna.nowak@example.com",
+        description: "Certyfikowany trener personalny z 10-letnim doświadczeniem...",
+        city: "Warszawa",
+        profilePictureUrl: "http://example.com/path/to/image.jpg",
+        specializations: [
+          { id: "s1...", name: "Trening siłowy" },
+          { id: "s2...", name: "Utrata wagi" },
+        ],
+        services: [
+          {
+            id: "svc1...",
+            name: "Trening personalny",
+            price: 150.0,
+            durationMinutes: 60,
+          },
+        ],
+        createdAt: "2025-11-16T10:00:00.000Z",
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: "Unauthorized - Missing, invalid, or expired JWT token",
+    schema: {
+      example: {
+        statusCode: 401,
+        message: "Unauthorized",
+        error: "Unauthorized",
+      },
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    description: "Forbidden - User does not have TRAINER role",
+    schema: {
+      example: {
+        statusCode: 403,
+        message: "Access denied. Required roles: TRAINER",
+        error: "Forbidden",
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: "Not Found - Trainer profile does not exist for the authenticated user",
+    schema: {
+      example: {
+        statusCode: 404,
+        message: "Trainer profile for user a1b2c3d4-e5f6-7890-1234-567890abcdef not found",
+        error: "Not Found",
+      },
+    },
+  })
+  async getMyProfile(@Request() request: IRequestApp): Promise<TrainerProfileResponseDto> {
+    const userId = request.user.userId;
+    return this.trainerProfilesService.findMyProfileByUserId(userId);
   }
 
   /**
@@ -312,83 +392,6 @@ export class TrainerProfilesController {
   async create(@Body() createTrainerProfileDto: CreateTrainerProfileDto, @Request() request: IRequestApp) {
     const userId = request.user.userId;
     return this.trainerProfilesService.create(createTrainerProfileDto, userId);
-  }
-
-  @Get("me")
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.TRAINER)
-  @ApiBearerAuth()
-  @ApiOperation({
-    summary: "Get authenticated trainer's profile",
-    description:
-      "Retrieves the complete profile of the authenticated trainer user, including personal details, specializations, and offered services. Only accessible by users with TRAINER role.",
-  })
-  @ApiResponse({
-    status: 200,
-    description: "Trainer profile successfully retrieved",
-    type: TrainerProfileResponseDto,
-    schema: {
-      example: {
-        id: "p1a2b3c4-e5f6-7890-1234-567890abcdef",
-        userId: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-        trainerName: "Anna Nowak",
-        email: "anna.nowak@example.com",
-        description: "Certyfikowany trener personalny z 10-letnim doświadczeniem...",
-        city: "Warszawa",
-        profilePictureUrl: "http://example.com/path/to/image.jpg",
-        specializations: [
-          { id: "s1...", name: "Trening siłowy" },
-          { id: "s2...", name: "Utrata wagi" },
-        ],
-        services: [
-          {
-            id: "svc1...",
-            name: "Trening personalny",
-            price: 150.0,
-            durationMinutes: 60,
-          },
-        ],
-        createdAt: "2025-11-16T10:00:00.000Z",
-      },
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: "Unauthorized - Missing, invalid, or expired JWT token",
-    schema: {
-      example: {
-        statusCode: 401,
-        message: "Unauthorized",
-        error: "Unauthorized",
-      },
-    },
-  })
-  @ApiResponse({
-    status: 403,
-    description: "Forbidden - User does not have TRAINER role",
-    schema: {
-      example: {
-        statusCode: 403,
-        message: "Access denied. Required roles: TRAINER",
-        error: "Forbidden",
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: "Not Found - Trainer profile does not exist for the authenticated user",
-    schema: {
-      example: {
-        statusCode: 404,
-        message: "Trainer profile for user a1b2c3d4-e5f6-7890-1234-567890abcdef not found",
-        error: "Not Found",
-      },
-    },
-  })
-  async getMyProfile(@Request() request: IRequestApp): Promise<TrainerProfileResponseDto> {
-    const userId = request.user.userId;
-    return this.trainerProfilesService.findMyProfileByUserId(userId);
   }
 
   @Patch(":id")
@@ -597,5 +600,59 @@ export class TrainerProfilesController {
   async remove(@Param() { id }: TrainerProfileIdParamDto, @Request() request: IRequestApp): Promise<void> {
     const userId = request.user.userId;
     return this.trainerProfilesService.remove(id, userId);
+  }
+
+  /**
+   * Public endpoint to get unavailabilities for a specific trainer.
+   * No authentication required - accessible to all users for booking purposes.
+   *
+   * GET /trainers/:id/unavailabilities
+   */
+  @Get(":id/unavailabilities")
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: "Get unavailabilities for a specific trainer (public)",
+    description:
+      "Retrieves all unavailability periods for a specific trainer. " +
+      "This is a public endpoint used by clients to see when a trainer is not available for bookings. " +
+      "No authentication required.",
+  })
+  @ApiParam({
+    name: "id",
+    description: "UUID of the trainer (user ID)",
+    type: String,
+    example: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Unavailabilities retrieved successfully",
+    type: [UnavailabilityResponseDto],
+    schema: {
+      example: [
+        {
+          id: "u1v2w3x4-y5z6-7890-1234-567890abcdef",
+          startTime: "2024-01-10T09:00:00.000Z",
+          endTime: "2024-01-10T17:00:00.000Z",
+          createdAt: "2024-01-01T10:00:00.000Z",
+        },
+      ],
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: "Bad Request - Invalid UUID format",
+    schema: {
+      example: {
+        statusCode: 400,
+        message: "Validation failed (uuid is expected)",
+        error: "Bad Request",
+      },
+    },
+  })
+  async getTrainerUnavailabilities(
+    @Param("id", ParseUUIDPipe) trainerId: string
+  ): Promise<UnavailabilityResponseDto[]> {
+    return this.unavailabilitiesService.findAll(trainerId, {});
   }
 }

@@ -1,13 +1,17 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { authApi } from '@/lib/api/auth'
+import { getMyTrainerProfile } from '@/lib/api/trainers'
 import type { User, LoginRequest, RegisterRequest } from '@/lib/api/types'
+import type { TrainerProfileDto } from '@/types/trainer'
 import { apiClient } from '@/lib/api/client'
 
 export const useAuthStore = defineStore('auth', () => {
   // State
   const user = ref<User | null>(null)
+  const trainerProfile = ref<TrainerProfileDto | null>(null)
   const isLoading = ref(false)
+  const isInitialized = ref(false)
   const error = ref<string | null>(null)
 
   // Getters
@@ -16,8 +20,22 @@ export const useAuthStore = defineStore('auth', () => {
   const isClient = computed(() => user.value?.role === 'CLIENT')
   const isTrainer = computed(() => user.value?.role === 'TRAINER')
   const isAdmin = computed(() => user.value?.role === 'ADMIN')
+  const hasTrainerProfile = computed(() => !!trainerProfile.value)
 
   // Actions
+  async function fetchTrainerProfile() {
+    if (!isTrainer.value) return
+
+    try {
+      const profile = await getMyTrainerProfile()
+      trainerProfile.value = profile
+    } catch (error) {
+      // Ignore 404 (profile not found), log others
+      // console.warn('Trainer profile not found or error', error)
+      trainerProfile.value = null
+    }
+  }
+
   async function login(credentials: LoginRequest) {
     isLoading.value = true
     error.value = null
@@ -25,6 +43,11 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await authApi.login(credentials)
       user.value = response.user
+
+      if (response.user.role === 'TRAINER') {
+        await fetchTrainerProfile()
+      }
+
       return response
     } catch (err: any) {
       const message =
@@ -43,6 +66,11 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await authApi.register(data)
       user.value = response.user
+
+      if (response.user.role === 'TRAINER') {
+        await fetchTrainerProfile()
+      }
+
       return response
     } catch (err: any) {
       const message =
@@ -65,7 +93,10 @@ export const useAuthStore = defineStore('auth', () => {
       // Continue with local logout even if API call fails
     } finally {
       user.value = null
+      trainerProfile.value = null
       isLoading.value = false
+      // Redirect to home page after logout
+      window.location.href = '/'
     }
   }
 
@@ -80,10 +111,15 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await authApi.getProfile()
       user.value = response.user as User
+
+      if (user.value.role === 'TRAINER') {
+        await fetchTrainerProfile()
+      }
     } catch (err: any) {
       console.error('Fetch profile error:', err)
       // If profile fetch fails, clear auth state
       user.value = null
+      trainerProfile.value = null
       apiClient.clearTokens()
     } finally {
       isLoading.value = false
@@ -126,15 +162,26 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Initialize auth state on app load
   async function initialize() {
-    if (authApi.isAuthenticated()) {
-      await fetchProfile()
+    try {
+      if (authApi.isAuthenticated()) {
+        await fetchProfile()
+      }
+    } finally {
+      isInitialized.value = true
     }
+  }
+
+  // Explicitly refresh trainer profile (e.g. after onboarding)
+  async function refreshTrainerProfile() {
+    await fetchTrainerProfile()
   }
 
   return {
     // State
     user,
+    trainerProfile,
     isLoading,
+    isInitialized,
     error,
     // Getters
     isAuthenticated,
@@ -142,6 +189,7 @@ export const useAuthStore = defineStore('auth', () => {
     isClient,
     isTrainer,
     isAdmin,
+    hasTrainerProfile,
     // Actions
     login,
     register,
@@ -151,5 +199,6 @@ export const useAuthStore = defineStore('auth', () => {
     resetPassword,
     clearError,
     initialize,
+    refreshTrainerProfile,
   }
 })

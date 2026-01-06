@@ -47,6 +47,14 @@ export async function getTrainerById(id: string): Promise<TrainerProfileDto> {
 }
 
 /**
+ * Fetch current user's trainer profile
+ */
+export async function getMyTrainerProfile(): Promise<TrainerProfileDto> {
+  const response = await api.get<TrainerProfileDto>('/trainers/me')
+  return response.data
+}
+
+/**
  * Fetch available specializations for filter dropdown
  */
 export async function getSpecializations(): Promise<SpecializationOption[]> {

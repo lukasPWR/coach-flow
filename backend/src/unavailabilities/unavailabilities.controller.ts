@@ -1,4 +1,17 @@
-import { Controller, Post, Get, Patch, Delete, Body, Query, Param, HttpCode, HttpStatus, UseGuards, ParseUUIDPipe } from "@nestjs/common";
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Delete,
+  Body,
+  Query,
+  Param,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+  ParseUUIDPipe,
+} from "@nestjs/common";
 import {
   ApiTags,
   ApiOperation,
@@ -26,7 +39,7 @@ import { RolesGuard } from "../common/guards/roles.guard";
 import { Roles } from "../common/decorators/roles.decorator";
 import { GetUser } from "../common/decorators/get-user.decorator";
 import { UserRole } from "../users/interfaces/user-role.enum";
-import { User } from "../users/entities/user.entity";
+import type { AuthUserInterface } from "../common/interfaces/auth-user.interface";
 
 /**
  * Controller for managing trainer unavailability periods.
@@ -131,10 +144,10 @@ export class UnavailabilitiesController {
     },
   })
   async findAll(
-    @GetUser() user: User,
+    @GetUser() user: AuthUserInterface,
     @Query() query: GetUnavailabilitiesQueryDto
   ): Promise<UnavailabilityResponseDto[]> {
-    return this.unavailabilitiesService.findAll(user.id, query);
+    return this.unavailabilitiesService.findAll(user.userId, query);
   }
 
   /**
@@ -217,8 +230,11 @@ export class UnavailabilitiesController {
       error: "Internal Server Error",
     },
   })
-  async findOne(@Param("id", ParseUUIDPipe) id: string, @GetUser() user: User): Promise<UnavailabilityResponseDto> {
-    return this.unavailabilitiesService.findOne(id, user.id);
+  async findOne(
+    @Param("id", ParseUUIDPipe) id: string,
+    @GetUser() user: AuthUserInterface
+  ): Promise<UnavailabilityResponseDto> {
+    return this.unavailabilitiesService.findOne(id, user.userId);
   }
 
   /**
@@ -326,8 +342,11 @@ export class UnavailabilitiesController {
       error: "Internal Server Error",
     },
   })
-  async create(@GetUser() user: User, @Body() createDto: CreateUnavailabilityDto): Promise<UnavailabilityResponseDto> {
-    return this.unavailabilitiesService.create(user.id, createDto);
+  async create(
+    @GetUser() user: AuthUserInterface,
+    @Body() createDto: CreateUnavailabilityDto
+  ): Promise<UnavailabilityResponseDto> {
+    return this.unavailabilitiesService.create(user.userId, createDto);
   }
 
   /**
@@ -451,10 +470,10 @@ export class UnavailabilitiesController {
   })
   async update(
     @Param("id", ParseUUIDPipe) id: string,
-    @GetUser() user: User,
+    @GetUser() user: AuthUserInterface,
     @Body() updateDto: UpdateUnavailabilityDto
   ): Promise<UnavailabilityResponseDto> {
-    return this.unavailabilitiesService.update(id, user.id, updateDto);
+    return this.unavailabilitiesService.update(id, user.userId, updateDto);
   }
 
   /**
@@ -530,7 +549,7 @@ export class UnavailabilitiesController {
       error: "Internal Server Error",
     },
   })
-  async remove(@Param("id", ParseUUIDPipe) id: string, @GetUser() user: User): Promise<void> {
-    return this.unavailabilitiesService.remove(id, user.id);
+  async remove(@Param("id", ParseUUIDPipe) id: string, @GetUser() user: AuthUserInterface): Promise<void> {
+    return this.unavailabilitiesService.remove(id, user.userId);
   }
 }
