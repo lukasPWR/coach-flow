@@ -90,10 +90,13 @@ Struktura opiera się na następujących filarach:
 #### **2. Panel Trenera (Trainer Dashboard)**
 
 - **Ścieżka:** `/dashboard`
-- **Główny Cel:** Prezentacja kluczowych informacji biznesowych i zadań wymagających natychmiastowej uwagi.
-- **Kluczowe Informacje:** Widget z prośbami o rezerwację do akceptacji (z odpytywaniem), kalendarz z sesjami na bieżący dzień/tydzień.
-- **Kluczowe Komponenty:** `PendingRequestWidget`, `DailySchedule`.
-- **Uwagi (UX, A11y, Bezpieczeństwo):** Chroniony strażnikiem. Użycie `aria-live` do informowania o nowych prośbach.
+- **Główny Cel:** Centrum dowodzenia trenera – prezentacja pilnych zadań (KPI) oraz szybka nawigacja do narzędzi zarządzania.
+- **Kluczowe Informacje:**
+  - **Sekcja "Pilne":** Widget z prośbami o rezerwację (z wizualizacją czasu do automatycznego odrzucenia - 24h).
+  - **Agenda:** Lista sesji na bieżący dzień.
+  - **Centrum Zarządzania:** Szybkie linki/kafelki do: Kalendarza dostępności, Zarządzania Usługami, Edycji Profilu.
+- **Kluczowe Komponenty:** `PendingRequestsWidget`, `DailySchedule`, `DashboardActionGrid` (karty nawigacyjne).
+- **Uwagi (UX, A11y, Bezpieczeństwo):** Chroniony strażnikiem. Priorytetyzacja wniosków kończących się (blisko limitu 24h). Użycie `aria-live` do powiadomień. Layout responsywny (na mobile kafelki jeden pod drugim).
 
 #### **3. Kalendarz i Dostępność (Calendar & Availability)**
 

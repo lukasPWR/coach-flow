@@ -32,6 +32,48 @@ export const bookingsApi = {
 
   rescheduleBooking: async (id: string, startTime: string): Promise<BookingDto> => {
     return bookingsApi.updateBooking(id, { startTime })
-  }
+  },
+
+  /**
+   * Akceptuje rezerwację (dla trenera)
+   * POST /bookings/:id/approve
+   */
+  approveBooking: async (id: string): Promise<BookingDto> => {
+    const response = await api.post<BookingDto>(`/bookings/${id}/approve`)
+    return response.data
+  },
+
+  /**
+   * Odrzuca rezerwację (dla trenera)
+   * POST /bookings/:id/reject
+   */
+  rejectBooking: async (id: string): Promise<BookingDto> => {
+    const response = await api.post<BookingDto>(`/bookings/${id}/reject`)
+    return response.data
+  },
+
+  /**
+   * Pobiera oczekujące rezerwacje dla trenera
+   */
+  getPendingBookings: async (limit: number = 10): Promise<PaginatedBookingsResponse> => {
+    return bookingsApi.getBookings({
+      role: 'trainer',
+      status: 'PENDING' as any,
+      limit,
+      page: 1,
+    })
+  },
+
+  /**
+   * Pobiera zaakceptowane rezerwacje dla trenera (do filtrowania dzisiejszych)
+   */
+  getAcceptedBookings: async (limit: number = 50): Promise<PaginatedBookingsResponse> => {
+    return bookingsApi.getBookings({
+      role: 'trainer',
+      status: 'ACCEPTED' as any,
+      limit,
+      page: 1,
+    })
+  },
 }
 
