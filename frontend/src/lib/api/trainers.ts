@@ -4,6 +4,9 @@ import type {
   GetTrainersResponse,
   SpecializationOption,
   TrainerProfileDto,
+  TrainerProfile,
+  UpdateTrainerProfileDto,
+  Specialization,
 } from '@/types/trainer'
 
 /**
@@ -55,6 +58,25 @@ export async function getMyTrainerProfile(): Promise<TrainerProfileDto> {
 }
 
 /**
+ * Fetch current user's full trainer profile with user data (for profile management)
+ */
+export async function getMyFullTrainerProfile(): Promise<TrainerProfile> {
+  const response = await api.get<TrainerProfile>('/trainers/me')
+  return response.data
+}
+
+/**
+ * Update trainer profile
+ */
+export async function updateTrainerProfile(
+  id: string,
+  data: UpdateTrainerProfileDto,
+): Promise<TrainerProfile> {
+  const response = await api.patch<TrainerProfile>(`/trainers/${id}`, data)
+  return response.data
+}
+
+/**
  * Fetch available specializations for filter dropdown
  */
 export async function getSpecializations(): Promise<SpecializationOption[]> {
@@ -65,4 +87,12 @@ export async function getSpecializations(): Promise<SpecializationOption[]> {
     value: spec.id,
     label: spec.name,
   }))
+}
+
+/**
+ * Fetch all specializations (full data)
+ */
+export async function getAllSpecializations(): Promise<Specialization[]> {
+  const response = await api.get<Specialization[]>('/specializations')
+  return response.data
 }

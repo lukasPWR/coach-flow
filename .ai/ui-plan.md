@@ -124,6 +124,7 @@ Struktura opiera się na następujących filarach:
 
 - **Ścieżka:** `/profile`
 - **Główny Cel:** Edycja publicznego profilu trenera po zakończeniu onboardingu.
+- **Kluczowe Informacje**: na scieżce `/profile` już jest podłączony komponent, widnieje tam guzik `Edytuj profil`- to on musi pozwalać na edycje profilu. Aktualnie jest to `ProfilePage.vue`
 - **Kluczowe Komponenty:** `ProfileForm`.
 
 ## 3. Mapa Podróży Użytkownika

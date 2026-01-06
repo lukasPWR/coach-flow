@@ -108,3 +108,45 @@ export interface TrainerProfileViewModel extends Omit<TrainerProfileDto, 'servic
   services: TrainerServiceViewModel[]
   initials: string // Calculated from name
 }
+
+// --- Profile Management Types ---
+
+/**
+ * Full trainer profile with user data (from GET /trainers/me)
+ * Matches TrainerProfileResponseDto from backend
+ */
+export interface TrainerProfile {
+  id: string
+  userId: string
+  trainerName: string
+  email: string
+  description: string | null
+  city: string | null
+  profilePictureUrl: string | null
+  specializations: Specialization[]
+  services: Array<{
+    id: string
+    name: string
+    price: number
+    durationMinutes: number
+  }>
+  createdAt: Date
+}
+
+/**
+ * Specialization entity
+ */
+export interface Specialization {
+  id: string
+  name: string
+}
+
+/**
+ * DTO for updating trainer profile (PATCH /trainers/:id)
+ */
+export interface UpdateTrainerProfileDto {
+  description?: string
+  city?: string
+  profilePictureUrl?: string
+  specializationIds?: string[]
+}
