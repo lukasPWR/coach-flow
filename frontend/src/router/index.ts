@@ -85,6 +85,12 @@ const router = createRouter({
       component: () => import('@/views/trainer/ServicesView.vue'),
       meta: { requiresAuth: true, requiresRole: 'TRAINER' },
     },
+    {
+      path: '/bookings',
+      name: 'trainer-bookings',
+      component: () => import('@/views/trainer/BookingsView.vue'),
+      meta: { requiresAuth: true, requiresRole: 'TRAINER' },
+    },
   ],
 })
 

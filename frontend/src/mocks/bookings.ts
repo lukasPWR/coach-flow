@@ -6,6 +6,11 @@ export const mockBookings: BookingDto[] = [
     startTime: new Date(Date.now() + 86400000 * 2).toISOString(), // +2 days
     endTime: new Date(Date.now() + 86400000 * 2 + 3600000).toISOString(),
     status: BookingStatus.ACCEPTED,
+    client: {
+      id: 'c1',
+      name: 'Maria Wiśniewska',
+      profilePictureUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Maria',
+    },
     trainer: {
       id: 't1',
       name: 'Jan Kowalski',
@@ -17,9 +22,6 @@ export const mockBookings: BookingDto[] = [
       price: 150,
       durationMinutes: 60,
     },
-    clientId: 'c1',
-    trainerId: 't1',
-    serviceId: 's1',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -28,6 +30,11 @@ export const mockBookings: BookingDto[] = [
     startTime: new Date(Date.now() + 86400000 * 5).toISOString(), // +5 days
     endTime: new Date(Date.now() + 86400000 * 5 + 3600000).toISOString(),
     status: BookingStatus.PENDING,
+    client: {
+      id: 'c2',
+      name: 'Tomasz Lewandowski',
+      profilePictureUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tomasz',
+    },
     trainer: {
       id: 't2',
       name: 'Anna Nowak',
@@ -39,9 +46,6 @@ export const mockBookings: BookingDto[] = [
       price: 200,
       durationMinutes: 45,
     },
-    clientId: 'c1',
-    trainerId: 't2',
-    serviceId: 's2',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -50,6 +54,11 @@ export const mockBookings: BookingDto[] = [
     startTime: new Date(Date.now() - 86400000 * 2).toISOString(), // -2 days
     endTime: new Date(Date.now() - 86400000 * 2 + 3600000).toISOString(),
     status: BookingStatus.ACCEPTED, // Completed in past
+    client: {
+      id: 'c1',
+      name: 'Maria Wiśniewska',
+      profilePictureUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Maria',
+    },
     trainer: {
       id: 't1',
       name: 'Jan Kowalski',
@@ -61,9 +70,6 @@ export const mockBookings: BookingDto[] = [
       price: 150,
       durationMinutes: 60,
     },
-    clientId: 'c1',
-    trainerId: 't1',
-    serviceId: 's1',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -72,6 +78,11 @@ export const mockBookings: BookingDto[] = [
     startTime: new Date(Date.now() - 86400000 * 5).toISOString(), // -5 days
     endTime: new Date(Date.now() - 86400000 * 5 + 3600000).toISOString(),
     status: BookingStatus.CANCELLED,
+    client: {
+      id: 'c3',
+      name: 'Katarzyna Dąbrowska',
+      profilePictureUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Katarzyna',
+    },
     trainer: {
       id: 't3',
       name: 'Piotr Zieliński',
@@ -83,9 +94,6 @@ export const mockBookings: BookingDto[] = [
       price: 100,
       durationMinutes: 30,
     },
-    clientId: 'c1',
-    trainerId: 't3',
-    serviceId: 's3',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },

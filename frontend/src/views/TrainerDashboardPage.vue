@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
 import { useTrainerDashboard } from '@/composables/useTrainerDashboard'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -9,9 +7,6 @@ import DashboardHeader from '@/components/dashboard/DashboardHeader.vue'
 import PendingRequestsWidget from '@/components/dashboard/trainer/PendingRequestsWidget.vue'
 import DailyScheduleWidget from '@/components/dashboard/trainer/DailyScheduleWidget.vue'
 import QuickActionsWidget from '@/components/dashboard/trainer/QuickActionsWidget.vue'
-
-const authStore = useAuthStore()
-const router = useRouter()
 
 const {
   pendingBookings,
@@ -58,11 +53,6 @@ async function handleApprove(id: string) {
 async function handleReject(id: string) {
   const result = await rejectBooking(id)
   showNotification(result.success ? 'success' : 'error', result.message)
-}
-
-function handleLogout() {
-  authStore.logout()
-  router.push('/login')
 }
 </script>
 
@@ -127,20 +117,9 @@ function handleLogout() {
     </Transition>
 
     <div class="container mx-auto px-4 py-8 max-w-7xl">
-      <!-- Header with logout -->
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+      <!-- Header -->
+      <div class="mb-8">
         <DashboardHeader :user-name="trainerName" />
-        <Button variant="outline" size="sm" @click="handleLogout">
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-            />
-          </svg>
-          Wyloguj się
-        </Button>
       </div>
 
       <!-- Error state -->

@@ -29,9 +29,9 @@ const quickActions = [
   {
     id: 'bookings',
     title: 'Rezerwacje',
-    description: 'Zobacz historię wszystkich rezerwacji',
+    description: 'Zarządzaj rezerwacjami od klientów',
     icon: '📋',
-    route: '/my-bookings',
+    route: '/bookings',
     color: 'warning' as const,
   },
 ]

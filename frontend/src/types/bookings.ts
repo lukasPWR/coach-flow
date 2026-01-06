@@ -5,11 +5,21 @@ export enum BookingStatus {
   CANCELLED = 'CANCELLED',
 }
 
+export enum UserRole {
+  CLIENT = 'client',
+  TRAINER = 'trainer',
+}
+
 export interface BookingDto {
   id: string
   startTime: string // ISO Date
   endTime: string
   status: BookingStatus
+  client: {
+    id: string
+    name: string
+    profilePictureUrl?: string
+  }
   trainer: {
     id: string
     name: string
@@ -60,4 +70,3 @@ export interface UpdateBookingDto {
 }
 
 export type BookingTab = 'upcoming' | 'pending' | 'history'
-

@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useTrainers } from '@/composables/useTrainers'
+import { useAuthStore } from '@/stores/auth'
 import TrainerCard from '@/components/trainers/TrainerCard.vue'
 import TrainerCardSkeleton from '@/components/trainers/TrainerCardSkeleton.vue'
 import TrainerFiltersSidebar from '@/components/trainers/TrainerFiltersSidebar.vue'
@@ -8,6 +10,19 @@ import InfiniteScrollTrigger from '@/components/trainers/InfiniteScrollTrigger.v
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+const isAuthenticated = computed(() => authStore.isAuthenticated)
+
+const goToDashboard = () => {
+  if (authStore.isTrainer) {
+    router.push('/trainer/dashboard')
+  } else {
+    router.push('/dashboard')
+  }
+}
 
 // Use trainers composable
 const {
@@ -52,6 +67,31 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen bg-background">
+    <!-- Top Navigation Bar -->
+    <header
+      class="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
+    >
+      <div class="container flex h-16 items-center justify-between px-4">
+        <router-link to="/" class="flex items-center gap-2 font-semibold">
+          <span class="text-xl font-bold text-primary">CoachFlow</span>
+        </router-link>
+
+        <div class="flex items-center gap-2">
+          <Button v-if="isAuthenticated" variant="default" size="sm" @click="goToDashboard">
+            Dashboard
+          </Button>
+          <template v-else>
+            <Button variant="ghost" size="sm" as-child>
+              <router-link to="/login">Zaloguj się</router-link>
+            </Button>
+            <Button size="sm" as-child>
+              <router-link to="/register">Zarejestruj się</router-link>
+            </Button>
+          </template>
+        </div>
+      </div>
+    </header>
+
     <!-- Header -->
     <div class="border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div class="container mx-auto px-4 py-6">
