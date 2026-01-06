@@ -73,6 +73,12 @@ const router = createRouter({
       component: () => import('@/views/TrainerOnboardingView.vue'),
       meta: { requiresAuth: true, requiresRole: 'TRAINER' },
     },
+    {
+      path: '/calendar',
+      name: 'trainer-calendar',
+      component: () => import('@/views/trainer/CalendarView.vue'),
+      meta: { requiresAuth: true, requiresRole: 'TRAINER' },
+    },
   ],
 })
 
