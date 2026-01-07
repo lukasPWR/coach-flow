@@ -5,7 +5,7 @@
       <Button @click="goToTrainers"> Znajdź trenera </Button>
     </div>
 
-    <DashboardStats :upcoming-count="0" :pending-count="0" />
+    <DashboardStats :upcoming-count="upcomingCount" :pending-count="pendingCount" />
 
     <Tabs default-value="upcoming" class="space-y-4">
       <TabsList>
@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { BookingStatus, type BookingViewModel } from '@/types/bookings'
@@ -100,6 +100,8 @@ const showCancelDialog = ref(false)
 const showRescheduleDialog = ref(false)
 const selectedBooking = ref<BookingViewModel | null>(null)
 const refreshTrigger = ref(0)
+const upcomingCount = ref(0)
+const pendingCount = ref(0)
 
 const goToTrainers = () => {
   router.push({ name: 'trainers-list' })
@@ -135,9 +137,39 @@ const handleRescheduleBooking = async (booking: BookingViewModel, newDate: strin
   }
 }
 
+const loadStats = async () => {
+  try {
+    const [upcomingResponse, pendingResponse] = await Promise.all([
+      bookingsApi.getBookings({
+        role: 'client',
+        status: [BookingStatus.ACCEPTED],
+        timeFilter: 'upcoming',
+        page: 1,
+        limit: 1,
+      }),
+      bookingsApi.getBookings({
+        role: 'client',
+        status: [BookingStatus.PENDING],
+        page: 1,
+        limit: 1,
+      }),
+    ])
+
+    upcomingCount.value = upcomingResponse.meta.totalItems
+    pendingCount.value = pendingResponse.meta.totalItems
+  } catch (error) {
+    console.error('Failed to load booking stats:', error)
+  }
+}
+
 onMounted(() => {
   if (!user.value) {
     authStore.fetchProfile()
   }
+  loadStats()
+})
+
+watch(refreshTrigger, () => {
+  loadStats()
 })
 </script>

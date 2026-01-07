@@ -36,7 +36,7 @@ import { RolesGuard } from "../common/guards/roles.guard";
 import { Roles } from "../common/decorators/roles.decorator";
 import { GetUser } from "../common/decorators/get-user.decorator";
 import { UserRole } from "../users/interfaces/user-role.enum";
-import { User } from "../users/entities/user.entity";
+import type { AuthUserInterface } from "../common/interfaces/auth-user.interface";
 import { BookingStatus } from "./interfaces/booking-status.enum";
 
 /**
@@ -197,8 +197,8 @@ export class BookingsController {
       },
     },
   })
-  async create(@GetUser() user: User, @Body() createBookingDto: CreateBookingDto): Promise<Booking> {
-    return this.bookingsService.create(user.id, createBookingDto);
+  async create(@GetUser() user: AuthUserInterface, @Body() createBookingDto: CreateBookingDto): Promise<Booking> {
+    return this.bookingsService.create(user.userId, createBookingDto);
   }
 
   /**
@@ -303,8 +303,11 @@ export class BookingsController {
       },
     },
   })
-  async findAll(@GetUser() user: User, @Query() query: GetBookingsQueryDto): Promise<PaginatedBookingsResponseDto> {
-    return this.bookingsService.findUserBookings(user.id, query);
+  async findAll(
+    @GetUser() user: AuthUserInterface,
+    @Query() query: GetBookingsQueryDto
+  ): Promise<PaginatedBookingsResponseDto> {
+    return this.bookingsService.findUserBookings(user.userId, query);
   }
 
   /**
@@ -405,8 +408,11 @@ export class BookingsController {
       },
     },
   })
-  async findOne(@GetUser() user: User, @Param("id", ParseUUIDPipe) id: string): Promise<BookingDetailsResponseDto> {
-    return this.bookingsService.getBookingById(id, user.id);
+  async findOne(
+    @GetUser() user: AuthUserInterface,
+    @Param("id", ParseUUIDPipe) id: string
+  ): Promise<BookingDetailsResponseDto> {
+    return this.bookingsService.getBookingById(id, user.userId);
   }
 
   /**
@@ -516,8 +522,8 @@ export class BookingsController {
       },
     },
   })
-  async approve(@GetUser() user: User, @Param("id", ParseUUIDPipe) id: string): Promise<Booking> {
-    return this.bookingsService.approveBooking(id, user.id);
+  async approve(@GetUser() user: AuthUserInterface, @Param("id", ParseUUIDPipe) id: string): Promise<Booking> {
+    return this.bookingsService.approveBooking(id, user.userId);
   }
 
   /**
@@ -627,8 +633,8 @@ export class BookingsController {
       },
     },
   })
-  async reject(@GetUser() user: User, @Param("id", ParseUUIDPipe) id: string): Promise<Booking> {
-    return this.bookingsService.rejectBooking(id, user.id);
+  async reject(@GetUser() user: AuthUserInterface, @Param("id", ParseUUIDPipe) id: string): Promise<Booking> {
+    return this.bookingsService.rejectBooking(id, user.userId);
   }
 
   /**
@@ -738,7 +744,7 @@ export class BookingsController {
       },
     },
   })
-  async cancel(@GetUser() user: User, @Param("id", ParseUUIDPipe) id: string): Promise<Booking> {
-    return this.bookingsService.cancelBooking(id, user.id);
+  async cancel(@GetUser() user: AuthUserInterface, @Param("id", ParseUUIDPipe) id: string): Promise<Booking> {
+    return this.bookingsService.cancelBooking(id, user.userId);
   }
 }

@@ -97,6 +97,7 @@ export interface TrainerProfileDto {
 export interface TrainerServiceViewModel {
   id: string
   name: string
+  durationMinutes: number
   priceFormatted: string // e.g. "150.00 PLN"
   durationFormatted: string // e.g. "1h 30m"
 }

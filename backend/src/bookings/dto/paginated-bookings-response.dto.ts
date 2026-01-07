@@ -67,6 +67,12 @@ export class BookingResponseDto {
   readonly status: string;
 
   @ApiProperty({
+    description: "Timestamp when the booking was created",
+    example: "2025-12-02T12:00:00.000Z",
+  })
+  readonly createdAt: Date;
+
+  @ApiProperty({
     description: "Client information",
     example: { id: "client-uuid", name: "Jan Kowalski" },
   })
@@ -86,11 +92,18 @@ export class BookingResponseDto {
 
   @ApiProperty({
     description: "Service information",
-    example: { id: "service-uuid", name: "Trening personalny" },
+    example: {
+      id: "service-uuid",
+      name: "Trening personalny",
+      price: 150,
+      durationMinutes: 60,
+    },
   })
   readonly service: {
     id: string;
     name: string;
+    price: number;
+    durationMinutes: number;
   };
 }
 
@@ -239,6 +252,7 @@ export function mapBookingToResponseDto(booking: Booking): BookingResponseDto {
     startTime: booking.startTime,
     endTime: booking.endTime,
     status: booking.status,
+    createdAt: booking.createdAt,
     client: {
       id: booking.client?.id ?? booking.clientId,
       name: booking.client?.name ?? "",
@@ -250,6 +264,8 @@ export function mapBookingToResponseDto(booking: Booking): BookingResponseDto {
     service: {
       id: booking.service?.id ?? booking.serviceId,
       name: booking.service?.serviceType?.name ?? "",
+      price: booking.service?.price ?? 0,
+      durationMinutes: booking.service?.durationMinutes ?? 0,
     },
   };
 }

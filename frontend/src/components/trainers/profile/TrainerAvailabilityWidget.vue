@@ -2,15 +2,28 @@
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ref, onMounted, computed } from 'vue'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { ref, onMounted, computed, watch } from 'vue'
 import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date'
+import { useRoute, useRouter } from 'vue-router'
+import { AlertCircle } from 'lucide-vue-next'
 import { api } from '@/lib/api/client'
+import { createBooking } from '@/lib/api/booking'
+import { buildTimeSlots } from '@/lib/booking/timeSlots'
+import { useAuthStore } from '@/stores/auth'
+import type { TimeSlot } from '@/types/bookings'
+import type { TrainerServiceViewModel } from '@/types/trainer'
 
 interface Props {
   trainerId: string
+  selectedService?: TrainerServiceViewModel | null
 }
 
 const props = defineProps<Props>()
+const authStore = useAuthStore()
+const router = useRouter()
+const route = useRoute()
+const timeZone = getLocalTimeZone()
 
 interface Unavailability {
   id: string
@@ -18,11 +31,14 @@ interface Unavailability {
   endTime: string
 }
 
-const value = ref<CalendarDate>(today(getLocalTimeZone()))
+const selectedDate = ref<CalendarDate>(today(timeZone))
+const selectedSlot = ref<TimeSlot | null>(null)
 const unavailabilities = ref<Unavailability[]>([])
 const isLoadingUnavailabilities = ref(false)
+const hasAvailabilityError = ref(false)
+const isSubmitting = ref(false)
+const toastMessage = ref<{ type: 'success' | 'error'; text: string } | null>(null)
 
-// Load unavailabilities for this trainer
 onMounted(async () => {
   await loadUnavailabilities()
 })
@@ -37,47 +53,124 @@ const loadUnavailabilities = async () => {
       `/trainers/${props.trainerId}/unavailabilities`,
     )
     unavailabilities.value = response.data
+    hasAvailabilityError.value = false
   } catch (error) {
     console.error('Failed to load unavailabilities', error)
     // If endpoint doesn't exist yet, fail silently
     unavailabilities.value = []
+    hasAvailabilityError.value = true
   } finally {
     isLoadingUnavailabilities.value = false
   }
 }
 
-// Get unavailabilities for the currently displayed month
-const getUnavailabilitiesForMonth = computed(() => {
-  if (!value.value) return []
+const handleRefreshAvailability = async () => {
+  await loadUnavailabilities()
+}
 
+const workHours = {
+  start: 8,
+  end: 20,
+}
+
+const isServiceSelected = computed(() => !!props.selectedService)
+
+const dailyUnavailabilities = computed(() => {
   return unavailabilities.value.filter((unavail) => {
     const unavailDate = new Date(unavail.startTime)
     return (
-      unavailDate.getFullYear() === value.value.year &&
-      unavailDate.getMonth() + 1 === value.value.month
+      unavailDate.getFullYear() === selectedDate.value.year &&
+      unavailDate.getMonth() + 1 === selectedDate.value.month &&
+      unavailDate.getDate() === selectedDate.value.day
     )
   })
 })
 
-const formatDate = (dateStr: string) => {
-  return new Date(dateStr).toLocaleDateString('pl-PL', {
+const timeSlots = computed<TimeSlot[]>(() => {
+  if (!props.selectedService) return []
+  return buildTimeSlots({
+    date: selectedDate.value,
+    durationMinutes: props.selectedService.durationMinutes,
+    unavailabilities: dailyUnavailabilities.value,
+    workHours,
+  })
+})
+
+watch(selectedDate, (value) => {
+  const minDate = today(timeZone)
+  if (value.toDate(timeZone) < minDate.toDate(timeZone)) {
+    selectedDate.value = minDate
+  }
+})
+
+watch([() => props.selectedService?.id, selectedDate], () => {
+  selectedSlot.value = null
+})
+
+const showToast = (type: 'success' | 'error', text: string) => {
+  toastMessage.value = { type, text }
+  setTimeout(() => {
+    toastMessage.value = null
+  }, 4000)
+}
+
+const formatTime = (date: Date) => {
+  return date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })
+}
+
+const formatDate = (date: CalendarDate) => {
+  return date.toDate(timeZone).toLocaleDateString('pl-PL', {
+    weekday: 'long',
     day: 'numeric',
     month: 'long',
   })
 }
 
-const formatTimeRange = (start: string, end: string) => {
-  const s = new Date(start)
-  const e = new Date(end)
-  return `${s.toLocaleTimeString('pl-PL', {
-    hour: '2-digit',
-    minute: '2-digit',
-  })} - ${e.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}`
+const selectedSlotLabel = computed(() => {
+  if (!selectedSlot.value) return null
+  return `${formatDate(selectedDate.value)} - ${formatTime(selectedSlot.value.start)}`
+})
+
+const handleSelectSlot = (slot: TimeSlot) => {
+  if (!slot.isAvailable) return
+  selectedSlot.value = slot
 }
 
-// Placeholder for future implementation
-const handleBooking = () => {
-  console.log('Booking logic to be implemented for:', value.value)
+const handleBooking = async () => {
+  if (!props.selectedService || !selectedSlot.value) return
+
+  if (!authStore.isAuthenticated) {
+    router.push({ name: 'login', query: { redirect: route.fullPath } })
+    return
+  }
+
+  isSubmitting.value = true
+  try {
+    await createBooking({
+      trainerId: props.trainerId,
+      serviceId: props.selectedService.id,
+      startTime: selectedSlot.value.start.toISOString(),
+    })
+
+    showToast('success', 'Wniosek rezerwacji został wysłany.')
+    selectedSlot.value = null
+    router.push({ name: authStore.isTrainer ? 'trainer-dashboard' : 'dashboard' })
+  } catch (error: any) {
+    const status = error?.response?.status
+    if (status === 401) {
+      router.push({ name: 'login', query: { redirect: route.fullPath } })
+      return
+    }
+
+    if (status === 400) {
+      showToast('error', 'Termin jest już zajęty. Wybierz inny slot.')
+      return
+    }
+
+    showToast('error', 'Nie udało się zarezerwować terminu. Spróbuj ponownie.')
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
@@ -85,40 +178,94 @@ const handleBooking = () => {
   <Card class="sticky top-4 md:border md:shadow-sm border-0 shadow-none">
     <CardHeader>
       <CardTitle>Dostępność</CardTitle>
-      <CardDescription>Wybierz termin, aby umówić się na trening</CardDescription>
+      <CardDescription v-if="!isServiceSelected">
+        Wybierz usługę z listy, aby sprawdzić dostępne terminy.
+      </CardDescription>
+      <CardDescription v-else>Wybierz datę i godzinę wizyty.</CardDescription>
     </CardHeader>
     <CardContent class="space-y-4">
-      <div class="flex justify-center">
-        <Calendar v-model="value as any" mode="single" class="rounded-md border" />
+      <Transition
+        enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0 -translate-y-2"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-200 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-2"
+      >
+        <Alert
+          v-if="toastMessage"
+          :variant="toastMessage.type === 'error' ? 'destructive' : 'default'"
+        >
+          <AlertCircle v-if="toastMessage.type === 'error'" class="h-4 w-4" />
+          <AlertTitle>{{ toastMessage.type === 'error' ? 'Błąd' : 'Sukces' }}</AlertTitle>
+          <AlertDescription>{{ toastMessage.text }}</AlertDescription>
+        </Alert>
+      </Transition>
+
+      <div v-if="!isServiceSelected" class="rounded-md border border-dashed p-4 text-sm">
+        Zaznacz usługę w sekcji po lewej, aby zobaczyć dostępne terminy rezerwacji.
       </div>
 
-      <!-- Show unavailabilities for the current month -->
-      <div v-if="getUnavailabilitiesForMonth.length > 0" class="space-y-2">
-        <p class="text-sm font-medium">Niedostępności w tym miesiącu:</p>
-        <div class="space-y-1 max-h-32 overflow-y-auto">
-          <div
-            v-for="unavail in getUnavailabilitiesForMonth"
-            :key="unavail.id"
-            class="text-xs text-muted-foreground border-l-2 border-destructive pl-2 py-1"
+      <div v-else class="space-y-4">
+        <div class="flex justify-center">
+          <Calendar v-model="selectedDate as any" mode="single" class="rounded-md border" />
+        </div>
+
+        <div v-if="isLoadingUnavailabilities" class="text-sm text-muted-foreground">
+          Ładowanie dostępności...
+        </div>
+        <div
+          v-else-if="hasAvailabilityError"
+          class="flex items-center justify-between gap-2 text-xs text-muted-foreground"
+        >
+          <span>Nie udało się pobrać niedostępności. Pokazujemy orientacyjne terminy.</span>
+          <Button
+            size="sm"
+            variant="outline"
+            :disabled="isLoadingUnavailabilities"
+            @click="handleRefreshAvailability"
           >
-            <div class="font-medium">{{ formatDate(unavail.startTime) }}</div>
-            <div>{{ formatTimeRange(unavail.startTime, unavail.endTime) }}</div>
+            Odśwież
+          </Button>
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-sm font-medium">Dostępne godziny na {{ formatDate(selectedDate) }}</p>
+          <div v-if="timeSlots.length > 0" class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <Button
+              v-for="slot in timeSlots"
+              :key="slot.start.toISOString()"
+              size="sm"
+              class="w-full"
+              :variant="
+                selectedSlot?.start.getTime() === slot.start.getTime() ? 'default' : 'outline'
+              "
+              :disabled="!slot.isAvailable"
+              @click="handleSelectSlot(slot)"
+            >
+              {{ formatTime(slot.start) }}
+            </Button>
+          </div>
+          <div v-else class="text-sm text-muted-foreground">
+            Brak dostępnych terminów w tym dniu.
           </div>
         </div>
-      </div>
 
-      <div class="space-y-2">
-        <div class="flex items-center gap-2 text-sm text-muted-foreground">
-          <div class="h-3 w-3 rounded-full bg-primary"></div>
-          <span>Dostępne terminy</span>
+        <div v-if="props.selectedService" class="rounded-md border bg-muted/30 p-3 text-sm">
+          <div class="font-medium">Wybrana usługa</div>
+          <div class="text-muted-foreground">
+            {{ props.selectedService.name }} - {{ props.selectedService.durationFormatted }} -
+            {{ props.selectedService.priceFormatted }}
+          </div>
+          <div v-if="selectedSlotLabel" class="mt-2 text-muted-foreground">
+            Termin: <span class="font-medium text-foreground">{{ selectedSlotLabel }}</span>
+          </div>
         </div>
-        <div class="flex items-center gap-2 text-sm text-muted-foreground">
-          <div class="h-3 w-3 rounded-full bg-destructive"></div>
-          <span>Zajęte/Niedostępne</span>
-        </div>
-      </div>
 
-      <Button class="w-full" @click="handleBooking"> Zarezerwuj termin </Button>
+        <Button class="w-full" :disabled="!selectedSlot || isSubmitting" @click="handleBooking">
+          {{ isSubmitting ? 'Rezerwuję...' : 'Zarezerwuj termin' }}
+        </Button>
+      </div>
     </CardContent>
   </Card>
 </template>

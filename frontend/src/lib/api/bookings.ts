@@ -27,7 +27,8 @@ export const bookingsApi = {
 
   // Explicit methods for actions can be helpful wrappers
   cancelBooking: async (id: string): Promise<BookingDto> => {
-    return bookingsApi.updateBooking(id, { status: 'CANCELLED' } as any) // Type cast if enum mismatch, but should be fine
+    const response = await api.post<BookingDto>(`/bookings/${id}/cancel`)
+    return response.data
   },
 
   rescheduleBooking: async (id: string, startTime: string): Promise<BookingDto> => {

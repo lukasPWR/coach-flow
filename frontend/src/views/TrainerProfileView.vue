@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useTrainerProfile } from '@/composables/useTrainerProfile'
 import { useAuthStore } from '@/stores/auth'
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AlertCircle } from 'lucide-vue-next'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import type { TrainerServiceViewModel } from '@/types/trainer'
 
 const route = useRoute()
 const router = useRouter()
@@ -18,6 +19,8 @@ const authStore = useAuthStore()
 const trainerId = route.params.id as string
 
 const { trainer, isLoading, error, loadTrainer } = useTrainerProfile(trainerId)
+const selectedService = ref<TrainerServiceViewModel | null>(null)
+const availabilityRef = ref<HTMLElement | null>(null)
 
 const isAuthenticated = computed(() => authStore.isAuthenticated)
 
@@ -26,6 +29,15 @@ const goToDashboard = () => {
     router.push('/trainer/dashboard')
   } else {
     router.push('/dashboard')
+  }
+}
+
+const handleSelectService = async (service: TrainerServiceViewModel) => {
+  selectedService.value = service
+
+  if (window.matchMedia('(max-width: 1023px)').matches && availabilityRef.value) {
+    await nextTick()
+    availabilityRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 }
 
@@ -107,11 +119,18 @@ onMounted(() => {
         <div class="grid gap-8 lg:grid-cols-[1fr_350px]">
           <div class="space-y-12">
             <TrainerBio v-if="trainer.description" :description="trainer.description" />
-            <TrainerServicesList :services="trainer.services" />
+            <TrainerServicesList
+              :services="trainer.services"
+              :selected-service-id="selectedService?.id ?? null"
+              @select="handleSelectService"
+            />
           </div>
 
-          <aside class="space-y-6">
-            <TrainerAvailabilityWidget :trainer-id="trainer.id" />
+          <aside ref="availabilityRef" class="space-y-6">
+            <TrainerAvailabilityWidget
+              :trainer-id="trainer.id"
+              :selected-service="selectedService"
+            />
           </aside>
         </div>
       </div>

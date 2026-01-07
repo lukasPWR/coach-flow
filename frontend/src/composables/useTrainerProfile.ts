@@ -39,6 +39,7 @@ export function useTrainerProfile(trainerId: string) {
     const services: TrainerServiceViewModel[] = dto.services.map((service) => ({
       id: service.id,
       name: service.name,
+      durationMinutes: service.durationMinutes,
       priceFormatted: formatPrice(service.price),
       durationFormatted: formatDuration(service.durationMinutes),
     }))

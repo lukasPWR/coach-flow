@@ -70,3 +70,20 @@ export interface UpdateBookingDto {
 }
 
 export type BookingTab = 'upcoming' | 'pending' | 'history'
+
+export interface CreateBookingRequest {
+  trainerId: string
+  serviceId: string
+  startTime: string // ISO 8601
+}
+
+export interface BookingResponse {
+  id: string
+  status: BookingStatus
+}
+
+export interface TimeSlot {
+  start: Date
+  end: Date
+  isAvailable: boolean
+}
