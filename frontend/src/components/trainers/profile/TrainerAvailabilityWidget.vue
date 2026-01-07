@@ -31,33 +31,77 @@ interface Unavailability {
   endTime: string
 }
 
+interface BookedSlot {
+  startTime: string
+  endTime: string
+}
+
 const selectedDate = ref<CalendarDate>(today(timeZone))
 const selectedSlot = ref<TimeSlot | null>(null)
 const unavailabilities = ref<Unavailability[]>([])
+const bookedSlots = ref<BookedSlot[]>([])
 const isLoadingUnavailabilities = ref(false)
 const hasAvailabilityError = ref(false)
 const isSubmitting = ref(false)
 const toastMessage = ref<{ type: 'success' | 'error'; text: string } | null>(null)
 
 onMounted(async () => {
-  await loadUnavailabilities()
+  await loadAvailability()
 })
 
-const loadUnavailabilities = async () => {
+const getDayRange = (date: CalendarDate) => {
+  const base = date.toDate(timeZone)
+  const from = new Date(base)
+  const to = new Date(base)
+  from.setHours(0, 0, 0, 0)
+  to.setHours(23, 59, 59, 999)
+  return { from, to }
+}
+
+const getDayRangeParams = (date: CalendarDate) => {
+  const range = getDayRange(date)
+  return {
+    from: range.from.toISOString(),
+    to: range.to.toISOString(),
+  }
+}
+
+const loadAvailability = async () => {
   try {
     isLoadingUnavailabilities.value = true
-    // Fetch unavailabilities for the specific trainer (public endpoint or filtered)
-    // For now, we'll use the general endpoint which returns all for authenticated user
-    // We need a public endpoint to get unavailabilities for a specific trainer
-    const response = await api.get<Unavailability[]>(
-      `/trainers/${props.trainerId}/unavailabilities`,
-    )
-    unavailabilities.value = response.data
-    hasAvailabilityError.value = false
+    const { from, to } = getDayRangeParams(selectedDate.value)
+    const [unavailabilityResult, bookedResult] = await Promise.allSettled([
+      api.get<Unavailability[]>(`/trainers/${props.trainerId}/unavailabilities`, {
+        params: { from, to },
+      }),
+      api.get<BookedSlot[]>(`/trainers/${props.trainerId}/booked-slots`, {
+        params: { from, to },
+      }),
+    ])
+
+    let hasError = false
+
+    if (unavailabilityResult.status === 'fulfilled') {
+      unavailabilities.value = unavailabilityResult.value.data
+    } else {
+      console.error('Failed to load unavailabilities', unavailabilityResult.reason)
+      unavailabilities.value = []
+      hasError = true
+    }
+
+    if (bookedResult.status === 'fulfilled') {
+      bookedSlots.value = bookedResult.value.data
+    } else {
+      console.error('Failed to load booked slots', bookedResult.reason)
+      bookedSlots.value = []
+      hasError = true
+    }
+
+    hasAvailabilityError.value = hasError
   } catch (error) {
-    console.error('Failed to load unavailabilities', error)
-    // If endpoint doesn't exist yet, fail silently
+    console.error('Failed to load availability data', error)
     unavailabilities.value = []
+    bookedSlots.value = []
     hasAvailabilityError.value = true
   } finally {
     isLoadingUnavailabilities.value = false
@@ -65,7 +109,7 @@ const loadUnavailabilities = async () => {
 }
 
 const handleRefreshAvailability = async () => {
-  await loadUnavailabilities()
+  await loadAvailability()
 }
 
 const workHours = {
@@ -76,14 +120,25 @@ const workHours = {
 const isServiceSelected = computed(() => !!props.selectedService)
 
 const dailyUnavailabilities = computed(() => {
+  const { from, to } = getDayRange(selectedDate.value)
   return unavailabilities.value.filter((unavail) => {
-    const unavailDate = new Date(unavail.startTime)
-    return (
-      unavailDate.getFullYear() === selectedDate.value.year &&
-      unavailDate.getMonth() + 1 === selectedDate.value.month &&
-      unavailDate.getDate() === selectedDate.value.day
-    )
+    const start = new Date(unavail.startTime)
+    const end = new Date(unavail.endTime)
+    return start <= to && end >= from
   })
+})
+
+const dailyBookedSlots = computed(() => {
+  const { from, to } = getDayRange(selectedDate.value)
+  return bookedSlots.value.filter((slot) => {
+    const start = new Date(slot.startTime)
+    const end = new Date(slot.endTime)
+    return start <= to && end >= from
+  })
+})
+
+const blockedRanges = computed(() => {
+  return [...dailyUnavailabilities.value, ...dailyBookedSlots.value]
 })
 
 const timeSlots = computed<TimeSlot[]>(() => {
@@ -91,7 +146,7 @@ const timeSlots = computed<TimeSlot[]>(() => {
   return buildTimeSlots({
     date: selectedDate.value,
     durationMinutes: props.selectedService.durationMinutes,
-    unavailabilities: dailyUnavailabilities.value,
+    unavailabilities: blockedRanges.value,
     workHours,
   })
 })
@@ -101,6 +156,7 @@ watch(selectedDate, (value) => {
   if (value.toDate(timeZone) < minDate.toDate(timeZone)) {
     selectedDate.value = minDate
   }
+  loadAvailability()
 })
 
 watch([() => props.selectedService?.id, selectedDate], () => {
@@ -218,7 +274,7 @@ const handleBooking = async () => {
           v-else-if="hasAvailabilityError"
           class="flex items-center justify-between gap-2 text-xs text-muted-foreground"
         >
-          <span>Nie udało się pobrać niedostępności. Pokazujemy orientacyjne terminy.</span>
+          <span>Nie udało się pobrać zajętości. Pokazujemy orientacyjne terminy.</span>
           <Button
             size="sm"
             variant="outline"

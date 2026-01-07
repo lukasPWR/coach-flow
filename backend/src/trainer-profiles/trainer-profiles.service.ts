@@ -11,6 +11,7 @@ import { TrainerProfile } from "./entities/trainer-profile.entity";
 import { User } from "../users/entities/user.entity";
 import { Specialization } from "../specializations/entities/specialization.entity";
 import { Service } from "../services/entities/service.entity";
+import { Booking } from "../bookings/entities/booking.entity";
 import { CreateTrainerProfileDto } from "./dto/create-trainer-profile.dto";
 import { UpdateTrainerProfileDto } from "./dto/update-trainer-profile.dto";
 import { TrainerProfileResponseDto, SpecializationDto, ServiceDto } from "./dto/trainer-profile-response.dto";
@@ -23,6 +24,9 @@ import {
   SpecializationDto as PublicSpecializationDto,
 } from "./dto/public-trainer-profile.response.dto";
 import { UserRole } from "../users/interfaces/user-role.enum";
+import { BookingStatus } from "../bookings/interfaces/booking-status.enum";
+import { GetUnavailabilitiesQueryDto } from "../unavailabilities/dto/get-unavailabilities-query.dto";
+import { BookedSlotResponseDto } from "../bookings/dto/booked-slot-response.dto";
 
 @Injectable()
 export class TrainerProfilesService {
@@ -34,7 +38,9 @@ export class TrainerProfilesService {
     @InjectRepository(Specialization)
     private readonly specializationRepository: Repository<Specialization>,
     @InjectRepository(Service)
-    private readonly serviceRepository: Repository<Service>
+    private readonly serviceRepository: Repository<Service>,
+    @InjectRepository(Booking)
+    private readonly bookingRepository: Repository<Booking>
   ) {}
 
   /**
@@ -432,5 +438,41 @@ export class TrainerProfilesService {
 
     // 4. Map to response DTO
     return this.mapToResponseDto(profile, services);
+  }
+
+  /**
+   * Retrieves booked slots for a trainer, filtered by optional date range.
+   * Used by public booking flow to mark occupied time slots.
+   */
+  async findBookedSlotsByTrainerId(
+    trainerId: string,
+    query: GetUnavailabilitiesQueryDto
+  ): Promise<BookedSlotResponseDto[]> {
+    const { from, to } = query;
+
+    const queryBuilder = this.bookingRepository
+      .createQueryBuilder("booking")
+      .select(["booking.startTime", "booking.endTime"])
+      .where("booking.trainerId = :trainerId", { trainerId })
+      .andWhere("booking.status != :cancelledStatus", {
+        cancelledStatus: BookingStatus.CANCELLED,
+      });
+
+    if (from && to) {
+      queryBuilder
+        .andWhere("booking.startTime < :to", { to: new Date(to) })
+        .andWhere("booking.endTime > :from", { from: new Date(from) });
+    } else if (from) {
+      queryBuilder.andWhere("booking.endTime >= :from", { from: new Date(from) });
+    } else if (to) {
+      queryBuilder.andWhere("booking.startTime <= :to", { to: new Date(to) });
+    }
+
+    const bookings = await queryBuilder.getMany();
+
+    return bookings.map((booking) => ({
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+    }));
   }
 }

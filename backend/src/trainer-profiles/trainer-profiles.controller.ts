@@ -30,6 +30,8 @@ import type { IRequestApp } from "src/common/interfaces/request-app.interface";
 import { Public } from "src/common/decorators/public.decorator";
 import { UnavailabilitiesService } from "../unavailabilities/unavailabilities.service";
 import { UnavailabilityResponseDto } from "../unavailabilities/dto/unavailability-response.dto";
+import { GetUnavailabilitiesQueryDto } from "../unavailabilities/dto/get-unavailabilities-query.dto";
+import { BookedSlotResponseDto } from "../bookings/dto/booked-slot-response.dto";
 
 @ApiTags("trainer-profiles")
 @Controller("trainers")
@@ -651,8 +653,65 @@ export class TrainerProfilesController {
     },
   })
   async getTrainerUnavailabilities(
-    @Param("id", ParseUUIDPipe) trainerId: string
+    @Param("id", ParseUUIDPipe) trainerId: string,
+    @Query() query: GetUnavailabilitiesQueryDto
   ): Promise<UnavailabilityResponseDto[]> {
-    return this.unavailabilitiesService.findAll(trainerId, {});
+    return this.unavailabilitiesService.findAll(trainerId, query);
+  }
+
+  /**
+   * Public endpoint to get booked slots for a specific trainer.
+   * No authentication required - accessible to all users for booking purposes.
+   *
+   * GET /trainers/:id/booked-slots
+   */
+  @Get(":id/booked-slots")
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: "Get booked slots for a specific trainer (public)",
+    description:
+      "Retrieves time slots already booked for a specific trainer. " +
+      "This is a public endpoint used by clients to see occupied slots during booking. " +
+      "No authentication required.",
+  })
+  @ApiParam({
+    name: "id",
+    description: "UUID of the trainer (user ID)",
+    type: String,
+    example: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+  })
+  @ApiQuery({
+    name: "from",
+    required: false,
+    type: String,
+    description: "Start date for filtering booked slots (ISO8601 format)",
+    example: "2024-01-01T00:00:00.000Z",
+  })
+  @ApiQuery({
+    name: "to",
+    required: false,
+    type: String,
+    description: "End date for filtering booked slots (ISO8601 format)",
+    example: "2024-01-31T23:59:59.999Z",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Booked slots retrieved successfully",
+    type: [BookedSlotResponseDto],
+    schema: {
+      example: [
+        {
+          startTime: "2024-01-10T09:00:00.000Z",
+          endTime: "2024-01-10T10:00:00.000Z",
+        },
+      ],
+    },
+  })
+  async getTrainerBookedSlots(
+    @Param("id", ParseUUIDPipe) trainerId: string,
+    @Query() query: GetUnavailabilitiesQueryDto
+  ): Promise<BookedSlotResponseDto[]> {
+    return this.trainerProfilesService.findBookedSlotsByTrainerId(trainerId, query);
   }
 }
