@@ -1,122 +1,223 @@
 # CoachFlow
 
-A modern SaaS platform designed to help personal trainers and coaches manage their clients, schedules, and progress tracking in one centralized application.
-
-## Table of Contents
-
-- [Tech Stack](#tech-stack)
-- [Getting Started Locally](#getting-started-locally)
-- [Available Scripts](#available-scripts)
-- [Project Scope](#project-scope)
-- [Project Status](#project-status)
-- [License](#license)
+Platform for managing coaching sessions.
 
 ## Tech Stack
 
 ### Frontend
-
 - **Framework**: Vue.js 3
 - **Language**: TypeScript 5
 - **Styling**: Tailwind CSS 4
-- **Component Library**: shadcn-vue
+- **UI Components**: shadcn-vue
 - **Build Tool**: Vite
+- **State Management**: Pinia
+- **Testing**: Vitest + Testing Library
 
 ### Backend
-
 - **Framework**: NestJS
+- **Language**: TypeScript 5
 - **Database**: PostgreSQL
-- **ORM**: Prisma
+- **ORM**: TypeORM
+- **Authentication**: JWT + Passport
+- **Testing**: Jest + Supertest
 
-### AI
+### E2E Testing
+- **Framework**: Playwright
+- **Browser**: Chromium
 
-- **Gateway**: Openrouter.ai
-
-### CI/CD & Hosting
-
-- **CI/CD**: GitHub Actions
-- **Hosting**: DigitalOcean (with Docker)
-
-## Getting Started Locally
-
-Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
+## Getting Started
 
 ### Prerequisites
 
-- **Node.js**: `v22.14.0` (it's recommended to use a version manager like `nvm` and run `nvm use`).
-- **npm** or another package manager.
-- **PostgreSQL**: A running instance of PostgreSQL.
+- Node.js 18+
+- PostgreSQL 14+
+- npm or yarn
 
-### Backend Setup
+### Installation
 
-1.  Navigate to the backend directory:
-    ```bash
-    cd backend
-    ```
-2.  Install the dependencies:
-    ```bash
-    npm install
-    ```
-3.  Set up your environment variables. Create a `.env` file in the `backend` directory. You can copy the `.env.example` if it exists. At a minimum, you will need to provide the `DATABASE_URL`:
-    ```env
-    DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
-    ```
-4.  Run database migrations to set up your database schema:
-    ```bash
-    npx prisma migrate dev
-    ```
-5.  Start the development server:
-    ```bash
-    npm run start:dev
-    ```
-    The backend server will be running on `http://localhost:3000`.
+```bash
+# Install dependencies for all workspaces
+npm install
 
-### Frontend Setup
+# Install backend dependencies
+cd backend && npm install
 
-1.  Navigate to the frontend directory:
-    ```bash
-    cd frontend
-    ```
-2.  Install the dependencies:
-    ```bash
-    npm install
-    ```
-3.  Start the development server:
-    ```bash
-    npm run dev
-    ```
-    The frontend application will be running on `http://localhost:5173`.
+# Install frontend dependencies
+cd frontend && npm install
+```
 
-## Available Scripts
+### Running the Application
 
-### Backend (`/backend`)
+```bash
+# Start backend (from backend directory)
+cd backend
+npm run start:dev
 
-- `npm run start:dev`: Starts the development server with hot-reloading.
-- `npm run build`: Compiles the TypeScript code into JavaScript.
-- `npm run test`: Runs unit tests.
-- `npm run lint`: Lints the codebase.
-- `npm run format`: Formats the codebase with Prettier.
+# Start frontend (from frontend directory)
+cd frontend
+npm run dev
+```
 
-### Frontend (`/frontend`)
+The application will be available at:
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3000
+- API Documentation: http://localhost:3000/api
 
-- `npm run dev`: Starts the Vite development server.
-- `npm run build`: Builds the application for production.
-- `npm run preview`: Serves the production build locally for preview.
-- `npm run lint`: Lints the codebase.
-- `npm run format`: Formats the codebase with Prettier.
+## Testing
 
-## Project Scope
+See [TESTING.md](./TESTING.md) for comprehensive testing guide.
 
-The goal of CoachFlow is to provide a comprehensive tool for coaches. Key features include:
+### Quick Start
 
-- **Client Management**: Keep track of all client information and history.
-- **Scheduling**: Manage appointments and training sessions.
-- **Progress Tracking**: Monitor client progress with metrics and notes.
-- **Communication**: A centralized place for coach-client communication.
+```bash
+# Run all tests
+npm run test:all
 
-## Project Status
+# Backend unit tests
+cd backend && npm test
 
-This project is currently **in development**.
+# Frontend unit tests
+cd frontend && npm test
+
+# E2E tests (from root)
+npm run test:e2e
+```
+
+### Test Coverage
+
+Current coverage goals:
+- Lines: 70%
+- Functions: 70%
+- Branches: 70%
+- Statements: 70%
+
+## Project Structure
+
+```
+coachflow/
+├── backend/           # NestJS backend application
+│   ├── src/          # Source code
+│   ├── test/         # E2E tests
+│   └── package.json
+├── frontend/         # Vue.js frontend application
+│   ├── src/         # Source code
+│   └── package.json
+├── e2e/             # Playwright E2E tests
+│   ├── pages/       # Page Object Models
+│   ├── fixtures/    # Test fixtures
+│   └── utils/       # Helper utilities
+├── .ai/             # AI configuration
+├── .cursor/         # Cursor IDE rules
+├── TESTING.md       # Testing documentation
+└── package.json     # Root workspace configuration
+```
+
+## Development
+
+### Code Style
+
+- Use ESLint and Prettier for code formatting
+- Follow conventional commits for commit messages
+- Use TypeScript strict mode
+
+### Git Workflow
+
+1. Create a feature branch from `main`
+2. Make your changes
+3. Run tests: `npm run test:all`
+4. Commit with conventional commits
+5. Create a pull request
+
+### Conventional Commits
+
+```
+feat: add new feature
+fix: bug fix
+docs: documentation changes
+style: formatting changes
+refactor: code refactoring
+test: add or update tests
+chore: maintenance tasks
+```
+
+## Scripts
+
+### Root Level
+
+```bash
+npm run test:e2e          # Run E2E tests
+npm run test:e2e:ui       # Run E2E tests in UI mode
+npm run test:e2e:headed   # Run E2E tests in headed mode
+npm run test:e2e:debug    # Debug E2E tests
+npm run test:e2e:report   # View E2E test report
+npm run test:all          # Run all tests (backend + frontend + e2e)
+```
+
+### Backend
+
+```bash
+npm run start:dev         # Start in development mode
+npm run build             # Build for production
+npm run start:prod        # Start production server
+npm test                  # Run unit tests
+npm run test:watch        # Run tests in watch mode
+npm run test:cov          # Run tests with coverage
+npm run test:e2e          # Run backend E2E tests
+npm run lint              # Lint code
+npm run format            # Format code
+```
+
+### Frontend
+
+```bash
+npm run dev               # Start development server
+npm run build             # Build for production
+npm run preview           # Preview production build
+npm test                  # Run unit tests
+npm run test:ui           # Run tests in UI mode
+npm run test:coverage     # Run tests with coverage
+npm run lint              # Lint code
+npm run format            # Format code
+```
+
+## Environment Variables
+
+### Backend
+
+Create `.env` file in `backend/` directory:
+
+```env
+NODE_ENV=development
+PORT=3000
+DATABASE_URL=postgresql://user:password@localhost:5432/coachflow
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_SECRET=your-refresh-secret
+JWT_REFRESH_EXPIRES_IN=7d
+```
+
+### Frontend
+
+Create `.env` file in `frontend/` directory:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+## Documentation
+
+- [Testing Guide](./TESTING.md) - Comprehensive testing documentation
+- [E2E Tests](./e2e/README.md) - Playwright E2E testing guide
+- [API Documentation](http://localhost:3000/api) - Swagger API docs (when backend is running)
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
 ## License
 
-This project is currently **UNLICENSED**.
+UNLICENSED - Private project

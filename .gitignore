@@ -1,76 +1,54 @@
 # Dependencies
-node_modules
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Environment variables
-.env
-.env.local
-.env.development
-.env.test
-.env.production
-.env*.local
-
-# Build outputs
-dist/
-build/
-out/
-
-# Frontend (Vue/Vite)
-frontend/.vite/
-frontend/dist/
-frontend/.cache/
-
-# Backend (NestJS)
-backend/dist/
-backend/.nest/
-
-# Logs
-logs/
-*.log
-
-# Operating System
-.DS_Store
-Thumbs.db
-*.swp
-*.swo
-*~
-
-# IDE
-.vscode/
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+node_modules/
+.pnp
+.pnp.js
 
 # Testing
 coverage/
 *.lcov
-.nyc_output/
+.nyc_output
+test-results/
+playwright-report/
+playwright/.cache/
 
-# Prisma
-backend/prisma/migrations/
-*.db
-*.db-journal
+# Production
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
 
 # Temporary files
 *.tmp
 *.temp
+
+# Database
+*.db
+*.sqlite
+
+# Cache
 .cache/
-
-# Docker
-.dockerignore
-
-# Misc
-.turbo/
-
+.parcel-cache/

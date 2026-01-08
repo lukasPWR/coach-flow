@@ -1,0 +1,22 @@
+{
+  "name": "coachflow",
+  "version": "1.0.0",
+  "description": "CoachFlow - Platform for managing coaching sessions",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:codegen": "playwright codegen",
+    "test:all": "npm run test --workspace=backend && npm run test --workspace=frontend && npm run test:e2e"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1"
+  }
+}
