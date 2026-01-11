@@ -128,7 +128,8 @@ describe("BookingsService", () => {
   });
 
   describe("create", () => {
-    const futureDate = new Date(Date.now() + 86400000); // 24 hours from now
+    // 24 hours from now
+    const futureDate = new Date(Date.now() + 86400000);
     const createBookingDto: CreateBookingDto = {
       trainerId: TRAINER_ID,
       serviceId: SERVICE_ID,
@@ -144,7 +145,8 @@ describe("BookingsService", () => {
 
     describe("validation", () => {
       it("should throw BadRequestException when booking time is in the past", async () => {
-        const pastDate = new Date(Date.now() - 86400000); // 24 hours ago
+        // 24 hours ago
+        const pastDate = new Date(Date.now() - 86400000);
         const dto = { ...createBookingDto, startTime: pastDate.toISOString() };
 
         await expect(service.create(CLIENT_ID, dto)).rejects.toThrow(
@@ -502,7 +504,8 @@ describe("BookingsService", () => {
   });
 
   describe("cancelBooking", () => {
-    const futureDate = new Date(Date.now() + 86400000); // 24 hours from now
+    // 24 hours from now
+    const futureDate = new Date(Date.now() + 86400000);
     const mockBooking: Booking = {
       id: BOOKING_ID,
       clientId: CLIENT_ID,
@@ -578,7 +581,8 @@ describe("BookingsService", () => {
     describe("late cancellation penalty", () => {
       it("should apply 7-day ban when client cancels less than 12 hours before start", async () => {
         const now = new Date("2024-01-01T10:00:00Z");
-        const startTime = new Date("2024-01-01T20:00:00Z"); // 10 hours from now
+        // 10 hours from now
+        const startTime = new Date("2024-01-01T20:00:00Z");
         const lateBooking = {
           ...mockBooking,
           startTime,
@@ -621,7 +625,8 @@ describe("BookingsService", () => {
       });
 
       it("should NOT apply ban when client cancels more than 12 hours before start", async () => {
-        const farFutureDate = new Date(Date.now() + 2 * 86400000); // 48 hours from now
+        // 48 hours from now
+        const farFutureDate = new Date(Date.now() + 2 * 86400000);
         const earlyBooking = {
           ...mockBooking,
           startTime: farFutureDate,
@@ -637,7 +642,8 @@ describe("BookingsService", () => {
       });
 
       it("should NOT apply ban when trainer cancels the booking", async () => {
-        const soonDate = new Date(Date.now() + 3600000); // 1 hour from now
+        // 1 hour from now
+        const soonDate = new Date(Date.now() + 3600000);
         const soonBooking = {
           ...mockBooking,
           startTime: soonDate,
@@ -751,7 +757,8 @@ describe("BookingsService", () => {
 
       await service.findUserBookings(CLIENT_ID, paginationQuery);
 
-      expect(queryBuilder.skip).toHaveBeenCalledWith(40); // (3 - 1) * 20
+      // (3 - 1) * 20
+      expect(queryBuilder.skip).toHaveBeenCalledWith(40);
       expect(queryBuilder.take).toHaveBeenCalledWith(20);
     });
 

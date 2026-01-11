@@ -4,9 +4,9 @@
  */
 
 // Set test environment variables
-process.env.NODE_ENV = 'test';
-process.env.JWT_SECRET = 'test-secret-key';
-process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/coachflow_test';
+process.env.NODE_ENV = "test";
+process.env.JWT_SECRET = "test-secret-key";
+process.env.DATABASE_URL = "postgresql://test:test@localhost:5432/coachflow_test";
 
 // Increase test timeout for integration tests
 jest.setTimeout(30000);

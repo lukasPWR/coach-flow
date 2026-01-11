@@ -1,4 +1,4 @@
-import { IsEnum, IsInt, IsOptional, Min, IsArray } from "class-validator";
+import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
 import { Type, Transform } from "class-transformer";
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { BookingStatus } from "../interfaces/booking-status.enum";
@@ -40,9 +40,9 @@ export class GetBookingsQueryDto {
   @IsOptional()
   @IsEnum(BookingStatus, { each: true })
   @Transform(({ value }) => {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       // Handle comma-separated string
-      return value.split(',');
+      return value.split(",");
     }
     // Ensure value is array
     return Array.isArray(value) ? value : [value];

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -39,7 +39,7 @@ export class UsersController {
   @ApiResponse({ status: 200, description: "User retrieved successfully" })
   @ApiResponse({ status: 403, description: "Forbidden - Access denied" })
   @ApiResponse({ status: 404, description: "User not found" })
-  findOne(@Param("id") id: string, @Request() req: any) {
+  findOne(@Param("id") id: string) {
     return this.usersService.findOne(id);
   }
 
@@ -49,7 +49,7 @@ export class UsersController {
   @ApiResponse({ status: 200, description: "User updated successfully" })
   @ApiResponse({ status: 403, description: "Forbidden - Access denied" })
   @ApiResponse({ status: 404, description: "User not found" })
-  update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto, @Request() req: any) {
+  update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 
