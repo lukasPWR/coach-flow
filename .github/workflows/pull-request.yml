@@ -1,0 +1,152 @@
+name: Pull Request CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+# Cancel in-progress runs for the same PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        workspace: [backend, frontend]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter - ${{ matrix.workspace }}
+        run: npm run lint --workspace=${{ matrix.workspace }}
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      matrix:
+        workspace: [backend, frontend]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests - ${{ matrix.workspace }}
+        run: npm run test:cov --workspace=${{ matrix.workspace }}
+
+      - name: Upload coverage to Codecov - ${{ matrix.workspace }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./${{ matrix.workspace }}/coverage/coverage-final.json
+          flags: ${{ matrix.workspace }}
+          name: codecov-${{ matrix.workspace }}
+          fail_ci_if_error: false
+
+  status-comment:
+    name: Status Comment
+    runs-on: ubuntu-latest
+    needs: [lint, unit-tests]
+    if: always()
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Check job statuses
+        id: check_status
+        run: |
+          lint_status="${{ needs.lint.result }}"
+          unit_tests_status="${{ needs.unit-tests.result }}"
+          
+          echo "lint_status=$lint_status" >> $GITHUB_OUTPUT
+          echo "unit_tests_status=$unit_tests_status" >> $GITHUB_OUTPUT
+          
+          if [[ "$lint_status" == "success" && "$unit_tests_status" == "success" ]]; then
+            echo "overall_status=success" >> $GITHUB_OUTPUT
+            echo "status_emoji=✅" >> $GITHUB_OUTPUT
+          else
+            echo "overall_status=failure" >> $GITHUB_OUTPUT
+            echo "status_emoji=❌" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Post PR comment
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const lintStatus = '${{ steps.check_status.outputs.lint_status }}';
+            const unitTestsStatus = '${{ steps.check_status.outputs.unit_tests_status }}';
+            const overallStatus = '${{ steps.check_status.outputs.overall_status }}';
+            const statusEmoji = '${{ steps.check_status.outputs.status_emoji }}';
+            
+            const getStatusEmoji = (status) => {
+              return status === 'success' ? '✅' : '❌';
+            };
+            
+            const commentBody = `## ${statusEmoji} CI Status Report
+            
+            | Job | Status |
+            |-----|--------|
+            | Lint | ${getStatusEmoji(lintStatus)} ${lintStatus} |
+            | Unit Tests | ${getStatusEmoji(unitTestsStatus)} ${unitTestsStatus} |
+            | **Overall** | **${statusEmoji} ${overallStatus}** |
+            
+            ---
+            
+            **Workflow Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            **Commit:** ${{ github.event.pull_request.head.sha }}
+            `;
+            
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('CI Status Report')
+            );
+            
+            // Update or create comment
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: commentBody
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody
+              });
+            }
