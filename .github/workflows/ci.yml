@@ -92,6 +92,7 @@ jobs:
           rm -rf node_modules package-lock.json
           npm install --include=optional
           npm rebuild
+          npm install @rollup/rollup-linux-x64-gnu --save-optional --force
 
       - name: Run frontend linter
         working-directory: ./frontend
@@ -234,6 +235,7 @@ jobs:
           rm -rf node_modules package-lock.json
           npm install --include=optional
           npm rebuild
+          npm install @rollup/rollup-linux-x64-gnu --save-optional --force
 
       - name: Build frontend
         working-directory: ./frontend
