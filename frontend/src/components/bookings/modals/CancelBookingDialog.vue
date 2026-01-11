@@ -1,8 +1,5 @@
 <template>
-  <Dialog
-    :open="open"
-    @update:open="$emit('update:open', $event)"
-  >
+  <Dialog :open="open" @update:open="$emit('update:open', $event)">
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Anuluj rezerwację</DialogTitle>
@@ -16,28 +13,19 @@
         <AlertTriangle class="h-5 w-5 mt-0.5 shrink-0" />
         <div class="text-sm">
           <p class="font-semibold">Późne anulowanie</p>
-          <p>Do wizyty zostało mniej niż 12 godzin. Anulowanie może skutkować tymczasową blokadą konta.</p>
+          <p>
+            Do wizyty zostało mniej niż 12 godzin. Anulowanie może skutkować tymczasową blokadą
+            konta.
+          </p>
         </div>
       </div>
-      <div
-        v-else
-        class="text-sm text-muted-foreground"
-      >
+      <div v-else class="text-sm text-muted-foreground">
         Spokojnie, jeśli anulujesz teraz, nie poniesiesz żadnych konsekwencji.
       </div>
 
       <DialogFooter>
-        <Button
-          variant="outline"
-          @click="$emit('update:open', false)"
-        >
-          Wróć
-        </Button>
-        <Button
-          variant="destructive"
-          :disabled="isLoading"
-          @click="handleConfirm"
-        >
+        <Button variant="outline" @click="$emit('update:open', false)"> Wróć </Button>
+        <Button variant="destructive" :disabled="isLoading" @click="handleConfirm">
           {{ isLoading ? "Anulowanie..." : "Potwierdź anulowanie" }}
         </Button>
       </DialogFooter>

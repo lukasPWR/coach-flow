@@ -41,19 +41,13 @@ const getSpecializationName = (id: string) => {
         v-model="state.profileData.profilePictureUrl"
         placeholder="https://example.com/photo.jpg"
       />
-      <p class="text-xs text-muted-foreground">
-        Wklej bezpośredni link do swojego zdjęcia.
-      </p>
+      <p class="text-xs text-muted-foreground">Wklej bezpośredni link do swojego zdjęcia.</p>
     </div>
 
     <!-- City -->
     <div class="space-y-2">
       <Label for="city">Miasto <span class="text-destructive">*</span></Label>
-      <Input
-        id="city"
-        v-model="state.profileData.city"
-        placeholder="np. Warszawa"
-      />
+      <Input id="city" v-model="state.profileData.city" placeholder="np. Warszawa" />
     </div>
 
     <!-- Specializations (Multi-select) -->
@@ -61,10 +55,7 @@ const getSpecializationName = (id: string) => {
       <Label>Specjalizacje <span class="text-destructive">*</span></Label>
       <DropdownMenu>
         <DropdownMenuTrigger as-child>
-          <Button
-            variant="outline"
-            class="w-full justify-between"
-          >
+          <Button variant="outline" class="w-full justify-between">
             {{
               state.profileData.specializationIds.length > 0
                 ? `Wybrano: ${state.profileData.specializationIds.length}`
@@ -77,10 +68,7 @@ const getSpecializationName = (id: string) => {
           <DropdownMenuLabel>Dostępne specjalizacje</DropdownMenuLabel>
           <DropdownMenuSeparator />
 
-          <div
-            v-if="state.isLoading"
-            class="flex justify-center p-4"
-          >
+          <div v-if="state.isLoading" class="flex justify-center p-4">
             <Loader2 class="w-4 h-4 animate-spin" />
           </div>
 
