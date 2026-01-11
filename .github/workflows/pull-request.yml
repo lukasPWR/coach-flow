@@ -35,6 +35,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install frontend optional dependencies
+        if: matrix.workspace == 'frontend'
+        working-directory: ./frontend
+        run: |
+          npm ci --include=optional
+          npm rebuild
+
       - name: Run linter - ${{ matrix.workspace }}
         run: npm run lint --workspace=${{ matrix.workspace }}
 
@@ -57,6 +64,13 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Install frontend optional dependencies
+        if: matrix.workspace == 'frontend'
+        working-directory: ./frontend
+        run: |
+          npm ci --include=optional
+          npm rebuild
 
       - name: Run unit tests - ${{ matrix.workspace }}
         run: npm run test:cov --workspace=${{ matrix.workspace }}
@@ -83,10 +97,10 @@ jobs:
         run: |
           lint_status="${{ needs.lint.result }}"
           unit_tests_status="${{ needs.unit-tests.result }}"
-          
+
           echo "lint_status=$lint_status" >> $GITHUB_OUTPUT
           echo "unit_tests_status=$unit_tests_status" >> $GITHUB_OUTPUT
-          
+
           if [[ "$lint_status" == "success" && "$unit_tests_status" == "success" ]]; then
             echo "overall_status=success" >> $GITHUB_OUTPUT
             echo "status_emoji=✅" >> $GITHUB_OUTPUT
@@ -103,37 +117,37 @@ jobs:
             const unitTestsStatus = '${{ steps.check_status.outputs.unit_tests_status }}';
             const overallStatus = '${{ steps.check_status.outputs.overall_status }}';
             const statusEmoji = '${{ steps.check_status.outputs.status_emoji }}';
-            
+
             const getStatusEmoji = (status) => {
               return status === 'success' ? '✅' : '❌';
             };
-            
+
             const commentBody = `## ${statusEmoji} CI Status Report
-            
+
             | Job | Status |
             |-----|--------|
             | Lint | ${getStatusEmoji(lintStatus)} ${lintStatus} |
             | Unit Tests | ${getStatusEmoji(unitTestsStatus)} ${unitTestsStatus} |
             | **Overall** | **${statusEmoji} ${overallStatus}** |
-            
+
             ---
-            
+
             **Workflow Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
             **Commit:** ${{ github.event.pull_request.head.sha }}
             `;
-            
+
             // Find existing comment
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-            
+
             const botComment = comments.find(comment => 
               comment.user.type === 'Bot' && 
               comment.body.includes('CI Status Report')
             );
-            
+
             // Update or create comment
             if (botComment) {
               await github.rest.issues.updateComment({
