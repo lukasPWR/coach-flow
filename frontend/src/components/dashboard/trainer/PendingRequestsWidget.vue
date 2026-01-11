@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
-import PendingRequestItem from './PendingRequestItem.vue'
-import type { PendingBookingVM } from '@/types/dashboard'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import PendingRequestItem from "./PendingRequestItem.vue";
+import type { PendingBookingVM } from "@/types/dashboard";
 
 defineProps<{
-  requests: PendingBookingVM[]
-  isLoading: boolean
-  isActionLoading: (id: string) => boolean
-}>()
+  requests: PendingBookingVM[];
+  isLoading: boolean;
+  isActionLoading: (_id: string) => boolean;
+}>();
 
 const emit = defineEmits<{
-  approve: [id: string]
-  reject: [id: string]
-}>()
+  approve: [id: string];
+  reject: [id: string];
+}>();
 
 function handleApprove(id: string) {
-  emit('approve', id)
+  emit("approve", id);
 }
 
 function handleReject(id: string) {
-  emit('reject', id)
+  emit("reject", id);
 }
 </script>
 

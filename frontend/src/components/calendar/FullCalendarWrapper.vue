@@ -1,121 +1,121 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
-import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
+import { ref, watch, onMounted } from "vue";
+import FullCalendar from "@fullcalendar/vue3";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
 import type {
   CalendarOptions,
   DateSelectArg,
   EventClickArg,
   EventChangeArg,
   CalendarApi,
-} from '@fullcalendar/core'
-import type { CalendarEvent } from '@/types/calendar'
+} from "@fullcalendar/core";
+import type { CalendarEvent } from "@/types/calendar";
 
 interface Props {
-  events: CalendarEvent[]
-  isLoading?: boolean
+  events: CalendarEvent[];
+  isLoading?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isLoading: false,
-})
+});
 
 const emit = defineEmits<{
-  select: [info: DateSelectArg]
-  eventClick: [info: EventClickArg]
-  eventChange: [info: EventChangeArg]
-  datesSet: [info: { start: Date; end: Date }]
-}>()
+  select: [info: DateSelectArg];
+  eventClick: [info: EventClickArg];
+  eventChange: [info: EventChangeArg];
+  datesSet: [info: { start: Date; end: Date }];
+}>();
 
 // Referencja do komponentu FullCalendar
-const calendarRef = ref<InstanceType<typeof FullCalendar> | null>(null)
+const calendarRef = ref<InstanceType<typeof FullCalendar> | null>(null);
 
 // Flaga do blokowania eventChange podczas synchronizacji z props
-const isSyncingEvents = ref(false)
+const isSyncingEvents = ref(false);
 
 // Funkcja do pobierania API kalendarza
 function getCalendarApi(): CalendarApi | null {
-  return calendarRef.value?.getApi() ?? null
+  return calendarRef.value?.getApi() ?? null;
 }
 
 // Aktualizuj wydarzenia przez API kalendarza (nie przez props)
 watch(
   () => props.events,
   (newEvents) => {
-    const api = getCalendarApi()
+    const api = getCalendarApi();
     if (api) {
-      isSyncingEvents.value = true
+      isSyncingEvents.value = true;
 
       // Pobierz ID istniejących wydarzeń
-      const existingEvents = api.getEvents()
-      const existingIds = new Set(existingEvents.map((e) => e.id))
-      const newIds = new Set(newEvents.map((e) => e.id))
+      const existingEvents = api.getEvents();
+      const existingIds = new Set(existingEvents.map((e) => e.id));
+      const newIds = new Set(newEvents.map((e) => e.id));
 
       // Usuń wydarzenia które już nie istnieją
       existingEvents.forEach((event) => {
         if (!newIds.has(event.id)) {
-          event.remove()
+          event.remove();
         }
-      })
+      });
 
       // Dodaj nowe wydarzenia (nie aktualizujemy istniejących - to powodowało pętlę)
       newEvents.forEach((newEvent) => {
         if (!existingIds.has(newEvent.id)) {
-          api.addEvent(newEvent)
+          api.addEvent(newEvent);
         }
-      })
+      });
 
       // Odblokuj po krótkim opóźnieniu
       setTimeout(() => {
-        isSyncingEvents.value = false
-      }, 100)
+        isSyncingEvents.value = false;
+      }, 100);
     }
-  },
-)
+  }
+);
 
 // Dodaj początkowe wydarzenia po zamontowaniu
 onMounted(() => {
   // Poczekaj na następny tick, żeby kalendarz się zainicjalizował
   setTimeout(() => {
-    const api = getCalendarApi()
+    const api = getCalendarApi();
     if (api && props.events.length > 0) {
-      props.events.forEach((event) => api.addEvent(event))
+      props.events.forEach((event) => api.addEvent(event));
     }
-  }, 0)
-})
+  }, 0);
+});
 
 // Statyczna konfiguracja kalendarza - NIE używamy computed!
 const calendarOptions: CalendarOptions = {
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-  initialView: 'timeGridWeek',
-  locale: 'pl',
+  initialView: "timeGridWeek",
+  locale: "pl",
   headerToolbar: {
-    left: 'prev,next today',
-    center: 'title',
-    right: 'dayGridMonth,timeGridWeek,timeGridDay',
+    left: "prev,next today",
+    center: "title",
+    right: "dayGridMonth,timeGridWeek,timeGridDay",
   },
   buttonText: {
-    today: 'Dziś',
-    month: 'Miesiąc',
-    week: 'Tydzień',
-    day: 'Dzień',
+    today: "Dziś",
+    month: "Miesiąc",
+    week: "Tydzień",
+    day: "Dzień",
   },
   // Konfiguracja czasu
-  slotMinTime: '06:00:00',
-  slotMaxTime: '22:00:00',
-  slotDuration: '00:15:00',
-  slotLabelInterval: '01:00:00',
+  slotMinTime: "06:00:00",
+  slotMaxTime: "22:00:00",
+  slotDuration: "00:15:00",
+  slotLabelInterval: "01:00:00",
   slotLabelFormat: {
-    hour: '2-digit',
-    minute: '2-digit',
+    hour: "2-digit",
+    minute: "2-digit",
     hour12: false,
   },
   // Pierwszy dzień tygodnia - poniedziałek
   firstDay: 1,
   // Wysokość kalendarza
-  height: 'auto',
+  height: "auto",
   contentHeight: 650,
   // Nie przekazujemy events tutaj - zarządzamy nimi przez API
   events: [],
@@ -125,27 +125,27 @@ const calendarOptions: CalendarOptions = {
   editable: true,
   eventResizableFromStart: true,
   // Kolory nagłówków
-  dayHeaderFormat: { weekday: 'short', day: 'numeric', month: 'numeric' },
+  dayHeaderFormat: { weekday: "short", day: "numeric", month: "numeric" },
   // Obsługa zdarzeń
   select: (info: DateSelectArg) => {
-    emit('select', info)
+    emit("select", info);
   },
   eventClick: (info: EventClickArg) => {
-    emit('eventClick', info)
+    emit("eventClick", info);
   },
   eventChange: (info: EventChangeArg) => {
     // Nie emituj eventChange podczas synchronizacji z props (zapobiega pętli)
     if (!isSyncingEvents.value) {
-      emit('eventChange', info)
+      emit("eventChange", info);
     }
   },
   datesSet: (info) => {
-    emit('datesSet', { start: info.start, end: info.end })
+    emit("datesSet", { start: info.start, end: info.end });
   },
   // Wyłączenie automatycznego cofania przy D&D
   eventDrop: () => {},
   eventResize: () => {},
-}
+};
 </script>
 
 <template>
@@ -275,7 +275,9 @@ const calendarOptions: CalendarOptions = {
   padding: 2px 4px;
   font-size: 0.75rem;
   cursor: pointer;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease;
 }
 
 .fc-custom .fc-event:hover {

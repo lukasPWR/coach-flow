@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { type HTMLAttributes, computed } from 'vue'
+import { type HTMLAttributes, computed } from "vue";
 import {
   CalendarRoot,
   type CalendarRootEmits,
   type CalendarRootProps,
   useForwardPropsEmits,
-} from 'radix-vue'
-import { cn } from '@/lib/utils'
+} from "radix-vue";
+import { cn } from "@/lib/utils";
 import {
   CalendarCell,
   CalendarCellTrigger,
@@ -19,19 +19,20 @@ import {
   CalendarHeading,
   CalendarNextButton,
   CalendarPrevButton,
-} from '.'
+} from ".";
 
-const props = defineProps<CalendarRootProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<CalendarRootProps & { class?: HTMLAttributes["class"] }>();
 
-const emits = defineEmits<CalendarRootEmits>()
+const emits = defineEmits<CalendarRootEmits>();
 
 const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { class: _, ...delegated } = props;
 
-  return delegated
-})
+  return delegated;
+});
 
-const forwarded = useForwardPropsEmits(delegatedProps, emits)
+const forwarded = useForwardPropsEmits(delegatedProps, emits);
 </script>
 
 <template>

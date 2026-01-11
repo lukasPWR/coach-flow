@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { Pencil, Trash2, Package } from 'lucide-vue-next'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
-import type { Service } from '@/types/services'
+import { Pencil, Trash2, Package } from "lucide-vue-next";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { Service } from "@/types/services";
 
 interface Props {
-  services: Service[]
-  serviceTypesMap: Record<string, string>
-  isLoading?: boolean
+  services: Service[];
+  serviceTypesMap: Record<string, string>;
+  isLoading?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isLoading: false,
-})
+});
 
 const emit = defineEmits<{
-  edit: [service: Service]
-  delete: [service: Service]
-}>()
+  edit: [service: Service];
+  delete: [service: Service];
+}>();
 
 // Get service type name
 // The service object from /trainers/me includes the name directly
@@ -27,38 +27,38 @@ const emit = defineEmits<{
 function getServiceTypeName(service: Service): string {
   // First try to get name from serviceType relation
   if (service.serviceType?.name) {
-    return service.serviceType.name
+    return service.serviceType.name;
   }
   // Fallback to serviceTypesMap if serviceTypeId is available
   if (service.serviceTypeId) {
-    return props.serviceTypesMap[service.serviceTypeId] || 'Nieznany typ'
+    return props.serviceTypesMap[service.serviceTypeId] || "Nieznany typ";
   }
   // Last resort - check if service has name directly (from /trainers/me response)
   if ((service as any).name) {
-    return (service as any).name
+    return (service as any).name;
   }
-  return 'Nieznany typ'
+  return "Nieznany typ";
 }
 
 // Format price
 function formatPrice(price: number): string {
-  return new Intl.NumberFormat('pl-PL', {
-    style: 'currency',
-    currency: 'PLN',
-  }).format(price)
+  return new Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: "PLN",
+  }).format(price);
 }
 
 // Format duration
 function formatDuration(minutes: number): string {
   if (minutes < 60) {
-    return `${minutes} min`
+    return `${minutes} min`;
   }
-  const hours = Math.floor(minutes / 60)
-  const remainingMinutes = minutes % 60
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
   if (remainingMinutes === 0) {
-    return `${hours} godz.`
+    return `${hours} godz.`;
   }
-  return `${hours} godz. ${remainingMinutes} min`
+  return `${hours} godz. ${remainingMinutes} min`;
 }
 </script>
 
@@ -143,7 +143,7 @@ function formatDuration(minutes: number): string {
           Nie dodałeś jeszcze żadnych usług. Kliknij "Dodaj usługę", aby rozpocząć.
         </p>
       </div>
-      <slot name="empty-action"></slot>
+      <slot name="empty-action" />
     </div>
   </div>
 </template>

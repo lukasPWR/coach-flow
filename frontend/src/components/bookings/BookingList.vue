@@ -5,7 +5,7 @@
         v-for="i in 3"
         :key="i"
         class="rounded-xl border bg-card text-card-foreground shadow p-6 h-[140px] animate-pulse bg-muted/10"
-      ></div>
+      />
     </div>
 
     <div
@@ -25,52 +25,54 @@
       v-if="currentPagination.totalPages > 1 && currentBookings.length > 0"
       :current-page="currentPagination.currentPage"
       :total-pages="currentPagination.totalPages"
+      class="mt-4"
       @next="handleNextPage"
       @prev="handlePrevPage"
-      class="mt-4"
     />
 
     <div v-else class="flex flex-col items-center justify-center py-12 text-center space-y-3">
       <div class="bg-muted/20 p-4 rounded-full">
         <CalendarX class="h-8 w-8 text-muted-foreground" />
       </div>
-      <p class="text-muted-foreground max-w-[250px]">{{ emptyMessage }}</p>
-      <slot name="empty-action"></slot>
+      <p class="text-muted-foreground max-w-[250px]">
+        {{ emptyMessage }}
+      </p>
+      <slot name="empty-action" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch, computed } from 'vue'
-import { CalendarX } from 'lucide-vue-next'
-import BookingCard from './BookingCard.vue'
-import PaginationControls from '@/components/common/PaginationControls.vue'
-import { useBookings } from '@/composables/useBookings'
-import type { BookingStatus, BookingViewModel, PaginationMeta } from '@/types/bookings'
+import { onMounted, watch, computed } from "vue";
+import { CalendarX } from "lucide-vue-next";
+import BookingCard from "./BookingCard.vue";
+import PaginationControls from "@/components/common/PaginationControls.vue";
+import { useBookings } from "@/composables/useBookings";
+import type { BookingStatus, BookingViewModel, PaginationMeta } from "@/types/bookings";
 
 const props = defineProps<{
   // Legacy props (Smart Mode)
-  statuses?: BookingStatus[]
-  timeFilter?: 'upcoming' | 'past'
-  refreshTrigger?: number
+  statuses?: BookingStatus[];
+  timeFilter?: "upcoming" | "past";
+  refreshTrigger?: number;
 
   // Common props
-  emptyMessage: string
+  emptyMessage: string;
 
   // New props (Dumb Mode)
-  bookings?: BookingViewModel[]
-  isLoading?: boolean
-  pagination?: PaginationMeta
-}>()
+  bookings?: BookingViewModel[];
+  isLoading?: boolean;
+  pagination?: PaginationMeta;
+}>();
 
 const emit = defineEmits<{
-  (e: 'cancel', booking: BookingViewModel): void
-  (e: 'reschedule', booking: BookingViewModel): void
-  (e: 'update:page', page: number): void
-}>()
+  cancel: [booking: BookingViewModel];
+  reschedule: [booking: BookingViewModel];
+  "update:page": [page: number];
+}>();
 
 // Determine mode
-const isDumbMode = computed(() => props.bookings !== undefined)
+const isDumbMode = computed(() => props.bookings !== undefined);
 
 // Smart Mode Logic
 const {
@@ -82,16 +84,18 @@ const {
   nextPage,
   prevPage,
 } = useBookings({
-  role: 'client',
+  role: "client",
   initialStatus: props.statuses,
   initialTimeFilter: props.timeFilter,
-})
+});
 
 // Computed values based on mode
-const currentBookings = computed(() => (isDumbMode.value ? props.bookings! : fetchedBookings.value))
+const currentBookings = computed(() =>
+  isDumbMode.value ? props.bookings! : fetchedBookings.value
+);
 const currentIsLoading = computed(() =>
-  isDumbMode.value ? props.isLoading : fetchedIsLoading.value,
-)
+  isDumbMode.value ? props.isLoading : fetchedIsLoading.value
+);
 const currentPagination = computed(() => {
   if (isDumbMode.value) {
     return (
@@ -102,68 +106,68 @@ const currentPagination = computed(() => {
         totalPages: 0,
         currentPage: 1,
       }
-    )
+    );
   }
-  return fetchedPagination.value
-})
+  return fetchedPagination.value;
+});
 
 // Event Handlers
 const handleNextPage = () => {
   if (isDumbMode.value) {
     if (currentPagination.value.currentPage < currentPagination.value.totalPages) {
-      emit('update:page', currentPagination.value.currentPage + 1)
+      emit("update:page", currentPagination.value.currentPage + 1);
     }
   } else {
-    nextPage()
+    nextPage();
   }
-}
+};
 
 const handlePrevPage = () => {
   if (isDumbMode.value) {
     if (currentPagination.value.currentPage > 1) {
-      emit('update:page', currentPagination.value.currentPage - 1)
+      emit("update:page", currentPagination.value.currentPage - 1);
     }
   } else {
-    prevPage()
+    prevPage();
   }
-}
+};
 
 // Watchers for Smart Mode
 watch(
   () => props.statuses,
   (newStatuses) => {
-    if (isDumbMode.value) return
-    filters.status = newStatuses || []
-    filters.page = 1
-    fetchBookings()
-  },
-)
+    if (isDumbMode.value) return;
+    filters.status = newStatuses || [];
+    filters.page = 1;
+    fetchBookings();
+  }
+);
 
 watch(
   () => props.timeFilter,
   (newVal) => {
-    if (isDumbMode.value) return
-    filters.timeFilter = newVal
-    filters.page = 1
-    fetchBookings()
-  },
-)
+    if (isDumbMode.value) return;
+    filters.timeFilter = newVal;
+    filters.page = 1;
+    fetchBookings();
+  }
+);
 
 watch(
   () => props.refreshTrigger,
   () => {
-    if (isDumbMode.value) return
-    fetchBookings()
-  },
-)
+    if (isDumbMode.value) return;
+    fetchBookings();
+  }
+);
 
 onMounted(() => {
   if (!isDumbMode.value) {
-    fetchBookings()
+    fetchBookings();
   }
-})
+});
 
 defineExpose({
   refresh: fetchBookings,
-})
+});
 </script>

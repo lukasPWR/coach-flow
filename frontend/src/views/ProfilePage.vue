@@ -1,102 +1,102 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Skeleton } from '@/components/ui/skeleton'
-import { AlertCircle } from 'lucide-vue-next'
-import type { TrainerProfile, UpdateTrainerProfileDto } from '@/types/trainer'
-import { getMyFullTrainerProfile, updateTrainerProfile } from '@/lib/api/trainers'
-import TrainerProfileView from '@/components/profile/TrainerProfileView.vue'
-import TrainerProfileForm from '@/components/profile/TrainerProfileForm.vue'
+import { ref, onMounted } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AlertCircle } from "lucide-vue-next";
+import type { TrainerProfile, UpdateTrainerProfileDto } from "@/types/trainer";
+import { getMyFullTrainerProfile, updateTrainerProfile } from "@/lib/api/trainers";
+import TrainerProfileView from "@/components/profile/TrainerProfileView.vue";
+import TrainerProfileForm from "@/components/profile/TrainerProfileForm.vue";
 
-const authStore = useAuthStore()
-const router = useRouter()
+const authStore = useAuthStore();
+const router = useRouter();
 
 // State
-const profile = ref<TrainerProfile | null>(null)
-const isLoading = ref(false)
-const isEditing = ref(false)
-const error = ref<string | null>(null)
+const profile = ref<TrainerProfile | null>(null);
+const isLoading = ref(false);
+const isEditing = ref(false);
+const error = ref<string | null>(null);
 
 // Notification state
 const notification = ref<{
-  show: boolean
-  type: 'success' | 'error'
-  message: string
+  show: boolean;
+  type: "success" | "error";
+  message: string;
 }>({
   show: false,
-  type: 'success',
-  message: '',
-})
+  type: "success",
+  message: "",
+});
 
-let notificationTimeout: ReturnType<typeof setTimeout> | null = null
+let notificationTimeout: ReturnType<typeof setTimeout> | null = null;
 
-function showNotification(type: 'success' | 'error', message: string) {
+function showNotification(type: "success" | "error", message: string) {
   if (notificationTimeout) {
-    clearTimeout(notificationTimeout)
+    clearTimeout(notificationTimeout);
   }
-  notification.value = { show: true, type, message }
+  notification.value = { show: true, type, message };
   notificationTimeout = setTimeout(() => {
-    notification.value.show = false
-  }, 4000)
+    notification.value.show = false;
+  }, 4000);
 }
 
 // Load profile data
 async function loadProfile() {
-  isLoading.value = true
-  error.value = null
+  isLoading.value = true;
+  error.value = null;
 
   try {
-    profile.value = await getMyFullTrainerProfile()
+    profile.value = await getMyFullTrainerProfile();
   } catch (err: any) {
     if (err.response?.status === 404) {
-      error.value = 'Nie znaleziono profilu trenera. Skontaktuj się z administratorem.'
+      error.value = "Nie znaleziono profilu trenera. Skontaktuj się z administratorem.";
     } else {
-      error.value = 'Nie udało się pobrać danych profilu. Spróbuj ponownie.'
+      error.value = "Nie udało się pobrać danych profilu. Spróbuj ponownie.";
     }
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
 }
 
 // Handle edit mode toggle
 function handleEdit() {
-  isEditing.value = true
+  isEditing.value = true;
 }
 
 // Handle cancel edit
 function handleCancel() {
-  isEditing.value = false
+  isEditing.value = false;
 }
 
 // Handle save profile
 async function handleSave(data: UpdateTrainerProfileDto) {
-  if (!profile.value) return
+  if (!profile.value) return;
 
   try {
-    await updateTrainerProfile(profile.value.id, data)
+    await updateTrainerProfile(profile.value.id, data);
     // Reload full profile to get all fields including trainerName and email
-    await loadProfile()
-    isEditing.value = false
+    await loadProfile();
+    isEditing.value = false;
 
-    showNotification('success', 'Profil został zaktualizowany pomyślnie')
+    showNotification("success", "Profil został zaktualizowany pomyślnie");
   } catch (err: any) {
-    showNotification('error', err.response?.data?.message || 'Nie udało się zapisać zmian')
+    showNotification("error", err.response?.data?.message || "Nie udało się zapisać zmian");
   }
 }
 
 // Handle logout
 async function handleLogout() {
-  await authStore.logout()
-  router.push('/login')
+  await authStore.logout();
+  router.push("/login");
 }
 
 // Load profile on mount
 onMounted(() => {
-  loadProfile()
-})
+  loadProfile();
+});
 </script>
 
 <template>
@@ -163,7 +163,7 @@ onMounted(() => {
       <!-- Header -->
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold">Mój Profil</h1>
-        <Button @click="handleLogout" variant="outline">Wyloguj się</Button>
+        <Button variant="outline" @click="handleLogout"> Wyloguj się </Button>
       </div>
 
       <!-- Loading state -->

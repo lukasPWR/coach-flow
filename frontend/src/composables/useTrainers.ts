@@ -1,36 +1,36 @@
-import { ref, reactive, computed, watch } from 'vue'
-import { getTrainers, getSpecializations } from '@/lib/api/trainers'
+import { ref, reactive, computed, watch } from "vue";
+import { getTrainers, getSpecializations } from "@/lib/api/trainers";
 import type {
   TrainerSummary,
   TrainerFiltersState,
   TrainersPaginationState,
   SpecializationOption,
-} from '@/types/trainer'
-import { useDebounceFn } from '@vueuse/core'
+} from "@/types/trainer";
+import { useDebounceFn } from "@vueuse/core";
 
 export function useTrainers() {
   // State
-  const trainers = ref<TrainerSummary[]>([])
-  const availableSpecializations = ref<SpecializationOption[]>([])
-  const isLoading = ref(false)
-  const isFetchingMore = ref(false)
-  const error = ref<string | null>(null)
+  const trainers = ref<TrainerSummary[]>([]);
+  const availableSpecializations = ref<SpecializationOption[]>([]);
+  const isLoading = ref(false);
+  const isFetchingMore = ref(false);
+  const error = ref<string | null>(null);
 
   const filters = reactive<TrainerFiltersState>({
-    city: '',
+    city: "",
     specializationId: null,
-  })
+  });
 
   const pagination = ref<TrainersPaginationState>({
     currentPage: 1,
     limit: 10,
     total: 0,
     hasMore: false,
-  })
+  });
 
   // Computed
-  const hasMore = computed(() => pagination.value.hasMore)
-  const isEmpty = computed(() => !isLoading.value && trainers.value.length === 0)
+  const hasMore = computed(() => pagination.value.hasMore);
+  const isEmpty = computed(() => !isLoading.value && trainers.value.length === 0);
 
   /**
    * Fetch trainers from API
@@ -40,39 +40,40 @@ export function useTrainers() {
     try {
       // Set appropriate loading state
       if (reset) {
-        isLoading.value = true
-        trainers.value = []
-        pagination.value.currentPage = 1
+        isLoading.value = true;
+        trainers.value = [];
+        pagination.value.currentPage = 1;
       } else {
-        isFetchingMore.value = true
+        isFetchingMore.value = true;
       }
 
-      error.value = null
+      error.value = null;
 
       const response = await getTrainers({
         page: pagination.value.currentPage,
         limit: pagination.value.limit,
         city: filters.city || undefined,
         specializationId: filters.specializationId || undefined,
-      })
+      });
 
       // Update trainers list
       if (reset) {
-        trainers.value = response.data
+        trainers.value = response.data;
       } else {
-        trainers.value.push(...response.data)
+        trainers.value.push(...response.data);
       }
 
       // Update pagination
-      pagination.value.total = response.meta.total
-      pagination.value.currentPage = response.meta.page
-      pagination.value.hasMore = trainers.value.length < response.meta.total
+      pagination.value.total = response.meta.total;
+      pagination.value.currentPage = response.meta.page;
+      pagination.value.hasMore = trainers.value.length < response.meta.total;
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Wystąpił błąd podczas pobierania trenerów'
-      console.error('Error fetching trainers:', err)
+      error.value =
+        err instanceof Error ? err.message : "Wystąpił błąd podczas pobierania trenerów";
+      console.error("Error fetching trainers:", err);
     } finally {
-      isLoading.value = false
-      isFetchingMore.value = false
+      isLoading.value = false;
+      isFetchingMore.value = false;
     }
   }
 
@@ -81,35 +82,35 @@ export function useTrainers() {
    */
   async function loadMore(): Promise<void> {
     if (isFetchingMore.value || isLoading.value || !hasMore.value) {
-      return
+      return;
     }
 
-    pagination.value.currentPage += 1
-    await fetchTrainers(false)
+    pagination.value.currentPage += 1;
+    await fetchTrainers(false);
   }
 
   /**
    * Update filters and refetch trainers
    */
   function updateFilters(newFilters: Partial<TrainerFiltersState>): void {
-    Object.assign(filters, newFilters)
-    debouncedFetch()
+    Object.assign(filters, newFilters);
+    debouncedFetch();
   }
 
   /**
    * Clear all filters
    */
   function clearFilters(): void {
-    filters.city = ''
-    filters.specializationId = null
-    fetchTrainers(true)
+    filters.city = "";
+    filters.specializationId = null;
+    fetchTrainers(true);
   }
 
   /**
    * Retry fetching after error
    */
   function retry(): void {
-    fetchTrainers(true)
+    fetchTrainers(true);
   }
 
   /**
@@ -117,32 +118,32 @@ export function useTrainers() {
    */
   async function fetchSpecializations(): Promise<void> {
     try {
-      availableSpecializations.value = await getSpecializations()
+      availableSpecializations.value = await getSpecializations();
     } catch (err) {
-      console.error('Error fetching specializations:', err)
+      console.error("Error fetching specializations:", err);
     }
   }
 
   // Debounced fetch for city filter (500ms delay)
   const debouncedFetch = useDebounceFn(() => {
-    fetchTrainers(true)
-  }, 500)
+    fetchTrainers(true);
+  }, 500);
 
   // Watch city filter for debounced search
   watch(
     () => filters.city,
     () => {
-      debouncedFetch()
-    },
-  )
+      debouncedFetch();
+    }
+  );
 
   // Watch specializationId for immediate search
   watch(
     () => filters.specializationId,
     () => {
-      fetchTrainers(true)
-    },
-  )
+      fetchTrainers(true);
+    }
+  );
 
   return {
     // State
@@ -165,5 +166,5 @@ export function useTrainers() {
     clearFilters,
     retry,
     fetchSpecializations,
-  }
+  };
 }

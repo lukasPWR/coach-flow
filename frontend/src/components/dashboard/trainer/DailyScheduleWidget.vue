@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
-import ScheduleItem from './ScheduleItem.vue'
-import type { DailySessionVM } from '@/types/dashboard'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import ScheduleItem from "./ScheduleItem.vue";
+import type { DailySessionVM } from "@/types/dashboard";
 
 defineProps<{
-  sessions: DailySessionVM[]
-  isLoading: boolean
-}>()
+  sessions: DailySessionVM[];
+  isLoading: boolean;
+}>();
 </script>
 
 <template>
@@ -27,7 +27,7 @@ defineProps<{
         </CardTitle>
         <span v-if="!isLoading && sessions.length > 0" class="text-sm text-muted-foreground">
           {{ sessions.length }}
-          {{ sessions.length === 1 ? 'sesja' : sessions.length < 5 ? 'sesje' : 'sesji' }}
+          {{ sessions.length === 1 ? "sesja" : sessions.length < 5 ? "sesje" : "sesji" }}
         </span>
       </div>
     </CardHeader>

@@ -1,69 +1,70 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { AlertCircle, CheckCircle2, Loader2, ArrowLeft } from 'lucide-vue-next'
+import { ref, reactive } from "vue";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle, CheckCircle2, Loader2, ArrowLeft } from "lucide-vue-next";
 
 interface ForgotPasswordFormData {
-  email: string
+  email: string;
 }
 
 interface FormErrors {
-  email?: string
-  general?: string
+  email?: string;
+  general?: string;
 }
 
 const formData = reactive<ForgotPasswordFormData>({
-  email: '',
-})
+  email: "",
+});
 
-const errors = ref<FormErrors>({})
-const isLoading = ref(false)
-const isSuccess = ref(false)
+const errors = ref<FormErrors>({});
+const isLoading = ref(false);
+const isSuccess = ref(false);
 
 const validateForm = (): boolean => {
-  const newErrors: FormErrors = {}
+  const newErrors: FormErrors = {};
 
   // Email validation
   if (!formData.email.trim()) {
-    newErrors.email = 'Pole jest wymagane.'
+    newErrors.email = "Pole jest wymagane.";
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-    newErrors.email = 'Proszę podać poprawny adres e-mail.'
+    newErrors.email = "Proszę podać poprawny adres e-mail.";
   }
 
-  errors.value = newErrors
-  return Object.keys(newErrors).length === 0
-}
+  errors.value = newErrors;
+  return Object.keys(newErrors).length === 0;
+};
 
 const handleSubmit = async () => {
   if (!validateForm()) {
-    return
+    return;
   }
 
-  isLoading.value = true
-  errors.value = {}
+  isLoading.value = true;
+  errors.value = {};
 
   try {
     // TODO: Call API endpoint for password reset when implemented
-    await new Promise(resolve => setTimeout(resolve, 1500)) // Simulate API call
-    
-    isSuccess.value = true
-    console.log('Password reset email sent to:', formData.email)
-  } catch (error: any) {
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    isSuccess.value = true;
+    console.log("Password reset email sent to:", formData.email);
+  } catch (_error: any) {
     // Handle API errors
-    errors.value.general = 'Wystąpił błąd podczas wysyłania e-maila. Spróbuj ponownie.'
+    errors.value.general = "Wystąpił błąd podczas wysyłania e-maila. Spróbuj ponownie.";
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const clearError = (field: keyof FormErrors) => {
   if (errors.value[field]) {
-    delete errors.value[field]
+    delete errors.value[field];
   }
-}
+};
 </script>
 
 <template>
@@ -79,8 +80,8 @@ const clearError = (field: keyof FormErrors) => {
     <Alert v-if="isSuccess" class="border-green-500 bg-green-50 dark:bg-green-950">
       <CheckCircle2 class="h-4 w-4 text-green-600 dark:text-green-400" />
       <AlertDescription class="text-green-800 dark:text-green-200">
-        Link do resetowania hasła został wysłany na adres <strong>{{ formData.email }}</strong>.
-        Sprawdź swoją skrzynkę pocztową.
+        Link do resetowania hasła został wysłany na adres <strong>{{ formData.email }}</strong
+        >. Sprawdź swoją skrzynkę pocztową.
       </AlertDescription>
     </Alert>
 
@@ -102,13 +103,15 @@ const clearError = (field: keyof FormErrors) => {
           :class="{ 'border-destructive': errors.email }"
           @input="clearError('email')"
         />
-        <p v-if="errors.email" class="text-sm text-destructive">{{ errors.email }}</p>
+        <p v-if="errors.email" class="text-sm text-destructive">
+          {{ errors.email }}
+        </p>
       </div>
 
       <!-- Submit button -->
       <Button type="submit" class="w-full" :disabled="isLoading">
         <Loader2 v-if="isLoading" class="mr-2 h-4 w-4 animate-spin" />
-        {{ isLoading ? 'Wysyłanie...' : 'Wyślij link resetujący' }}
+        {{ isLoading ? "Wysyłanie..." : "Wyślij link resetujący" }}
       </Button>
     </form>
 
@@ -121,4 +124,3 @@ const clearError = (field: keyof FormErrors) => {
     </div>
   </div>
 </template>
-

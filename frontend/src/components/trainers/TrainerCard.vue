@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed } from "vue";
+import { useRouter } from "vue-router";
 import {
   Card,
   CardContent,
@@ -8,41 +8,41 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import type { TrainerSummary } from '@/types/trainer'
+} from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import type { TrainerSummary } from "@/types/trainer";
 
 interface Props {
-  trainer: TrainerSummary
+  trainer: TrainerSummary;
 }
 
-const props = defineProps<Props>()
-const router = useRouter()
+const props = defineProps<Props>();
+const router = useRouter();
 
 // Get initials for avatar fallback
 const initials = computed(() => {
-  const names = props.trainer.name.split(' ')
+  const names = props.trainer.name.split(" ");
   if (names.length >= 2) {
-    return `${names[0][0]}${names[1][0]}`.toUpperCase()
+    return `${names[0][0]}${names[1][0]}`.toUpperCase();
   }
-  return props.trainer.name.substring(0, 2).toUpperCase()
-})
+  return props.trainer.name.substring(0, 2).toUpperCase();
+});
 
 // Navigate to trainer detail page
 function viewTrainerDetails() {
-  router.push({ name: 'trainer-profile', params: { id: props.trainer.id } })
+  router.push({ name: "trainer-profile", params: { id: props.trainer.id } });
 }
 
 // Truncate description to max length
 const truncatedDescription = computed(() => {
-  const maxLength = 120
+  const maxLength = 120;
   if (props.trainer.description.length > maxLength) {
-    return props.trainer.description.substring(0, maxLength) + '...'
+    return props.trainer.description.substring(0, maxLength) + "...";
   }
-  return props.trainer.description
-})
+  return props.trainer.description;
+});
 </script>
 
 <template>
@@ -54,7 +54,9 @@ const truncatedDescription = computed(() => {
       <div class="flex items-start gap-4">
         <Avatar class="h-16 w-16 border-2 border-muted">
           <AvatarImage :src="trainer.profilePictureUrl" :alt="trainer.name" />
-          <AvatarFallback class="text-lg">{{ initials }}</AvatarFallback>
+          <AvatarFallback class="text-lg">
+            {{ initials }}
+          </AvatarFallback>
         </Avatar>
         <div class="flex-1 min-w-0">
           <CardTitle class="text-xl group-hover:text-primary transition-colors">

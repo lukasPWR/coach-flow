@@ -1,55 +1,55 @@
 // API Types
-export type UserRole = 'CLIENT' | 'TRAINER' | 'ADMIN'
+export type UserRole = "CLIENT" | "TRAINER" | "ADMIN";
 
 export interface User {
-  id: string
-  name: string
-  email: string
-  role: UserRole
-  createdAt: string
-  updatedAt: string
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AuthResponse {
-  user: User
-  accessToken: string
-  refreshToken: string
+  user: User;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface TokenResponse {
-  accessToken: string
-  refreshToken: string
+  accessToken: string;
+  refreshToken: string;
 }
 
 // Request DTOs
 export interface LoginRequest {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface RegisterRequest {
-  name: string
-  email: string
-  password: string
-  role: UserRole
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
 }
 
 export interface RefreshTokenRequest {
-  refreshToken: string
+  refreshToken: string;
 }
 
 export interface RequestPasswordResetRequest {
-  email: string
+  email: string;
 }
 
 export interface ResetPasswordRequest {
-  token: string
-  password: string
+  token: string;
+  password: string;
 }
 
 // API Error Response
 export interface ApiError {
-  statusCode: number
-  message: string | string[]
-  error?: string
+  statusCode: number;
+  message: string | string[];
+  error?: string;
 }

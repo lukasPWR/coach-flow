@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { Card, CardContent } from '@/components/ui/card'
-import { computed } from 'vue'
+import { Card, CardContent } from "@/components/ui/card";
+import { computed } from "vue";
 
 const props = defineProps<{
-  title: string
-  description: string
-  icon: string
-  to: string
-  color?: 'default' | 'primary' | 'success' | 'warning'
-}>()
+  title: string;
+  description: string;
+  icon: string;
+  to: string;
+  color?: "default" | "primary" | "success" | "warning";
+}>();
 
 const colorClasses = computed(() => {
   const colors = {
-    default: 'bg-muted/50 text-muted-foreground group-hover:bg-muted',
-    primary: 'bg-primary/10 text-primary group-hover:bg-primary/20',
-    success: 'bg-emerald-500/10 text-emerald-600 group-hover:bg-emerald-500/20',
-    warning: 'bg-amber-500/10 text-amber-600 group-hover:bg-amber-500/20',
-  }
-  return colors[props.color ?? 'default']
-})
+    default: "bg-muted/50 text-muted-foreground group-hover:bg-muted",
+    primary: "bg-primary/10 text-primary group-hover:bg-primary/20",
+    success: "bg-emerald-500/10 text-emerald-600 group-hover:bg-emerald-500/20",
+    warning: "bg-amber-500/10 text-amber-600 group-hover:bg-amber-500/20",
+  };
+  return colors[props.color ?? "default"];
+});
 </script>
 
 <template>

@@ -1,49 +1,49 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import type { PendingBookingVM } from '@/types/dashboard'
+import { computed } from "vue";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import type { PendingBookingVM } from "@/types/dashboard";
 
 const props = defineProps<{
-  request: PendingBookingVM
-  isLoading?: boolean
-}>()
+  request: PendingBookingVM;
+  isLoading?: boolean;
+}>();
 
 const emit = defineEmits<{
-  approve: [id: string]
-  reject: [id: string]
-}>()
+  approve: [id: string];
+  reject: [id: string];
+}>();
 
 const timerBadgeClass = computed(() => {
   if (props.request.isExpired) {
-    return 'bg-destructive/10 text-destructive border-destructive/20'
+    return "bg-destructive/10 text-destructive border-destructive/20";
   }
   if (props.request.isUrgent) {
-    return 'bg-amber-500/10 text-amber-600 border-amber-500/20 animate-pulse'
+    return "bg-amber-500/10 text-amber-600 border-amber-500/20 animate-pulse";
   }
-  return 'bg-muted text-muted-foreground border-border'
-})
+  return "bg-muted text-muted-foreground border-border";
+});
 
 const cardClass = computed(() => {
   if (props.request.isExpired) {
-    return 'border-destructive/30 bg-destructive/5 opacity-75'
+    return "border-destructive/30 bg-destructive/5 opacity-75";
   }
   if (props.request.isUrgent) {
-    return 'border-amber-500/30 bg-amber-500/5'
+    return "border-amber-500/30 bg-amber-500/5";
   }
-  return ''
-})
+  return "";
+});
 
 function handleApprove() {
   if (!props.request.isExpired && !props.isLoading) {
-    emit('approve', props.request.id)
+    emit("approve", props.request.id);
   }
 }
 
 function handleReject() {
   if (!props.request.isExpired && !props.isLoading) {
-    emit('reject', props.request.id)
+    emit("reject", props.request.id);
   }
 }
 </script>
@@ -130,8 +130,8 @@ function handleReject() {
               size="sm"
               variant="outline"
               :disabled="request.isExpired || isLoading"
-              @click="handleReject"
               class="text-muted-foreground hover:text-destructive hover:border-destructive/50"
+              @click="handleReject"
             >
               <span v-if="isLoading" class="mr-1">
                 <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -155,8 +155,8 @@ function handleReject() {
             <Button
               size="sm"
               :disabled="request.isExpired || isLoading"
-              @click="handleApprove"
               class="bg-emerald-600 hover:bg-emerald-700 text-white"
+              @click="handleApprove"
             >
               <span v-if="isLoading" class="mr-1">
                 <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">

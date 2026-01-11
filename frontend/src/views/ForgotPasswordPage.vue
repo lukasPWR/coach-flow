@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AuthLayout from '@/components/layouts/AuthLayout.vue'
-import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm.vue'
+import AuthLayout from "@/components/layouts/AuthLayout.vue";
+import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm.vue";
 </script>
 
 <template>
@@ -8,4 +8,3 @@ import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm.vue'
     <ForgotPasswordForm />
   </AuthLayout>
 </template>
-

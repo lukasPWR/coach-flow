@@ -3,7 +3,9 @@
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4">
+  <div
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4"
+  >
     <div class="w-full max-w-md">
       <!-- Logo and branding -->
       <div class="text-center mb-8">
@@ -23,4 +25,3 @@
     </div>
   </div>
 </template>
-

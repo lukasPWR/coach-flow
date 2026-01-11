@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useTrainerDashboard } from '@/composables/useTrainerDashboard'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import DashboardHeader from '@/components/dashboard/DashboardHeader.vue'
-import PendingRequestsWidget from '@/components/dashboard/trainer/PendingRequestsWidget.vue'
-import DailyScheduleWidget from '@/components/dashboard/trainer/DailyScheduleWidget.vue'
-import QuickActionsWidget from '@/components/dashboard/trainer/QuickActionsWidget.vue'
+import { ref } from "vue";
+import { useTrainerDashboard } from "@/composables/useTrainerDashboard";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import DashboardHeader from "@/components/dashboard/DashboardHeader.vue";
+import PendingRequestsWidget from "@/components/dashboard/trainer/PendingRequestsWidget.vue";
+import DailyScheduleWidget from "@/components/dashboard/trainer/DailyScheduleWidget.vue";
+import QuickActionsWidget from "@/components/dashboard/trainer/QuickActionsWidget.vue";
 
 const {
   pendingBookings,
@@ -20,39 +20,39 @@ const {
   rejectBooking,
   isActionLoading,
   retry,
-} = useTrainerDashboard()
+} = useTrainerDashboard();
 
 // Toast-like notification state
 const notification = ref<{
-  show: boolean
-  type: 'success' | 'error'
-  message: string
+  show: boolean;
+  type: "success" | "error";
+  message: string;
 }>({
   show: false,
-  type: 'success',
-  message: '',
-})
+  type: "success",
+  message: "",
+});
 
-let notificationTimeout: ReturnType<typeof setTimeout> | null = null
+let notificationTimeout: ReturnType<typeof setTimeout> | null = null;
 
-function showNotification(type: 'success' | 'error', message: string) {
+function showNotification(type: "success" | "error", message: string) {
   if (notificationTimeout) {
-    clearTimeout(notificationTimeout)
+    clearTimeout(notificationTimeout);
   }
-  notification.value = { show: true, type, message }
+  notification.value = { show: true, type, message };
   notificationTimeout = setTimeout(() => {
-    notification.value.show = false
-  }, 4000)
+    notification.value.show = false;
+  }, 4000);
 }
 
 async function handleApprove(id: string) {
-  const result = await approveBooking(id)
-  showNotification(result.success ? 'success' : 'error', result.message)
+  const result = await approveBooking(id);
+  showNotification(result.success ? "success" : "error", result.message);
 }
 
 async function handleReject(id: string) {
-  const result = await rejectBooking(id)
-  showNotification(result.success ? 'success' : 'error', result.message)
+  const result = await rejectBooking(id);
+  showNotification(result.success ? "success" : "error", result.message);
 }
 </script>
 

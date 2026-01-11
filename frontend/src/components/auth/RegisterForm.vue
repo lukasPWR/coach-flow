@@ -1,151 +1,151 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { AlertCircle, Loader2 } from 'lucide-vue-next'
-import { useAuthStore } from '@/stores/auth'
-import type { UserRole } from '@/lib/api/types'
+import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle, Loader2 } from "lucide-vue-next";
+import { useAuthStore } from "@/stores/auth";
+import type { UserRole } from "@/lib/api/types";
 
-type FormUserRole = 'TRAINER' | 'CLIENT'
+type FormUserRole = "TRAINER" | "CLIENT";
 
 interface RegisterFormData {
-  name: string
-  email: string
-  password: string
-  confirmPassword: string
-  role: FormUserRole
-  termsAccepted: boolean
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  role: FormUserRole;
+  termsAccepted: boolean;
 }
 
 interface FormErrors {
-  name?: string
-  email?: string
-  password?: string
-  confirmPassword?: string
-  termsAccepted?: string
-  general?: string
+  name?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  termsAccepted?: string;
+  general?: string;
 }
 
-const router = useRouter()
-const authStore = useAuthStore()
+const router = useRouter();
+const authStore = useAuthStore();
 
 const formData = reactive<RegisterFormData>({
-  name: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-  role: 'CLIENT',
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  role: "CLIENT",
   termsAccepted: false,
-})
+});
 
-const errors = ref<FormErrors>({})
-const isLoading = ref(false)
+const errors = ref<FormErrors>({});
+const isLoading = ref(false);
 
 const validateForm = (): boolean => {
-  const newErrors: FormErrors = {}
+  const newErrors: FormErrors = {};
 
   // Name validation
   if (!formData.name.trim()) {
-    newErrors.name = 'Pole jest wymagane.'
+    newErrors.name = "Pole jest wymagane.";
   } else if (formData.name.trim().length < 2) {
-    newErrors.name = 'Imię musi mieć co najmniej 2 znaki.'
+    newErrors.name = "Imię musi mieć co najmniej 2 znaki.";
   }
 
   // Email validation
   if (!formData.email.trim()) {
-    newErrors.email = 'Pole jest wymagane.'
+    newErrors.email = "Pole jest wymagane.";
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-    newErrors.email = 'Proszę podać poprawny adres e-mail.'
+    newErrors.email = "Proszę podać poprawny adres e-mail.";
   }
 
   // Password validation (zgodnie z wymaganiami backendu)
   if (!formData.password) {
-    newErrors.password = 'Pole jest wymagane.'
+    newErrors.password = "Pole jest wymagane.";
   } else if (formData.password.length < 8) {
-    newErrors.password = 'Hasło musi mieć co najmniej 8 znaków.'
+    newErrors.password = "Hasło musi mieć co najmniej 8 znaków.";
   } else if (
     !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(formData.password)
   ) {
-    newErrors.password = 'Hasło musi zawierać wielką literę, małą literę, cyfrę i znak specjalny.'
+    newErrors.password = "Hasło musi zawierać wielką literę, małą literę, cyfrę i znak specjalny.";
   }
 
   // Confirm password validation
   if (!formData.confirmPassword) {
-    newErrors.confirmPassword = 'Pole jest wymagane.'
+    newErrors.confirmPassword = "Pole jest wymagane.";
   } else if (formData.password !== formData.confirmPassword) {
-    newErrors.confirmPassword = 'Hasła nie są identyczne.'
+    newErrors.confirmPassword = "Hasła nie są identyczne.";
   }
 
   // Terms acceptance validation
   if (!formData.termsAccepted) {
-    newErrors.termsAccepted = 'Musisz zaakceptować regulamin.'
+    newErrors.termsAccepted = "Musisz zaakceptować regulamin.";
   }
 
-  errors.value = newErrors
-  return Object.keys(newErrors).length === 0
-}
+  errors.value = newErrors;
+  return Object.keys(newErrors).length === 0;
+};
 
 const handleSubmit = async () => {
-  console.log('Submit clicked!', formData)
+  console.log("Submit clicked!", formData);
   console.log(
-    'termsAccepted value:',
+    "termsAccepted value:",
     formData.termsAccepted,
-    'type:',
-    typeof formData.termsAccepted,
-  )
+    "type:",
+    typeof formData.termsAccepted
+  );
 
   if (!validateForm()) {
-    console.log('Validation failed:', errors.value)
-    return
+    console.log("Validation failed:", errors.value);
+    return;
   }
 
-  console.log('Validation passed, starting registration...')
-  isLoading.value = true
-  errors.value = {}
+  console.log("Validation passed, starting registration...");
+  isLoading.value = true;
+  errors.value = {};
 
   try {
-    console.log('Calling authStore.register...')
+    console.log("Calling authStore.register...");
     await authStore.register({
       name: formData.name,
       email: formData.email,
       password: formData.password,
       role: formData.role as UserRole,
-    })
+    });
 
-    console.log('Registration successful!')
+    console.log("Registration successful!");
     // Redirect based on user role
     if (authStore.isTrainer) {
       // New trainers should go through onboarding
       // If they already have a profile (edge case), router guard will redirect to dashboard
-      router.push('/onboarding')
+      router.push("/onboarding");
     } else {
-      router.push('/dashboard')
+      router.push("/dashboard");
     }
   } catch (error: any) {
-    console.error('Registration error:', error)
+    console.error("Registration error:", error);
     // Handle API errors
     if (error.response?.status === 409) {
-      errors.value.general = 'Adres e-mail jest już zajęty.'
+      errors.value.general = "Adres e-mail jest już zajęty.";
     } else if (error.response?.data?.message) {
-      const message = error.response.data.message
-      errors.value.general = Array.isArray(message) ? message[0] : message
+      const message = error.response.data.message;
+      errors.value.general = Array.isArray(message) ? message[0] : message;
     } else {
-      errors.value.general = 'Wystąpił błąd podczas rejestracji. Spróbuj ponownie.'
+      errors.value.general = "Wystąpił błąd podczas rejestracji. Spróbuj ponownie.";
     }
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const clearError = (field: keyof FormErrors) => {
   if (errors.value[field]) {
-    delete errors.value[field]
+    delete errors.value[field];
   }
-}
+};
 </script>
 
 <template>
@@ -163,7 +163,7 @@ const clearError = (field: keyof FormErrors) => {
       <AlertDescription>{{ errors.general }}</AlertDescription>
     </Alert>
 
-    <form @submit.prevent="handleSubmit" class="space-y-4">
+    <form class="space-y-4" @submit.prevent="handleSubmit">
       <!-- Name field -->
       <div class="space-y-2">
         <Label for="name">Imię</Label>
@@ -175,7 +175,9 @@ const clearError = (field: keyof FormErrors) => {
           :class="{ 'border-destructive': errors.name }"
           @input="clearError('name')"
         />
-        <p v-if="errors.name" class="text-sm text-destructive">{{ errors.name }}</p>
+        <p v-if="errors.name" class="text-sm text-destructive">
+          {{ errors.name }}
+        </p>
       </div>
 
       <!-- Email field -->
@@ -189,7 +191,9 @@ const clearError = (field: keyof FormErrors) => {
           :class="{ 'border-destructive': errors.email }"
           @input="clearError('email')"
         />
-        <p v-if="errors.email" class="text-sm text-destructive">{{ errors.email }}</p>
+        <p v-if="errors.email" class="text-sm text-destructive">
+          {{ errors.email }}
+        </p>
       </div>
 
       <!-- Password field -->
@@ -203,7 +207,9 @@ const clearError = (field: keyof FormErrors) => {
           :class="{ 'border-destructive': errors.password }"
           @input="clearError('password')"
         />
-        <p v-if="errors.password" class="text-sm text-destructive">{{ errors.password }}</p>
+        <p v-if="errors.password" class="text-sm text-destructive">
+          {{ errors.password }}
+        </p>
       </div>
 
       <!-- Confirm password field -->
@@ -243,17 +249,17 @@ const clearError = (field: keyof FormErrors) => {
       <div class="space-y-2">
         <div class="flex items-start space-x-2">
           <input
-            type="checkbox"
             id="terms"
             v-model="formData.termsAccepted"
-            @change="
-              () => {
-                console.log('Checkbox changed:', formData.termsAccepted)
-                clearError('termsAccepted')
-              }
-            "
+            type="checkbox"
             class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
             :class="{ 'border-red-500': errors.termsAccepted }"
+            @change="
+              () => {
+                console.log('Checkbox changed:', formData.termsAccepted);
+                clearError('termsAccepted');
+              }
+            "
           />
           <Label for="terms" class="text-sm font-normal leading-none cursor-pointer">
             Akceptuję
@@ -270,7 +276,7 @@ const clearError = (field: keyof FormErrors) => {
       <!-- Submit button -->
       <Button type="submit" class="w-full" :disabled="isLoading">
         <Loader2 v-if="isLoading" class="mr-2 h-4 w-4 animate-spin" />
-        {{ isLoading ? 'Rejestracja...' : 'Zarejestruj się' }}
+        {{ isLoading ? "Rejestracja..." : "Zarejestruj się" }}
       </Button>
     </form>
 

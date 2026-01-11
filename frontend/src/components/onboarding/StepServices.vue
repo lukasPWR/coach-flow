@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { useOnboarding } from '@/composables/useOnboarding'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { ref, reactive } from "vue";
+import { useOnboarding } from "@/composables/useOnboarding";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -19,45 +19,45 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
-import { Plus, Trash2, Clock, Banknote } from 'lucide-vue-next'
-import type { CreateServiceDto } from '@/types/onboarding'
+} from "@/components/ui/dialog";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Plus, Trash2, Clock, Banknote } from "lucide-vue-next";
+import type { CreateServiceDto } from "@/types/onboarding";
 
-const { state, serviceTypes, addService, removeService } = useOnboarding()
+const { state, serviceTypes, addService, removeService } = useOnboarding();
 
-const isDialogOpen = ref(false)
+const isDialogOpen = ref(false);
 const newService = reactive<CreateServiceDto>({
-  serviceTypeId: '',
+  serviceTypeId: "",
   price: 0,
   durationMinutes: 60,
-})
+});
 
 const resetForm = () => {
-  newService.serviceTypeId = ''
-  newService.price = 0
-  newService.durationMinutes = 60
-}
+  newService.serviceTypeId = "";
+  newService.price = 0;
+  newService.durationMinutes = 60;
+};
 
 const handleAddService = async () => {
-  if (!newService.serviceTypeId || newService.price <= 0) return
+  if (!newService.serviceTypeId || newService.price <= 0) return;
 
-  await addService({ ...newService })
-  isDialogOpen.value = false
-  resetForm()
-}
+  await addService({ ...newService });
+  isDialogOpen.value = false;
+  resetForm();
+};
 
 const getServiceName = (service: any) => {
-  if (service.serviceType?.name) return service.serviceType.name
-  if (service.name) return service.name
+  if (service.serviceType?.name) return service.serviceType.name;
+  if (service.name) return service.name;
   if (service.serviceTypeId)
-    return serviceTypes.value.find((t) => t.id === service.serviceTypeId)?.name
-  return 'Nieznana usługa'
-}
+    return serviceTypes.value.find((t) => t.id === service.serviceTypeId)?.name;
+  return "Nieznana usługa";
+};
 
 const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(amount)
-}
+  return new Intl.NumberFormat("pl-PL", { style: "currency", currency: "PLN" }).format(amount);
+};
 </script>
 
 <template>
@@ -81,7 +81,7 @@ const formatCurrency = (amount: number) => {
 
           <div class="grid gap-4 py-4">
             <div class="grid gap-2">
-              <Label htmlFor="serviceType">Typ usługi</Label>
+              <Label html-for="serviceType">Typ usługi</Label>
               <Select v-model="newService.serviceTypeId">
                 <SelectTrigger id="serviceType">
                   <SelectValue placeholder="Wybierz typ usługi" />
@@ -96,33 +96,33 @@ const formatCurrency = (amount: number) => {
 
             <div class="grid grid-cols-2 gap-4">
               <div class="grid gap-2">
-                <Label htmlFor="price">Cena (PLN)</Label>
+                <Label html-for="price">Cena (PLN)</Label>
                 <Input
                   id="price"
+                  v-model.number="newService.price"
                   type="number"
                   min="0"
                   step="1"
-                  v-model.number="newService.price"
                 />
               </div>
               <div class="grid gap-2">
-                <Label htmlFor="duration">Czas (min)</Label>
+                <Label html-for="duration">Czas (min)</Label>
                 <Input
                   id="duration"
+                  v-model.number="newService.durationMinutes"
                   type="number"
                   min="15"
                   step="15"
-                  v-model.number="newService.durationMinutes"
                 />
               </div>
             </div>
           </div>
 
           <DialogFooter>
-            <Button variant="outline" @click="isDialogOpen = false">Anuluj</Button>
+            <Button variant="outline" @click="isDialogOpen = false"> Anuluj </Button>
             <Button
-              @click="handleAddService"
               :disabled="!newService.serviceTypeId || newService.price <= 0"
+              @click="handleAddService"
             >
               Dodaj
             </Button>

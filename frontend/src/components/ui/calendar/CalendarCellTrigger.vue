@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { type HTMLAttributes, computed } from 'vue'
-import { CalendarCellTrigger, type CalendarCellTriggerProps, useForwardProps } from 'radix-vue'
-import { buttonVariants } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { type HTMLAttributes, computed } from "vue";
+import { CalendarCellTrigger, type CalendarCellTriggerProps, useForwardProps } from "radix-vue";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-const props = defineProps<CalendarCellTriggerProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<CalendarCellTriggerProps & { class?: HTMLAttributes["class"] }>();
 
 const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
-  return delegated
-})
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { class: _, ...delegated } = props;
+  return delegated;
+});
 
-const forwardedProps = useForwardProps(delegatedProps)
+const forwardedProps = useForwardProps(delegatedProps);
 </script>
 
 <template>
@@ -29,7 +30,7 @@ const forwardedProps = useForwardProps(delegatedProps)
         'data-[disabled]:text-muted-foreground data-[disabled]:opacity-50',
         // Unavailable
         'data-[unavailable]:text-destructive-foreground data-[unavailable]:opacity-50',
-        props.class,
+        props.class
       )
     "
     v-bind="forwardedProps"

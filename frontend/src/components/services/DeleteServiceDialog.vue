@@ -6,38 +6,38 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface Props {
-  open: boolean
-  isDeleting?: boolean
-  serviceName?: string
+  open: boolean;
+  isDeleting?: boolean;
+  serviceName?: string;
 }
 
 withDefaults(defineProps<Props>(), {
   isDeleting: false,
-  serviceName: 'tę usługę',
-})
+  serviceName: "tę usługę",
+});
 
 const emit = defineEmits<{
-  'update:open': [value: boolean]
-  confirm: []
-  cancel: []
-}>()
+  "update:open": [value: boolean];
+  confirm: [];
+  cancel: [];
+}>();
 
 function handleConfirm() {
-  emit('confirm')
+  emit("confirm");
 }
 
 function handleCancel() {
-  emit('cancel')
-  emit('update:open', false)
+  emit("cancel");
+  emit("update:open", false);
 }
 
 function handleOpenChange(open: boolean) {
   if (!open) {
-    handleCancel()
+    handleCancel();
   }
 }
 </script>
@@ -58,7 +58,7 @@ function handleOpenChange(open: boolean) {
           Anuluj
         </Button>
         <Button type="button" variant="destructive" :disabled="isDeleting" @click="handleConfirm">
-          {{ isDeleting ? 'Usuwanie...' : 'Usuń' }}
+          {{ isDeleting ? "Usuwanie..." : "Usuń" }}
         </Button>
       </DialogFooter>
     </DialogContent>

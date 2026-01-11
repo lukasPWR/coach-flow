@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { Clock } from 'lucide-vue-next'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { TrainerServiceViewModel } from '@/types/trainer'
+import { Clock } from "lucide-vue-next";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { TrainerServiceViewModel } from "@/types/trainer";
 
 interface Props {
-  services: TrainerServiceViewModel[]
-  selectedServiceId?: string | null
+  services: TrainerServiceViewModel[];
+  selectedServiceId?: string | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   selectedServiceId: null,
-})
+});
 
 const emit = defineEmits<{
-  (event: 'select', service: TrainerServiceViewModel): void
-}>()
+  select: [service: TrainerServiceViewModel];
+}>();
 </script>
 
 <template>
@@ -36,7 +36,9 @@ const emit = defineEmits<{
         }"
       >
         <CardHeader class="pb-2">
-          <CardTitle class="text-base font-medium">{{ service.name }}</CardTitle>
+          <CardTitle class="text-base font-medium">
+            {{ service.name }}
+          </CardTitle>
         </CardHeader>
         <CardContent class="space-y-3">
           <div class="flex items-center justify-between">
@@ -52,7 +54,7 @@ const emit = defineEmits<{
             :variant="props.selectedServiceId === service.id ? 'default' : 'outline'"
             @click="emit('select', service)"
           >
-            {{ props.selectedServiceId === service.id ? 'Wybrano' : 'Wybierz' }}
+            {{ props.selectedServiceId === service.id ? "Wybrano" : "Wybierz" }}
           </Button>
         </CardContent>
       </Card>

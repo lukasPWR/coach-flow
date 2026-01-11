@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { Plus } from 'lucide-vue-next'
-import { useAuthStore } from '@/stores/auth'
-import { useServices } from '@/composables/useServices'
-import { useServiceTypes } from '@/composables/useServiceTypes'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { ServiceFormDialog, DeleteServiceDialog, ServicesList } from '@/components/services'
-import type { Service, ServiceFormValues } from '@/types/services'
+import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import { Plus } from "lucide-vue-next";
+import { useAuthStore } from "@/stores/auth";
+import { useServices } from "@/composables/useServices";
+import { useServiceTypes } from "@/composables/useServiceTypes";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ServiceFormDialog, DeleteServiceDialog, ServicesList } from "@/components/services";
+import type { Service, ServiceFormValues } from "@/types/services";
 
-const authStore = useAuthStore()
-const router = useRouter()
+const authStore = useAuthStore();
+const router = useRouter();
 
 // Composables
 const {
@@ -21,137 +21,137 @@ const {
   createService,
   updateService,
   deleteService,
-} = useServices()
+} = useServices();
 const {
   serviceTypes,
   serviceTypesMap,
   isLoading: isLoadingTypes,
   fetchServiceTypes,
-} = useServiceTypes()
+} = useServiceTypes();
 
 // Local state
-const isFormDialogOpen = ref(false)
-const isDeleteDialogOpen = ref(false)
-const serviceToEdit = ref<Service | null>(null)
-const serviceToDelete = ref<Service | null>(null)
-const isSubmitting = ref(false)
-const isDeleting = ref(false)
-const error = ref<string | null>(null)
+const isFormDialogOpen = ref(false);
+const isDeleteDialogOpen = ref(false);
+const serviceToEdit = ref<Service | null>(null);
+const serviceToDelete = ref<Service | null>(null);
+const isSubmitting = ref(false);
+const isDeleting = ref(false);
+const error = ref<string | null>(null);
 
 // Toast notification state
 const notification = ref<{
-  show: boolean
-  type: 'success' | 'error'
-  message: string
+  show: boolean;
+  type: "success" | "error";
+  message: string;
 }>({
   show: false,
-  type: 'success',
-  message: '',
-})
+  type: "success",
+  message: "",
+});
 
-let notificationTimeout: ReturnType<typeof setTimeout> | null = null
+let notificationTimeout: ReturnType<typeof setTimeout> | null = null;
 
 // Computed
-const isLoading = computed(() => isLoadingServices.value || isLoadingTypes.value)
+const isLoading = computed(() => isLoadingServices.value || isLoadingTypes.value);
 
 // Functions
-function showNotification(type: 'success' | 'error', message: string) {
+function showNotification(type: "success" | "error", message: string) {
   if (notificationTimeout) {
-    clearTimeout(notificationTimeout)
+    clearTimeout(notificationTimeout);
   }
-  notification.value = { show: true, type, message }
+  notification.value = { show: true, type, message };
   notificationTimeout = setTimeout(() => {
-    notification.value.show = false
-  }, 4000)
+    notification.value.show = false;
+  }, 4000);
 }
 
 async function loadData() {
   try {
-    error.value = null
-    await Promise.all([fetchServices(), fetchServiceTypes()])
+    error.value = null;
+    await Promise.all([fetchServices(), fetchServiceTypes()]);
   } catch (err: any) {
-    error.value = err.message || 'Nie udało się pobrać danych'
-    console.error('Failed to load data:', err)
+    error.value = err.message || "Nie udało się pobrać danych";
+    console.error("Failed to load data:", err);
   }
 }
 
 function handleAddService() {
-  serviceToEdit.value = null
-  isFormDialogOpen.value = true
+  serviceToEdit.value = null;
+  isFormDialogOpen.value = true;
 }
 
 function handleEditService(service: Service) {
-  serviceToEdit.value = service
-  isFormDialogOpen.value = true
+  serviceToEdit.value = service;
+  isFormDialogOpen.value = true;
 }
 
 function handleDeleteService(service: Service) {
-  serviceToDelete.value = service
-  isDeleteDialogOpen.value = true
+  serviceToDelete.value = service;
+  isDeleteDialogOpen.value = true;
 }
 
 async function handleFormSubmit(formData: ServiceFormValues) {
   try {
-    isSubmitting.value = true
+    isSubmitting.value = true;
 
     if (serviceToEdit.value) {
       // Edit mode
       await updateService(serviceToEdit.value.id, {
         price: formData.price,
         durationMinutes: formData.durationMinutes,
-      })
-      showNotification('success', 'Usługa została zaktualizowana')
+      });
+      showNotification("success", "Usługa została zaktualizowana");
     } else {
       // Create mode
-      await createService(formData)
-      showNotification('success', 'Usługa została dodana')
+      await createService(formData);
+      showNotification("success", "Usługa została dodana");
     }
 
-    isFormDialogOpen.value = false
-    serviceToEdit.value = null
+    isFormDialogOpen.value = false;
+    serviceToEdit.value = null;
   } catch (err: any) {
-    const errorMessage = err.response?.data?.message || 'Nie udało się zapisać usługi'
-    showNotification('error', Array.isArray(errorMessage) ? errorMessage[0] : errorMessage)
+    const errorMessage = err.response?.data?.message || "Nie udało się zapisać usługi";
+    showNotification("error", Array.isArray(errorMessage) ? errorMessage[0] : errorMessage);
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
 }
 
 async function handleConfirmDelete() {
-  if (!serviceToDelete.value) return
+  if (!serviceToDelete.value) return;
 
   try {
-    isDeleting.value = true
-    await deleteService(serviceToDelete.value.id)
-    showNotification('success', 'Usługa została usunięta')
-    isDeleteDialogOpen.value = false
-    serviceToDelete.value = null
+    isDeleting.value = true;
+    await deleteService(serviceToDelete.value.id);
+    showNotification("success", "Usługa została usunięta");
+    isDeleteDialogOpen.value = false;
+    serviceToDelete.value = null;
   } catch (err: any) {
-    const errorMessage = err.response?.data?.message || 'Nie udało się usunąć usługi'
-    showNotification('error', Array.isArray(errorMessage) ? errorMessage[0] : errorMessage)
+    const errorMessage = err.response?.data?.message || "Nie udało się usunąć usługi";
+    showNotification("error", Array.isArray(errorMessage) ? errorMessage[0] : errorMessage);
   } finally {
-    isDeleting.value = false
+    isDeleting.value = false;
   }
 }
 
 function handleCancelDelete() {
-  isDeleteDialogOpen.value = false
-  serviceToDelete.value = null
+  isDeleteDialogOpen.value = false;
+  serviceToDelete.value = null;
 }
 
 function handleLogout() {
-  authStore.logout()
-  router.push('/login')
+  authStore.logout();
+  router.push("/login");
 }
 
 function retry() {
-  loadData()
+  loadData();
 }
 
 // Lifecycle
 onMounted(() => {
-  loadData()
-})
+  loadData();
+});
 </script>
 
 <template>
@@ -244,13 +244,13 @@ onMounted(() => {
         <AlertTitle>Wystąpił błąd</AlertTitle>
         <AlertDescription class="flex items-center justify-between">
           <span>{{ error }}</span>
-          <Button variant="outline" size="sm" @click="retry">Spróbuj ponownie</Button>
+          <Button variant="outline" size="sm" @click="retry"> Spróbuj ponownie </Button>
         </AlertDescription>
       </Alert>
 
       <!-- Add Service Button -->
       <div class="mb-6">
-        <Button @click="handleAddService" :disabled="isLoading">
+        <Button :disabled="isLoading" @click="handleAddService">
           <Plus class="h-4 w-4 mr-2" />
           Dodaj usługę
         </Button>

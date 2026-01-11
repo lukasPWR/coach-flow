@@ -14,11 +14,23 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         <!-- Karta dla Trenerów -->
-        <div class="bg-card rounded-3xl p-8 md:p-10 shadow-sm border border-border/50 hover:shadow-md transition-shadow duration-300">
+        <div
+          class="bg-card rounded-3xl p-8 md:p-10 shadow-sm border border-border/50 hover:shadow-md transition-shadow duration-300"
+        >
           <div class="mb-8">
             <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              <svg
+                class="w-6 h-6 text-primary"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
               </svg>
             </div>
             <h3 class="text-2xl md:text-3xl font-semibold mb-2">Dla Trenerów</h3>
@@ -26,10 +38,10 @@
               Profesjonalne narzędzia do zarządzania Twoją praktyką treningową
             </p>
           </div>
-          
+
           <div class="space-y-6">
             <div class="flex items-start gap-4">
-              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5"></div>
+              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5" />
               <div>
                 <h4 class="font-medium text-foreground/90 mb-1">Zarządzaj grafikiem</h4>
                 <p class="text-sm text-muted-foreground font-light leading-relaxed">
@@ -37,9 +49,9 @@
                 </p>
               </div>
             </div>
-            
+
             <div class="flex items-start gap-4">
-              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5"></div>
+              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5" />
               <div>
                 <h4 class="font-medium text-foreground/90 mb-1">Profesjonalny profil</h4>
                 <p class="text-sm text-muted-foreground font-light leading-relaxed">
@@ -47,9 +59,9 @@
                 </p>
               </div>
             </div>
-            
+
             <div class="flex items-start gap-4">
-              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5"></div>
+              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5" />
               <div>
                 <h4 class="font-medium text-foreground/90 mb-1">Kontroluj swój czas</h4>
                 <p class="text-sm text-muted-foreground font-light leading-relaxed">
@@ -57,9 +69,9 @@
                 </p>
               </div>
             </div>
-            
+
             <div class="flex items-start gap-4">
-              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5"></div>
+              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5" />
               <div>
                 <h4 class="font-medium text-foreground/90 mb-1">Rozwijaj bazę klientów</h4>
                 <p class="text-sm text-muted-foreground font-light leading-relaxed">
@@ -71,11 +83,23 @@
         </div>
 
         <!-- Karta dla Klientów -->
-        <div class="bg-card rounded-3xl p-8 md:p-10 shadow-sm border border-border/50 hover:shadow-md transition-shadow duration-300">
+        <div
+          class="bg-card rounded-3xl p-8 md:p-10 shadow-sm border border-border/50 hover:shadow-md transition-shadow duration-300"
+        >
           <div class="mb-8">
             <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                class="w-6 h-6 text-primary"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <h3 class="text-2xl md:text-3xl font-semibold mb-2">Dla Klientów</h3>
@@ -83,10 +107,10 @@
               Prosty sposób na organizację Twojego planu treningowego
             </p>
           </div>
-          
+
           <div class="space-y-6">
             <div class="flex items-start gap-4">
-              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5"></div>
+              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5" />
               <div>
                 <h4 class="font-medium text-foreground/90 mb-1">Szybka rezerwacja</h4>
                 <p class="text-sm text-muted-foreground font-light leading-relaxed">
@@ -94,9 +118,9 @@
                 </p>
               </div>
             </div>
-            
+
             <div class="flex items-start gap-4">
-              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5"></div>
+              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5" />
               <div>
                 <h4 class="font-medium text-foreground/90 mb-1">Twój kalendarz treningów</h4>
                 <p class="text-sm text-muted-foreground font-light leading-relaxed">
@@ -104,9 +128,9 @@
                 </p>
               </div>
             </div>
-            
+
             <div class="flex items-start gap-4">
-              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5"></div>
+              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5" />
               <div>
                 <h4 class="font-medium text-foreground/90 mb-1">Znajdź idealnego trenera</h4>
                 <p class="text-sm text-muted-foreground font-light leading-relaxed">
@@ -114,9 +138,9 @@
                 </p>
               </div>
             </div>
-            
+
             <div class="flex items-start gap-4">
-              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5"></div>
+              <div class="shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-2.5" />
               <div>
                 <h4 class="font-medium text-foreground/90 mb-1">Automatyczne przypomnienia</h4>
                 <p class="text-sm text-muted-foreground font-light leading-relaxed">
@@ -130,4 +154,3 @@
     </div>
   </section>
 </template>
-

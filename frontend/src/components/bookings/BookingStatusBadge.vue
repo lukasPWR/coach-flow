@@ -5,41 +5,40 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Badge } from '@/components/ui/badge'
-import { BookingStatus } from '@/types/bookings'
+import { computed } from "vue";
+import { Badge } from "@/components/ui/badge";
+import { BookingStatus } from "@/types/bookings";
 
 const props = defineProps<{
-  status: BookingStatus
-}>()
+  status: BookingStatus;
+}>();
 
 const variant = computed(() => {
   switch (props.status) {
     case BookingStatus.ACCEPTED:
-      return 'default'
+      return "default";
     case BookingStatus.PENDING:
-      return 'secondary'
+      return "secondary";
     case BookingStatus.REJECTED:
     case BookingStatus.CANCELLED:
-      return 'destructive'
+      return "destructive";
     default:
-      return 'outline'
+      return "outline";
   }
-})
+});
 
 const label = computed(() => {
   switch (props.status) {
     case BookingStatus.ACCEPTED:
-      return 'Potwierdzona'
+      return "Potwierdzona";
     case BookingStatus.PENDING:
-      return 'Oczekująca'
+      return "Oczekująca";
     case BookingStatus.REJECTED:
-      return 'Odrzucona'
+      return "Odrzucona";
     case BookingStatus.CANCELLED:
-      return 'Anulowana'
+      return "Anulowana";
     default:
-      return props.status
+      return props.status;
   }
-})
+});
 </script>
-

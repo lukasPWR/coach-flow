@@ -17,7 +17,9 @@
               <Calendar class="h-6 w-6" />
             </div>
             <div>
-              <p class="text-lg font-semibold leading-none">{{ booking.formattedDate }}</p>
+              <p class="text-lg font-semibold leading-none">
+                {{ booking.formattedDate }}
+              </p>
               <p class="text-sm text-muted-foreground mt-1">
                 {{ booking.formattedTime }} • {{ booking.service.durationMinutes }} min
               </p>
@@ -44,8 +46,8 @@
             v-if="booking.status === BookingStatus.PENDING"
             size="sm"
             variant="default"
-            @click="$emit('approve', booking)"
             :disabled="isProcessing"
+            @click="$emit('approve', booking)"
           >
             <Check class="h-4 w-4 mr-1" />
             Akceptuj
@@ -54,8 +56,8 @@
             v-if="booking.status === BookingStatus.PENDING"
             size="sm"
             variant="outline"
-            @click="$emit('reject', booking)"
             :disabled="isProcessing"
+            @click="$emit('reject', booking)"
           >
             <X class="h-4 w-4 mr-1" />
             Odrzuć
@@ -64,8 +66,8 @@
             v-if="canCancel"
             size="sm"
             variant="destructive"
-            @click="$emit('cancel', booking)"
             :disabled="isProcessing"
+            @click="$emit('cancel', booking)"
           >
             <Ban class="h-4 w-4 mr-1" />
             Anuluj
@@ -77,46 +79,46 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Calendar, Check, X, Ban } from 'lucide-vue-next'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import BookingStatusBadge from './BookingStatusBadge.vue'
-import type { BookingViewModel } from '@/types/bookings'
-import { BookingStatus } from '@/types/bookings'
-import { formatPrice } from '@/lib/utils'
+import { computed } from "vue";
+import { Calendar, Check, X, Ban } from "lucide-vue-next";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import BookingStatusBadge from "./BookingStatusBadge.vue";
+import type { BookingViewModel } from "@/types/bookings";
+import { BookingStatus } from "@/types/bookings";
+import { formatPrice } from "@/lib/utils";
 
 const props = defineProps<{
-  booking: BookingViewModel
-  isProcessing?: boolean
-}>()
+  booking: BookingViewModel;
+  isProcessing?: boolean;
+}>();
 
 defineEmits<{
-  (e: 'approve', booking: BookingViewModel): void
-  (e: 'reject', booking: BookingViewModel): void
-  (e: 'cancel', booking: BookingViewModel): void
-}>()
+  approve: [booking: BookingViewModel];
+  reject: [booking: BookingViewModel];
+  cancel: [booking: BookingViewModel];
+}>();
 
 const clientInitials = computed(() => {
   return props.booking.client.name
-    .split(' ')
+    .split(" ")
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase()
-    .slice(0, 2)
-})
+    .slice(0, 2);
+});
 
 const canCancel = computed(() => {
   return (
     (props.booking.status === BookingStatus.PENDING ||
       props.booking.status === BookingStatus.ACCEPTED) &&
     props.booking.isUpcoming
-  )
-})
+  );
+});
 
 const showActions = computed(() => {
-  return props.booking.status === BookingStatus.PENDING || canCancel.value
-})
+  return props.booking.status === BookingStatus.PENDING || canCancel.value;
+});
 </script>

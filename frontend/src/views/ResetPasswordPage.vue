@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AuthLayout from '@/components/layouts/AuthLayout.vue'
-import ResetPasswordForm from '@/components/auth/ResetPasswordForm.vue'
+import AuthLayout from "@/components/layouts/AuthLayout.vue";
+import ResetPasswordForm from "@/components/auth/ResetPasswordForm.vue";
 </script>
 
 <template>
@@ -8,4 +8,3 @@ import ResetPasswordForm from '@/components/auth/ResetPasswordForm.vue'
     <ResetPasswordForm />
   </AuthLayout>
 </template>
-

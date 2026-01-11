@@ -6,18 +6,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue";
 
 defineProps<{
-  userName: string
-}>()
+  userName: string;
+}>();
 
 const currentDate = computed(() => {
-  return new Intl.DateTimeFormat('pl-PL', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date())
-})
+  return new Intl.DateTimeFormat("pl-PL", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date());
+});
 </script>

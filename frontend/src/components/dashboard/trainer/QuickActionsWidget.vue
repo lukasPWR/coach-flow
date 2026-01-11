@@ -1,40 +1,40 @@
 <script setup lang="ts">
-import ActionCard from './ActionCard.vue'
+import ActionCard from "./ActionCard.vue";
 
 const quickActions = [
   {
-    id: 'calendar',
-    title: 'Kalendarz',
-    description: 'Zarządzaj swoją dostępnością i harmonogramem',
-    icon: '📅',
-    route: '/calendar',
-    color: 'primary' as const,
+    id: "calendar",
+    title: "Kalendarz",
+    description: "Zarządzaj swoją dostępnością i harmonogramem",
+    icon: "📅",
+    route: "/calendar",
+    color: "primary" as const,
   },
   {
-    id: 'services',
-    title: 'Usługi',
-    description: 'Edytuj ofertę i cennik swoich usług',
-    icon: '💪',
-    route: '/trainer/services',
-    color: 'success' as const,
+    id: "services",
+    title: "Usługi",
+    description: "Edytuj ofertę i cennik swoich usług",
+    icon: "💪",
+    route: "/trainer/services",
+    color: "success" as const,
   },
   {
-    id: 'profile',
-    title: 'Profil',
-    description: 'Zaktualizuj swój profil i zdjęcie',
-    icon: '👤',
-    route: '/profile',
-    color: 'default' as const,
+    id: "profile",
+    title: "Profil",
+    description: "Zaktualizuj swój profil i zdjęcie",
+    icon: "👤",
+    route: "/profile",
+    color: "default" as const,
   },
   {
-    id: 'bookings',
-    title: 'Rezerwacje',
-    description: 'Zarządzaj rezerwacjami od klientów',
-    icon: '📋',
-    route: '/bookings',
-    color: 'warning' as const,
+    id: "bookings",
+    title: "Rezerwacje",
+    description: "Zarządzaj rezerwacjami od klientów",
+    icon: "📋",
+    route: "/bookings",
+    color: "warning" as const,
   },
-]
+];
 </script>
 
 <template>
