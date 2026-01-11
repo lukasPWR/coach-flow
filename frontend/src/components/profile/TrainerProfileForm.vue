@@ -72,7 +72,7 @@ onMounted(async () => {
   isLoadingSpecializations.value = true
   try {
     specializations.value = await getAllSpecializations()
-  } catch (error: any) {
+  } catch {
     errors.value.general = "Nie udało się pobrać listy specjalizacji"
   } finally {
     isLoadingSpecializations.value = false
@@ -96,6 +96,7 @@ function validateForm(): boolean {
   // Profile picture URL validation (optional, must be valid URL)
   if (formData.value.profilePictureUrl) {
     try {
+      // eslint-disable-next-line no-new
       new URL(formData.value.profilePictureUrl)
     } catch {
       errors.value.profilePictureUrl = "Podaj poprawny adres URL"

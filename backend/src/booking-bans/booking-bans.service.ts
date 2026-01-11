@@ -240,7 +240,8 @@ export class BookingBansService {
         take,
         relations: ["client", "trainer"],
         order: {
-          createdAt: "DESC", // Most recent bans first
+          // Most recent bans first
+          createdAt: "DESC",
         },
       });
 

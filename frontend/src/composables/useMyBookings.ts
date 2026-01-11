@@ -23,6 +23,11 @@ export function useMyBookings() {
           status: [BookingStatus.ACCEPTED, BookingStatus.REJECTED, BookingStatus.CANCELLED],
           timeFilter: 'past' as const,
         }
+      default:
+        return {
+          status: [BookingStatus.ACCEPTED],
+          timeFilter: 'upcoming' as const,
+        }
     }
   })
 

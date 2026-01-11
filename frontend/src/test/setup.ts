@@ -1,4 +1,4 @@
-import { expect, afterEach, vi } from 'vitest';
+import { afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/vue';
 import '@testing-library/jest-dom/vitest';
 
@@ -23,6 +23,7 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock IntersectionObserver
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 global.IntersectionObserver = class IntersectionObserver {
   constructor() {}
   disconnect() {}
@@ -34,6 +35,7 @@ global.IntersectionObserver = class IntersectionObserver {
 } as any;
 
 // Mock ResizeObserver
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 global.ResizeObserver = class ResizeObserver {
   constructor() {}
   disconnect() {}

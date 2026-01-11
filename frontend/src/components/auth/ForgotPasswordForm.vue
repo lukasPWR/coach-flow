@@ -50,8 +50,7 @@ const handleSubmit = async () => {
     await new Promise(resolve => setTimeout(resolve, 1500)) // Simulate API call
     
     isSuccess.value = true
-    console.log('Password reset email sent to:', formData.email)
-  } catch (error: any) {
+  } catch {
     // Handle API errors
     errors.value.general = 'Wystąpił błąd podczas wysyłania e-maila. Spróbuj ponownie.'
   } finally {

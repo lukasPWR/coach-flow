@@ -58,7 +58,7 @@ export async function getMyTrainerProfile() {
   try {
     const response = await api.get('/trainers/me')
     return response.data
-  } catch (error) {
+  } catch {
     // If 404, it means profile doesn't exist, which is expected for new onboarding
     return null
   }

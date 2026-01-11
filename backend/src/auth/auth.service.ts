@@ -54,7 +54,8 @@ export class AuthService {
 
     const tokens = await this.generateTokens(user);
 
-    const { password, ...userWithoutPassword } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...userWithoutPassword } = user;
 
     return {
       user: userWithoutPassword,
@@ -79,7 +80,8 @@ export class AuthService {
 
     const tokens = await this.generateTokens(user);
 
-    const { password, ...userWithoutPassword } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _pwd, ...userWithoutPassword } = user;
 
     return {
       user: userWithoutPassword,
@@ -97,7 +99,7 @@ export class AuthService {
       payload = this.jwtService.verify(refreshToken, {
         secret: this.configService.get<string>("JWT_REFRESH_SECRET"),
       });
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException("Invalid or expired refresh token");
     }
 
@@ -127,6 +129,8 @@ export class AuthService {
 
     await this.tokensService.createPasswordResetToken(user.id, resetToken, expiresAt);
 
+    // TODO: Send email with password reset token
+    // eslint-disable-next-line no-console
     console.log(`Password reset token for ${user.email}: ${resetToken}`);
   }
 

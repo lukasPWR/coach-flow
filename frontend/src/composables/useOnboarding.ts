@@ -3,7 +3,6 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import type {
   OnboardingState,
-  CreateTrainerProfileDto,
   CreateServiceDto,
   CreateUnavailabilityDto,
   UnavailabilityResponseDto,
@@ -75,7 +74,7 @@ export function useOnboarding() {
           city: profile.city || '',
           description: profile.description || '',
           profilePictureUrl: profile.profilePictureUrl || '',
-          specializationIds: profile.specializations?.map((s: any) => s.id) || [],
+          specializationIds: profile.specializations?.map((s: { id: string }) => s.id) || [],
         }
 
         // Also fetch services
@@ -120,14 +119,16 @@ export function useOnboarding() {
       await api.createTrainerProfile(payload)
       state.profileCreated = true
       state.currentStep = 2
-    } catch (error: any) {
-      if (error.response?.status === 409) {
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { status?: number; data?: { message?: string } } }
+      if (axiosError.response?.status === 409) {
         // Profile already exists
         state.profileCreated = true
         state.currentStep = 2
       } else {
         console.error('Failed to create profile', error)
-        errors.value = { global: error.response?.data?.message || 'Failed to create profile' }
+        const axiosError = error as { response?: { data?: { message?: string } } }
+        errors.value = { global: axiosError.response?.data?.message || 'Failed to create profile' }
       }
     } finally {
       state.isLoading = false

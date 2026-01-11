@@ -54,6 +54,7 @@ const handleAddUnavailability = async () => {
   )
 
   if (endDateTime <= startDateTime) {
+    // TODO: Replace with toast notification
     alert('Data zakończenia musi być późniejsza niż data rozpoczęcia')
     return
   }
@@ -65,11 +66,14 @@ const handleAddUnavailability = async () => {
 
   try {
     await submitUnavailability(payload)
+    // TODO: Replace with toast notification
     alert('Niedostępność dodana pomyślnie!')
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Failed to add unavailability', error)
-    console.error('Error response:', error.response?.data)
-    const errorMsg = error.response?.data?.message || 'Nie udało się dodać niedostępności'
+    const axiosError = error as { response?: { data?: { message?: string | string[] } } }
+    console.error('Error response:', axiosError.response?.data)
+    const errorMsg = axiosError.response?.data?.message || 'Nie udało się dodać niedostępności'
+    // TODO: Replace with toast notification
     alert(Array.isArray(errorMsg) ? errorMsg.join(', ') : errorMsg)
   }
 }
@@ -103,9 +107,11 @@ const getUnavailabilitiesForMonth = () => {
 const handleRemoveUnavailability = async (id: string) => {
   try {
     await removeUnavailability(id)
+    // TODO: Replace with toast notification
     alert('Niedostępność usunięta pomyślnie!')
   } catch (error) {
     console.error('Failed to remove unavailability', error)
+    // TODO: Replace with toast notification
     alert('Nie udało się usunąć niedostępności')
   }
 }

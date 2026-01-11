@@ -73,6 +73,7 @@ const handleCancelConfirm = async (booking: BookingViewModel) => {
 }
 
 const handleRescheduleRequest = () => {
+  // TODO: Implement reschedule functionality
   alert('Funkcja w budowie: Zmiana terminu będzie dostępna wkrótce.')
 }
 

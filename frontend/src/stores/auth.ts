@@ -29,7 +29,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const profile = await getMyTrainerProfile()
       trainerProfile.value = profile
-    } catch (error) {
+    } catch {
       // Ignore 404 (profile not found), log others
       // console.warn('Trainer profile not found or error', error)
       trainerProfile.value = null
@@ -49,9 +49,10 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       return response
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const axiosError = err as { response?: { data?: { message?: string | string[] } } }
       const message =
-        err.response?.data?.message || 'Wystąpił błąd podczas logowania. Spróbuj ponownie.'
+        axiosError.response?.data?.message || 'Wystąpił błąd podczas logowania. Spróbuj ponownie.'
       error.value = Array.isArray(message) ? message[0] : message
       throw err
     } finally {
@@ -72,9 +73,10 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       return response
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const axiosError = err as { response?: { data?: { message?: string | string[] } } }
       const message =
-        err.response?.data?.message || 'Wystąpił błąd podczas rejestracji. Spróbuj ponownie.'
+        axiosError.response?.data?.message || 'Wystąpił błąd podczas rejestracji. Spróbuj ponownie.'
       error.value = Array.isArray(message) ? message[0] : message
       throw err
     } finally {

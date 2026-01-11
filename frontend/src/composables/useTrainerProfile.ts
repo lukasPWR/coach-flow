@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { getTrainerById } from '@/lib/api/trainers'
 import type {
   TrainerProfileViewModel,
@@ -57,10 +57,11 @@ export function useTrainerProfile(trainerId: string) {
     try {
       const data = await getTrainerById(trainerId)
       trainer.value = mapToViewModel(data)
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error('Failed to load trainer profile:', e)
       error.value = 'Nie udało się pobrać profilu trenera.'
-      if (e.response?.status === 404) {
+      const axiosError = e as { response?: { status?: number } }
+      if (axiosError.response?.status === 404) {
         error.value = 'Trener nie został znaleziony.'
       }
     } finally {

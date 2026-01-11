@@ -78,10 +78,12 @@ const handleSubmit = async () => {
     await new Promise(resolve => setTimeout(resolve, 1500)) // Simulate API call
     
     isSuccess.value = true
+    // eslint-disable-next-line no-console
     console.log('Password reset successful with token:', token.value)
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Handle API errors
-    if (error.response?.status === 400) {
+    const responseError = error as { response?: { status?: number } }
+    if (responseError.response?.status === 400) {
       errors.value.general = 'Token resetowania hasła jest nieprawidłowy lub wygasł.'
     } else {
       errors.value.general = 'Wystąpił błąd podczas resetowania hasła. Spróbuj ponownie.'

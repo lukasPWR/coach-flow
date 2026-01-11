@@ -90,7 +90,9 @@ const validateForm = (): boolean => {
 }
 
 const handleSubmit = async () => {
+  // eslint-disable-next-line no-console
   console.log('Submit clicked!', formData)
+  // eslint-disable-next-line no-console
   console.log(
     'termsAccepted value:',
     formData.termsAccepted,
@@ -99,15 +101,18 @@ const handleSubmit = async () => {
   )
 
   if (!validateForm()) {
+    // eslint-disable-next-line no-console
     console.log('Validation failed:', errors.value)
     return
   }
 
+  // eslint-disable-next-line no-console
   console.log('Validation passed, starting registration...')
   isLoading.value = true
   errors.value = {}
 
   try {
+    // eslint-disable-next-line no-console
     console.log('Calling authStore.register...')
     await authStore.register({
       name: formData.name,
@@ -116,6 +121,7 @@ const handleSubmit = async () => {
       role: formData.role as UserRole,
     })
 
+    // eslint-disable-next-line no-console
     console.log('Registration successful!')
     // Redirect based on user role
     if (authStore.isTrainer) {
@@ -125,13 +131,15 @@ const handleSubmit = async () => {
     } else {
       router.push('/dashboard')
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    // eslint-disable-next-line no-console
     console.error('Registration error:', error)
     // Handle API errors
-    if (error.response?.status === 409) {
+    const responseError = error as { response?: { status?: number; data?: { message?: string | string[] } } }
+    if (responseError.response?.status === 409) {
       errors.value.general = 'Adres e-mail jest już zajęty.'
-    } else if (error.response?.data?.message) {
-      const message = error.response.data.message
+    } else if (responseError.response?.data?.message) {
+      const message = responseError.response.data.message
       errors.value.general = Array.isArray(message) ? message[0] : message
     } else {
       errors.value.general = 'Wystąpił błąd podczas rejestracji. Spróbuj ponownie.'
