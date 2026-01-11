@@ -53,6 +53,28 @@ jobs:
     name: Unit Tests
     runs-on: ubuntu-latest
     needs: lint
+    
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/coachflow_test
+      JWT_SECRET: test-secret-key-for-ci
+      JWT_EXPIRES_IN: 1h
+    
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: coachflow_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
     strategy:
       matrix:
         workspace: [backend, frontend]
@@ -81,13 +103,18 @@ jobs:
           npm install @rollup/rollup-linux-x64-gnu --no-save --force
 
       - name: Run unit tests - ${{ matrix.workspace }}
-        run: npm run test:cov --workspace=${{ matrix.workspace }}
+        run: |
+          if [ "${{ matrix.workspace }}" == "frontend" ]; then
+            npm run test:coverage --workspace=${{ matrix.workspace }}
+          else
+            npm run test:cov --workspace=${{ matrix.workspace }}
+          fi
 
       - name: Upload coverage to Codecov - ${{ matrix.workspace }}
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./${{ matrix.workspace }}/coverage/coverage-final.json
+          directory: ./${{ matrix.workspace }}/coverage
           flags: ${{ matrix.workspace }}
           name: codecov-${{ matrix.workspace }}
           fail_ci_if_error: false
