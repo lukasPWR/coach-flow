@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
+import { Test, TestingModule } from "@nestjs/testing";
+import { INestApplication, ValidationPipe } from "@nestjs/common";
+import request from "supertest";
+import { AppModule } from "../src/app.module";
 
-describe('AppController (e2e)', () => {
+describe("AppController (e2e)", () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -12,14 +12,14 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    
+
     // Apply global pipes and middleware like in main.ts
     app.useGlobalPipes(
       new ValidationPipe({
         whitelist: true,
         forbidNonWhitelisted: true,
         transform: true,
-      }),
+      })
     );
 
     await app.init();
@@ -29,22 +29,18 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  describe('/ (GET)', () => {
+  describe("/ (GET)", () => {
     it('should return "Hello World!"', () => {
-      return request(app.getHttpServer())
-        .get('/')
-        .expect(200)
-        .expect('Hello World!');
+      return request(app.getHttpServer()).get("/").expect(200).expect("Hello World!");
     });
   });
-
-  describe('/health (GET)', () => {
-    it('should return health status', () => {
+  describe("/health (GET)", () => {
+    it("should return health status", () => {
       return request(app.getHttpServer())
-        .get('/health')
+        .get("/health")
         .expect(200)
         .expect((res) => {
-          expect(res.body).toHaveProperty('status');
+          expect(res.body).toHaveProperty("status");
         });
     });
   });
