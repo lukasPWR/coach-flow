@@ -9,9 +9,9 @@
 
     <Tabs v-model="activeTab" class="space-y-4">
       <TabsList>
-        <TabsTrigger value="upcoming">Nadchodzące</TabsTrigger>
-        <TabsTrigger value="pending">Oczekujące</TabsTrigger>
-        <TabsTrigger value="history">Historia</TabsTrigger>
+        <TabsTrigger value="upcoming"> Nadchodzące </TabsTrigger>
+        <TabsTrigger value="pending"> Oczekujące </TabsTrigger>
+        <TabsTrigger value="history"> Historia </TabsTrigger>
       </TabsList>
 
       <!-- Content is handled by BookingList with shared state -->
@@ -49,34 +49,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Button } from '@/components/ui/button'
-import BookingList from '@/components/bookings/BookingList.vue'
-import CancelBookingDialog from '@/components/bookings/modals/CancelBookingDialog.vue'
-import { useMyBookings } from '@/composables/useMyBookings'
-import type { BookingViewModel } from '@/types/bookings'
+import { ref } from "vue";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import BookingList from "@/components/bookings/BookingList.vue";
+import CancelBookingDialog from "@/components/bookings/modals/CancelBookingDialog.vue";
+import { useMyBookings } from "@/composables/useMyBookings";
+import type { BookingViewModel } from "@/types/bookings";
 
-const { bookings, isLoading, activeTab, pagination, cancelBooking, setPage } = useMyBookings()
+const { bookings, isLoading, activeTab, pagination, cancelBooking, setPage } = useMyBookings();
 
-const showCancelDialog = ref(false)
-const selectedBooking = ref<BookingViewModel | null>(null)
+const showCancelDialog = ref(false);
+const selectedBooking = ref<BookingViewModel | null>(null);
 
 const openCancelDialog = (booking: BookingViewModel) => {
-  selectedBooking.value = booking
-  showCancelDialog.value = true
-}
+  selectedBooking.value = booking;
+  showCancelDialog.value = true;
+};
 
 const handleCancelConfirm = async (booking: BookingViewModel) => {
-  await cancelBooking(booking.id)
-  showCancelDialog.value = false
-}
+  await cancelBooking(booking.id);
+  showCancelDialog.value = false;
+};
 
 const handleRescheduleRequest = () => {
-  alert('Funkcja w budowie: Zmiana terminu będzie dostępna wkrótce.')
-}
+  alert("Funkcja w budowie: Zmiana terminu będzie dostępna wkrótce.");
+};
 
 const handlePageChange = (page: number) => {
-  setPage(page)
-}
+  setPage(page);
+};
 </script>

@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useTrainers } from '@/composables/useTrainers'
-import { useAuthStore } from '@/stores/auth'
-import TrainerCard from '@/components/trainers/TrainerCard.vue'
-import TrainerCardSkeleton from '@/components/trainers/TrainerCardSkeleton.vue'
-import TrainerFiltersSidebar from '@/components/trainers/TrainerFiltersSidebar.vue'
-import InfiniteScrollTrigger from '@/components/trainers/InfiniteScrollTrigger.vue'
-import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { computed, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useTrainers } from "@/composables/useTrainers";
+import { useAuthStore } from "@/stores/auth";
+import TrainerCard from "@/components/trainers/TrainerCard.vue";
+import TrainerCardSkeleton from "@/components/trainers/TrainerCardSkeleton.vue";
+import TrainerFiltersSidebar from "@/components/trainers/TrainerFiltersSidebar.vue";
+import InfiniteScrollTrigger from "@/components/trainers/InfiniteScrollTrigger.vue";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const router = useRouter()
-const authStore = useAuthStore()
+const router = useRouter();
+const authStore = useAuthStore();
 
-const isAuthenticated = computed(() => authStore.isAuthenticated)
+const isAuthenticated = computed(() => authStore.isAuthenticated);
 
 const goToDashboard = () => {
   if (authStore.isTrainer) {
-    router.push('/trainer/dashboard')
+    router.push("/trainer/dashboard");
   } else {
-    router.push('/dashboard')
+    router.push("/dashboard");
   }
-}
+};
 
 // Use trainers composable
 const {
@@ -40,29 +40,29 @@ const {
   clearFilters,
   retry,
   fetchSpecializations,
-} = useTrainers()
+} = useTrainers();
 
 // Mobile filter sheet state
-const isFilterSheetOpen = ref(false)
+const isFilterSheetOpen = ref(false);
 
 // Handle filter updates
 function handleCityUpdate(value: string) {
-  filters.city = value
+  filters.city = value;
 }
 
 function handleSpecializationUpdate(value: string | null) {
-  filters.specializationId = value
+  filters.specializationId = value;
 }
 
 function handleClearFilters() {
-  clearFilters()
-  isFilterSheetOpen.value = false
+  clearFilters();
+  isFilterSheetOpen.value = false;
 }
 
 // Initialize data on mount
 onMounted(async () => {
-  await Promise.all([fetchTrainers(true), fetchSpecializations()])
-})
+  await Promise.all([fetchTrainers(true), fetchSpecializations()]);
+});
 </script>
 
 <template>
@@ -82,10 +82,10 @@ onMounted(async () => {
           </Button>
           <template v-else>
             <Button variant="ghost" size="sm" as-child>
-              <router-link to="/login">Zaloguj się</router-link>
+              <router-link to="/login"> Zaloguj się </router-link>
             </Button>
             <Button size="sm" as-child>
-              <router-link to="/register">Zarejestruj się</router-link>
+              <router-link to="/register"> Zarejestruj się </router-link>
             </Button>
           </template>
         </div>

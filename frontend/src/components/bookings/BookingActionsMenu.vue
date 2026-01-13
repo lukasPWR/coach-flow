@@ -7,10 +7,14 @@
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
-      <DropdownMenuItem @click="$emit('reschedule')" v-if="canReschedule">
+      <DropdownMenuItem v-if="canReschedule" @click="$emit('reschedule')">
         Zmień termin
       </DropdownMenuItem>
-      <DropdownMenuItem @click="$emit('cancel')" v-if="canCancel" class="text-destructive focus:text-destructive">
+      <DropdownMenuItem
+        v-if="canCancel"
+        class="text-destructive focus:text-destructive"
+        @click="$emit('cancel')"
+      >
         Anuluj
       </DropdownMenuItem>
     </DropdownMenuContent>
@@ -18,23 +22,22 @@
 </template>
 
 <script setup lang="ts">
-import { MoreHorizontal } from 'lucide-vue-next'
-import { Button } from '@/components/ui/button'
+import { MoreHorizontal } from "lucide-vue-next";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from "@/components/ui/dropdown-menu";
 
 defineProps<{
-  canCancel: boolean
-  canReschedule: boolean
-}>()
+  canCancel: boolean;
+  canReschedule: boolean;
+}>();
 
 defineEmits<{
-  (e: 'reschedule'): void
-  (e: 'cancel'): void
-}>()
+  (_e: "reschedule"): void;
+  (_e: "cancel"): void;
+}>();
 </script>
-

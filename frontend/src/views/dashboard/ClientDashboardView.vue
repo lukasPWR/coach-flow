@@ -9,9 +9,9 @@
 
     <Tabs default-value="upcoming" class="space-y-4">
       <TabsList>
-        <TabsTrigger value="upcoming">Nadchodzące</TabsTrigger>
-        <TabsTrigger value="pending">Oczekujące</TabsTrigger>
-        <TabsTrigger value="history">Historia</TabsTrigger>
+        <TabsTrigger value="upcoming"> Nadchodzące </TabsTrigger>
+        <TabsTrigger value="pending"> Oczekujące </TabsTrigger>
+        <TabsTrigger value="history"> Historia </TabsTrigger>
       </TabsList>
 
       <TabsContent value="upcoming">
@@ -78,98 +78,98 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useRouter } from 'vue-router'
-import { BookingStatus, type BookingViewModel } from '@/types/bookings'
-import { bookingsApi } from '@/lib/api/bookings'
-import { useAuthStore } from '@/stores/auth'
-import DashboardHeader from '@/components/dashboard/DashboardHeader.vue'
-import DashboardStats from '@/components/dashboard/DashboardStats.vue'
-import BookingList from '@/components/bookings/BookingList.vue'
-import CancelBookingDialog from '@/components/bookings/modals/CancelBookingDialog.vue'
-import RescheduleBookingDialog from '@/components/bookings/modals/RescheduleBookingDialog.vue'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Button } from '@/components/ui/button'
+import { ref, onMounted, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+import { BookingStatus, type BookingViewModel } from "@/types/bookings";
+import { bookingsApi } from "@/lib/api/bookings";
+import { useAuthStore } from "@/stores/auth";
+import DashboardHeader from "@/components/dashboard/DashboardHeader.vue";
+import DashboardStats from "@/components/dashboard/DashboardStats.vue";
+import BookingList from "@/components/bookings/BookingList.vue";
+import CancelBookingDialog from "@/components/bookings/modals/CancelBookingDialog.vue";
+import RescheduleBookingDialog from "@/components/bookings/modals/RescheduleBookingDialog.vue";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 
-const router = useRouter()
-const authStore = useAuthStore()
-const { user } = storeToRefs(authStore)
+const router = useRouter();
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 
-const showCancelDialog = ref(false)
-const showRescheduleDialog = ref(false)
-const selectedBooking = ref<BookingViewModel | null>(null)
-const refreshTrigger = ref(0)
-const upcomingCount = ref(0)
-const pendingCount = ref(0)
+const showCancelDialog = ref(false);
+const showRescheduleDialog = ref(false);
+const selectedBooking = ref<BookingViewModel | null>(null);
+const refreshTrigger = ref(0);
+const upcomingCount = ref(0);
+const pendingCount = ref(0);
 
 const goToTrainers = () => {
-  router.push({ name: 'trainers-list' })
-}
+  router.push({ name: "trainers-list" });
+};
 
 const openCancelDialog = (booking: BookingViewModel) => {
-  selectedBooking.value = booking
-  showCancelDialog.value = true
-}
+  selectedBooking.value = booking;
+  showCancelDialog.value = true;
+};
 
 const openRescheduleDialog = (booking: BookingViewModel) => {
-  selectedBooking.value = booking
-  showRescheduleDialog.value = true
-}
+  selectedBooking.value = booking;
+  showRescheduleDialog.value = true;
+};
 
 const handleCancelBooking = async (booking: BookingViewModel) => {
   try {
-    await bookingsApi.cancelBooking(booking.id)
-    refreshTrigger.value++
-    showCancelDialog.value = false
+    await bookingsApi.cancelBooking(booking.id);
+    refreshTrigger.value++;
+    showCancelDialog.value = false;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
 
 const handleRescheduleBooking = async (booking: BookingViewModel, newDate: string) => {
   try {
-    await bookingsApi.rescheduleBooking(booking.id, newDate)
-    refreshTrigger.value++
-    showRescheduleDialog.value = false
+    await bookingsApi.rescheduleBooking(booking.id, newDate);
+    refreshTrigger.value++;
+    showRescheduleDialog.value = false;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
 
 const loadStats = async () => {
   try {
     const [upcomingResponse, pendingResponse] = await Promise.all([
       bookingsApi.getBookings({
-        role: 'client',
+        role: "client",
         status: [BookingStatus.ACCEPTED],
-        timeFilter: 'upcoming',
+        timeFilter: "upcoming",
         page: 1,
         limit: 1,
       }),
       bookingsApi.getBookings({
-        role: 'client',
+        role: "client",
         status: [BookingStatus.PENDING],
         page: 1,
         limit: 1,
       }),
-    ])
+    ]);
 
-    upcomingCount.value = upcomingResponse.meta.totalItems
-    pendingCount.value = pendingResponse.meta.totalItems
+    upcomingCount.value = upcomingResponse.meta.totalItems;
+    pendingCount.value = pendingResponse.meta.totalItems;
   } catch (error) {
-    console.error('Failed to load booking stats:', error)
+    console.error("Failed to load booking stats:", error);
   }
-}
+};
 
 onMounted(() => {
   if (!user.value) {
-    authStore.fetchProfile()
+    authStore.fetchProfile();
   }
-  loadStats()
-})
+  loadStats();
+});
 
 watch(refreshTrigger, () => {
-  loadStats()
-})
+  loadStats();
+});
 </script>

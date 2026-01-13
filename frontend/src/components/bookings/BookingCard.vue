@@ -17,7 +17,9 @@
               <Calendar class="h-6 w-6" />
             </div>
             <div>
-              <p class="text-lg font-semibold leading-none">{{ booking.formattedDate }}</p>
+              <p class="text-lg font-semibold leading-none">
+                {{ booking.formattedDate }}
+              </p>
               <p class="text-sm text-muted-foreground mt-1">
                 {{ booking.formattedTime }} • {{ booking.service.durationMinutes }} min
               </p>
@@ -27,7 +29,8 @@
           <div class="flex items-center gap-3 pt-1">
             <Avatar class="h-8 w-8">
               <AvatarImage
-                :src="booking.trainer.profilePictureUrl || undefined"
+                v-if="booking.trainer.profilePictureUrl"
+                :src="booking.trainer.profilePictureUrl"
                 :alt="booking.trainer.name"
               />
               <AvatarFallback>{{ initials }}</AvatarFallback>
@@ -53,31 +56,31 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Calendar } from 'lucide-vue-next'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import BookingStatusBadge from './BookingStatusBadge.vue'
-import BookingActionsMenu from './BookingActionsMenu.vue'
-import type { BookingViewModel } from '@/types/bookings'
-import { formatPrice } from '@/lib/utils'
+import { computed } from "vue";
+import { Calendar } from "lucide-vue-next";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import BookingStatusBadge from "./BookingStatusBadge.vue";
+import BookingActionsMenu from "./BookingActionsMenu.vue";
+import type { BookingViewModel } from "@/types/bookings";
+import { formatPrice } from "@/lib/utils";
 
 const props = defineProps<{
-  booking: BookingViewModel
-}>()
+  booking: BookingViewModel;
+}>();
 
 defineEmits<{
-  (e: 'cancel', booking: BookingViewModel): void
-  (e: 'reschedule', booking: BookingViewModel): void
-}>()
+  cancel: [booking: BookingViewModel];
+  reschedule: [booking: BookingViewModel];
+}>();
 
 const initials = computed(() => {
   return props.booking.trainer.name
-    .split(' ')
+    .split(" ")
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase()
-    .slice(0, 2)
-})
+    .slice(0, 2);
+});
 </script>

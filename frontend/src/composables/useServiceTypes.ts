@@ -1,10 +1,10 @@
-import { ref, computed } from 'vue'
-import type { ServiceType } from '@/types/services'
-import * as servicesApi from '@/lib/api/services'
+import { ref, computed } from "vue";
+import type { ServiceType } from "@/types/services";
+import * as servicesApi from "@/lib/api/services";
 
-const serviceTypes = ref<ServiceType[]>([])
-const isLoading = ref(false)
-const error = ref<string | null>(null)
+const serviceTypes = ref<ServiceType[]>([]);
+const isLoading = ref(false);
+const error = ref<string | null>(null);
 
 export function useServiceTypes() {
   /**
@@ -13,12 +13,12 @@ export function useServiceTypes() {
   const serviceTypesMap = computed<Record<string, string>>(() => {
     return serviceTypes.value.reduce(
       (acc, type) => {
-        acc[type.id] = type.name
-        return acc
+        acc[type.id] = type.name;
+        return acc;
       },
-      {} as Record<string, string>,
-    )
-  })
+      {} as Record<string, string>
+    );
+  });
 
   /**
    * Fetch all service types from API
@@ -26,21 +26,21 @@ export function useServiceTypes() {
   const fetchServiceTypes = async (force = false) => {
     // If already loaded and not forcing refresh, skip
     if (serviceTypes.value.length > 0 && !force) {
-      return
+      return;
     }
 
     try {
-      isLoading.value = true
-      error.value = null
-      serviceTypes.value = await servicesApi.getServiceTypes()
+      isLoading.value = true;
+      error.value = null;
+      serviceTypes.value = await servicesApi.getServiceTypes();
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Failed to fetch service types'
-      console.error('Failed to fetch service types:', err)
-      throw err
+      error.value = err.response?.data?.message || "Failed to fetch service types";
+      console.error("Failed to fetch service types:", err);
+      throw err;
     } finally {
-      isLoading.value = false
+      isLoading.value = false;
     }
-  }
+  };
 
   return {
     serviceTypes,
@@ -48,6 +48,5 @@ export function useServiceTypes() {
     isLoading,
     error,
     fetchServiceTypes,
-  }
+  };
 }
-

@@ -239,8 +239,9 @@ export class BookingBansService {
         skip,
         take,
         relations: ["client", "trainer"],
+        // Most recent bans first
         order: {
-          createdAt: "DESC", // Most recent bans first
+          createdAt: "DESC",
         },
       });
 

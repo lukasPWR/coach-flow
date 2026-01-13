@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import type { TrainerProfile } from '@/types/trainer'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { computed } from 'vue'
+import type { TrainerProfile } from "@/types/trainer";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { computed } from "vue";
 
 const props = defineProps<{
-  profile: TrainerProfile
-}>()
+  profile: TrainerProfile;
+}>();
 
 const emit = defineEmits<{
-  edit: []
-}>()
+  edit: [];
+}>();
 
 // Calculate user initials from name
 const userInitials = computed(() => {
-  const name = props.profile.trainerName
+  const name = props.profile.trainerName;
   if (!name) {
-    return '??'
+    return "??";
   }
-  const parts = name.split(' ')
+  const parts = name.split(" ");
   if (parts.length >= 2) {
-    return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
+    return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
   }
-  return name.substring(0, 2).toUpperCase()
-})
+  return name.substring(0, 2).toUpperCase();
+});
 </script>
 
 <template>
@@ -43,11 +43,15 @@ const userInitials = computed(() => {
       </Avatar>
 
       <div class="flex-1">
-        <h2 class="text-2xl font-bold mb-1">{{ profile.trainerName }}</h2>
-        <p class="text-muted-foreground">{{ profile.email }}</p>
+        <h2 class="text-2xl font-bold mb-1">
+          {{ profile.trainerName }}
+        </h2>
+        <p class="text-muted-foreground">
+          {{ profile.email }}
+        </p>
       </div>
 
-      <Button @click="emit('edit')" variant="outline"> Edytuj profil </Button>
+      <Button variant="outline" @click="emit('edit')"> Edytuj profil </Button>
     </div>
 
     <!-- Details Section -->
@@ -55,14 +59,14 @@ const userInitials = computed(() => {
       <div>
         <label class="text-sm font-medium text-muted-foreground">Miasto</label>
         <p class="text-lg mt-1">
-          {{ profile.city || 'Nie podano' }}
+          {{ profile.city || "Nie podano" }}
         </p>
       </div>
 
       <div>
         <label class="text-sm font-medium text-muted-foreground">Opis</label>
         <p class="text-lg mt-1 whitespace-pre-wrap">
-          {{ profile.description || 'Brak opisu' }}
+          {{ profile.description || "Brak opisu" }}
         </p>
       </div>
 

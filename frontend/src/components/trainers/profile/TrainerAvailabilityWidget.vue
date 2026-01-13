@@ -1,75 +1,75 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { ref, onMounted, computed, watch } from 'vue'
-import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date'
-import { useRoute, useRouter } from 'vue-router'
-import { AlertCircle } from 'lucide-vue-next'
-import { api } from '@/lib/api/client'
-import { createBooking } from '@/lib/api/booking'
-import { buildTimeSlots } from '@/lib/booking/timeSlots'
-import { useAuthStore } from '@/stores/auth'
-import type { TimeSlot } from '@/types/bookings'
-import type { TrainerServiceViewModel } from '@/types/trainer'
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ref, onMounted, computed, watch } from "vue";
+import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
+import { useRoute, useRouter } from "vue-router";
+import { AlertCircle } from "lucide-vue-next";
+import { api } from "@/lib/api/client";
+import { createBooking } from "@/lib/api/booking";
+import { buildTimeSlots } from "@/lib/booking/timeSlots";
+import { useAuthStore } from "@/stores/auth";
+import type { TimeSlot } from "@/types/bookings";
+import type { TrainerServiceViewModel } from "@/types/trainer";
 
 interface Props {
-  trainerId: string
-  selectedService?: TrainerServiceViewModel | null
+  trainerId: string;
+  selectedService?: TrainerServiceViewModel | null;
 }
 
-const props = defineProps<Props>()
-const authStore = useAuthStore()
-const router = useRouter()
-const route = useRoute()
-const timeZone = getLocalTimeZone()
+const props = defineProps<Props>();
+const authStore = useAuthStore();
+const router = useRouter();
+const route = useRoute();
+const timeZone = getLocalTimeZone();
 
 interface Unavailability {
-  id: string
-  startTime: string
-  endTime: string
+  id: string;
+  startTime: string;
+  endTime: string;
 }
 
 interface BookedSlot {
-  startTime: string
-  endTime: string
+  startTime: string;
+  endTime: string;
 }
 
-const selectedDate = ref<CalendarDate>(today(timeZone))
-const selectedSlot = ref<TimeSlot | null>(null)
-const unavailabilities = ref<Unavailability[]>([])
-const bookedSlots = ref<BookedSlot[]>([])
-const isLoadingUnavailabilities = ref(false)
-const hasAvailabilityError = ref(false)
-const isSubmitting = ref(false)
-const toastMessage = ref<{ type: 'success' | 'error'; text: string } | null>(null)
+const selectedDate = ref<CalendarDate>(today(timeZone));
+const selectedSlot = ref<TimeSlot | null>(null);
+const unavailabilities = ref<Unavailability[]>([]);
+const bookedSlots = ref<BookedSlot[]>([]);
+const isLoadingUnavailabilities = ref(false);
+const hasAvailabilityError = ref(false);
+const isSubmitting = ref(false);
+const toastMessage = ref<{ type: "success" | "error"; text: string } | null>(null);
 
 onMounted(async () => {
-  await loadAvailability()
-})
+  await loadAvailability();
+});
 
 const getDayRange = (date: CalendarDate) => {
-  const base = date.toDate(timeZone)
-  const from = new Date(base)
-  const to = new Date(base)
-  from.setHours(0, 0, 0, 0)
-  to.setHours(23, 59, 59, 999)
-  return { from, to }
-}
+  const base = date.toDate(timeZone);
+  const from = new Date(base);
+  const to = new Date(base);
+  from.setHours(0, 0, 0, 0);
+  to.setHours(23, 59, 59, 999);
+  return { from, to };
+};
 
 const getDayRangeParams = (date: CalendarDate) => {
-  const range = getDayRange(date)
+  const range = getDayRange(date);
   return {
     from: range.from.toISOString(),
     to: range.to.toISOString(),
-  }
-}
+  };
+};
 
 const loadAvailability = async () => {
   try {
-    isLoadingUnavailabilities.value = true
-    const { from, to } = getDayRangeParams(selectedDate.value)
+    isLoadingUnavailabilities.value = true;
+    const { from, to } = getDayRangeParams(selectedDate.value as CalendarDate);
     const [unavailabilityResult, bookedResult] = await Promise.allSettled([
       api.get<Unavailability[]>(`/trainers/${props.trainerId}/unavailabilities`, {
         params: { from, to },
@@ -77,157 +77,157 @@ const loadAvailability = async () => {
       api.get<BookedSlot[]>(`/trainers/${props.trainerId}/booked-slots`, {
         params: { from, to },
       }),
-    ])
+    ]);
 
-    let hasError = false
+    let hasError = false;
 
-    if (unavailabilityResult.status === 'fulfilled') {
-      unavailabilities.value = unavailabilityResult.value.data
+    if (unavailabilityResult.status === "fulfilled") {
+      unavailabilities.value = unavailabilityResult.value.data;
     } else {
-      console.error('Failed to load unavailabilities', unavailabilityResult.reason)
-      unavailabilities.value = []
-      hasError = true
+      console.error("Failed to load unavailabilities", unavailabilityResult.reason);
+      unavailabilities.value = [];
+      hasError = true;
     }
 
-    if (bookedResult.status === 'fulfilled') {
-      bookedSlots.value = bookedResult.value.data
+    if (bookedResult.status === "fulfilled") {
+      bookedSlots.value = bookedResult.value.data;
     } else {
-      console.error('Failed to load booked slots', bookedResult.reason)
-      bookedSlots.value = []
-      hasError = true
+      console.error("Failed to load booked slots", bookedResult.reason);
+      bookedSlots.value = [];
+      hasError = true;
     }
 
-    hasAvailabilityError.value = hasError
+    hasAvailabilityError.value = hasError;
   } catch (error) {
-    console.error('Failed to load availability data', error)
-    unavailabilities.value = []
-    bookedSlots.value = []
-    hasAvailabilityError.value = true
+    console.error("Failed to load availability data", error);
+    unavailabilities.value = [];
+    bookedSlots.value = [];
+    hasAvailabilityError.value = true;
   } finally {
-    isLoadingUnavailabilities.value = false
+    isLoadingUnavailabilities.value = false;
   }
-}
+};
 
 const handleRefreshAvailability = async () => {
-  await loadAvailability()
-}
+  await loadAvailability();
+};
 
 const workHours = {
   start: 8,
   end: 20,
-}
+};
 
-const isServiceSelected = computed(() => !!props.selectedService)
+const isServiceSelected = computed(() => !!props.selectedService);
 
 const dailyUnavailabilities = computed(() => {
-  const { from, to } = getDayRange(selectedDate.value)
+  const { from, to } = getDayRange(selectedDate.value as CalendarDate);
   return unavailabilities.value.filter((unavail) => {
-    const start = new Date(unavail.startTime)
-    const end = new Date(unavail.endTime)
-    return start <= to && end >= from
-  })
-})
+    const start = new Date(unavail.startTime);
+    const end = new Date(unavail.endTime);
+    return start <= to && end >= from;
+  });
+});
 
 const dailyBookedSlots = computed(() => {
-  const { from, to } = getDayRange(selectedDate.value)
+  const { from, to } = getDayRange(selectedDate.value as CalendarDate);
   return bookedSlots.value.filter((slot) => {
-    const start = new Date(slot.startTime)
-    const end = new Date(slot.endTime)
-    return start <= to && end >= from
-  })
-})
+    const start = new Date(slot.startTime);
+    const end = new Date(slot.endTime);
+    return start <= to && end >= from;
+  });
+});
 
 const blockedRanges = computed(() => {
-  return [...dailyUnavailabilities.value, ...dailyBookedSlots.value]
-})
+  return [...dailyUnavailabilities.value, ...dailyBookedSlots.value];
+});
 
 const timeSlots = computed<TimeSlot[]>(() => {
-  if (!props.selectedService) return []
+  if (!props.selectedService) return [];
   return buildTimeSlots({
-    date: selectedDate.value,
+    date: selectedDate.value as CalendarDate,
     durationMinutes: props.selectedService.durationMinutes,
     unavailabilities: blockedRanges.value,
     workHours,
-  })
-})
+  });
+});
 
 watch(selectedDate, (value) => {
-  const minDate = today(timeZone)
+  const minDate = today(timeZone);
   if (value.toDate(timeZone) < minDate.toDate(timeZone)) {
-    selectedDate.value = minDate
+    selectedDate.value = minDate;
   }
-  loadAvailability()
-})
+  loadAvailability();
+});
 
 watch([() => props.selectedService?.id, selectedDate], () => {
-  selectedSlot.value = null
-})
+  selectedSlot.value = null;
+});
 
-const showToast = (type: 'success' | 'error', text: string) => {
-  toastMessage.value = { type, text }
+const showToast = (type: "success" | "error", text: string) => {
+  toastMessage.value = { type, text };
   setTimeout(() => {
-    toastMessage.value = null
-  }, 4000)
-}
+    toastMessage.value = null;
+  }, 4000);
+};
 
 const formatTime = (date: Date) => {
-  return date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })
-}
+  return date.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" });
+};
 
 const formatDate = (date: CalendarDate) => {
-  return date.toDate(timeZone).toLocaleDateString('pl-PL', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-  })
-}
+  return date.toDate(timeZone).toLocaleDateString("pl-PL", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+};
 
 const selectedSlotLabel = computed(() => {
-  if (!selectedSlot.value) return null
-  return `${formatDate(selectedDate.value)} - ${formatTime(selectedSlot.value.start)}`
-})
+  if (!selectedSlot.value) return null;
+  return `${formatDate(selectedDate.value as CalendarDate)} - ${formatTime(selectedSlot.value.start)}`;
+});
 
 const handleSelectSlot = (slot: TimeSlot) => {
-  if (!slot.isAvailable) return
-  selectedSlot.value = slot
-}
+  if (!slot.isAvailable) return;
+  selectedSlot.value = slot;
+};
 
 const handleBooking = async () => {
-  if (!props.selectedService || !selectedSlot.value) return
+  if (!props.selectedService || !selectedSlot.value) return;
 
   if (!authStore.isAuthenticated) {
-    router.push({ name: 'login', query: { redirect: route.fullPath } })
-    return
+    router.push({ name: "login", query: { redirect: route.fullPath } });
+    return;
   }
 
-  isSubmitting.value = true
+  isSubmitting.value = true;
   try {
     await createBooking({
       trainerId: props.trainerId,
       serviceId: props.selectedService.id,
       startTime: selectedSlot.value.start.toISOString(),
-    })
+    });
 
-    showToast('success', 'Wniosek rezerwacji został wysłany.')
-    selectedSlot.value = null
-    router.push({ name: authStore.isTrainer ? 'trainer-dashboard' : 'dashboard' })
+    showToast("success", "Wniosek rezerwacji został wysłany.");
+    selectedSlot.value = null;
+    router.push({ name: authStore.isTrainer ? "trainer-dashboard" : "dashboard" });
   } catch (error: any) {
-    const status = error?.response?.status
+    const status = error?.response?.status;
     if (status === 401) {
-      router.push({ name: 'login', query: { redirect: route.fullPath } })
-      return
+      router.push({ name: "login", query: { redirect: route.fullPath } });
+      return;
     }
 
     if (status === 400) {
-      showToast('error', 'Termin jest już zajęty. Wybierz inny slot.')
-      return
+      showToast("error", "Termin jest już zajęty. Wybierz inny slot.");
+      return;
     }
 
-    showToast('error', 'Nie udało się zarezerwować terminu. Spróbuj ponownie.')
+    showToast("error", "Nie udało się zarezerwować terminu. Spróbuj ponownie.");
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
-}
+};
 </script>
 
 <template>
@@ -237,7 +237,7 @@ const handleBooking = async () => {
       <CardDescription v-if="!isServiceSelected">
         Wybierz usługę z listy, aby sprawdzić dostępne terminy.
       </CardDescription>
-      <CardDescription v-else>Wybierz datę i godzinę wizyty.</CardDescription>
+      <CardDescription v-else> Wybierz datę i godzinę wizyty. </CardDescription>
     </CardHeader>
     <CardContent class="space-y-4">
       <Transition
@@ -253,7 +253,7 @@ const handleBooking = async () => {
           :variant="toastMessage.type === 'error' ? 'destructive' : 'default'"
         >
           <AlertCircle v-if="toastMessage.type === 'error'" class="h-4 w-4" />
-          <AlertTitle>{{ toastMessage.type === 'error' ? 'Błąd' : 'Sukces' }}</AlertTitle>
+          <AlertTitle>{{ toastMessage.type === "error" ? "Błąd" : "Sukces" }}</AlertTitle>
           <AlertDescription>{{ toastMessage.text }}</AlertDescription>
         </Alert>
       </Transition>
@@ -286,7 +286,7 @@ const handleBooking = async () => {
         </div>
 
         <div class="space-y-2">
-          <p class="text-sm font-medium">Dostępne godziny na {{ formatDate(selectedDate) }}</p>
+          <p class="text-sm font-medium">Dostępne godziny na {{ formatDate(selectedDate as CalendarDate) }}</p>
           <div v-if="timeSlots.length > 0" class="grid grid-cols-2 gap-2 sm:grid-cols-3">
             <Button
               v-for="slot in timeSlots"
@@ -319,7 +319,7 @@ const handleBooking = async () => {
         </div>
 
         <Button class="w-full" :disabled="!selectedSlot || isSubmitting" @click="handleBooking">
-          {{ isSubmitting ? 'Rezerwuję...' : 'Zarezerwuj termin' }}
+          {{ isSubmitting ? "Rezerwuję..." : "Zarezerwuj termin" }}
         </Button>
       </div>
     </CardContent>

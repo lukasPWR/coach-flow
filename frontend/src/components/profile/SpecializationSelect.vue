@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { Specialization } from '@/types/trainer'
+import { computed } from "vue";
+import type { Specialization } from "@/types/trainer";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -8,47 +8,47 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { ChevronDown, X, Loader2 } from 'lucide-vue-next'
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ChevronDown, X, Loader2 } from "lucide-vue-next";
 
 interface Props {
-  modelValue: string[]
-  specializations: Specialization[]
-  isLoading?: boolean
-  error?: string
+  modelValue: string[];
+  specializations: Specialization[];
+  isLoading?: boolean;
+  error?: string;
 }
 
 interface Emits {
-  (e: 'update:modelValue', value: string[]): void
+  "update:modelValue": [value: string[]];
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isLoading: false,
   error: undefined,
-})
+});
 
-const emit = defineEmits<Emits>()
+const emit = defineEmits<Emits>();
 
 const toggleSpecialization = (id: string) => {
-  const currentValue = [...props.modelValue]
-  const index = currentValue.indexOf(id)
+  const currentValue = [...props.modelValue];
+  const index = currentValue.indexOf(id);
 
   if (index === -1) {
-    currentValue.push(id)
+    currentValue.push(id);
   } else {
-    currentValue.splice(index, 1)
+    currentValue.splice(index, 1);
   }
 
-  emit('update:modelValue', currentValue)
-}
+  emit("update:modelValue", currentValue);
+};
 
 const getSpecializationName = (id: string) => {
-  return props.specializations.find((s) => s.id === id)?.name || id
-}
+  return props.specializations.find((s) => s.id === id)?.name || id;
+};
 
-const selectedCount = computed(() => props.modelValue.length)
+const selectedCount = computed(() => props.modelValue.length);
 </script>
 
 <template>
@@ -60,7 +60,7 @@ const selectedCount = computed(() => props.modelValue.length)
           class="w-full justify-between"
           :class="{ 'border-destructive': error }"
         >
-          {{ selectedCount > 0 ? `Wybrano: ${selectedCount}` : 'Wybierz specjalizacje' }}
+          {{ selectedCount > 0 ? `Wybrano: ${selectedCount}` : "Wybierz specjalizacje" }}
           <ChevronDown class="ml-2 h-4 w-4 opacity-50" />
         </Button>
       </DropdownMenuTrigger>

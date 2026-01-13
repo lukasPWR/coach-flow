@@ -54,7 +54,7 @@ export class AuthService {
 
     const tokens = await this.generateTokens(user);
 
-    const { password, ...userWithoutPassword } = user;
+    const { password: _password, ...userWithoutPassword } = user;
 
     return {
       user: userWithoutPassword,
@@ -79,7 +79,7 @@ export class AuthService {
 
     const tokens = await this.generateTokens(user);
 
-    const { password, ...userWithoutPassword } = user;
+    const { password: _password, ...userWithoutPassword } = user;
 
     return {
       user: userWithoutPassword,
@@ -97,7 +97,7 @@ export class AuthService {
       payload = this.jwtService.verify(refreshToken, {
         secret: this.configService.get<string>("JWT_REFRESH_SECRET"),
       });
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException("Invalid or expired refresh token");
     }
 
@@ -127,7 +127,8 @@ export class AuthService {
 
     await this.tokensService.createPasswordResetToken(user.id, resetToken, expiresAt);
 
-    console.log(`Password reset token for ${user.email}: ${resetToken}`);
+    // TODO: Send email with reset token instead of logging it
+    // console.log(`Password reset token for ${user.email}: ${resetToken}`);
   }
 
   async resetPassword(dto: ResetPasswordDto): Promise<void> {

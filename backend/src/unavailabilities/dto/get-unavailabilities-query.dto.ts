@@ -24,4 +24,3 @@ export class GetUnavailabilitiesQueryDto {
   @IsDateString()
   readonly to?: string;
 }
-

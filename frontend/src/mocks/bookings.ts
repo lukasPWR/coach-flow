@@ -1,24 +1,25 @@
-import { BookingStatus, type BookingDto } from '@/types/bookings'
+import { BookingStatus, type BookingDto } from "@/types/bookings";
 
 export const mockBookings: BookingDto[] = [
   {
-    id: '1',
-    startTime: new Date(Date.now() + 86400000 * 2).toISOString(), // +2 days
+    id: "1",
+    // +2 days
+    startTime: new Date(Date.now() + 86400000 * 2).toISOString(),
     endTime: new Date(Date.now() + 86400000 * 2 + 3600000).toISOString(),
     status: BookingStatus.ACCEPTED,
     client: {
-      id: 'c1',
-      name: 'Maria Wiśniewska',
-      profilePictureUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Maria',
+      id: "c1",
+      name: "Maria Wiśniewska",
+      profilePictureUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Maria",
     },
     trainer: {
-      id: 't1',
-      name: 'Jan Kowalski',
-      profilePictureUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jan',
+      id: "t1",
+      name: "Jan Kowalski",
+      profilePictureUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jan",
     },
     service: {
-      id: 's1',
-      name: 'Trening Personalny',
+      id: "s1",
+      name: "Trening Personalny",
       price: 150,
       durationMinutes: 60,
     },
@@ -26,23 +27,24 @@ export const mockBookings: BookingDto[] = [
     updatedAt: new Date().toISOString(),
   },
   {
-    id: '2',
-    startTime: new Date(Date.now() + 86400000 * 5).toISOString(), // +5 days
+    id: "2",
+    // +5 days
+    startTime: new Date(Date.now() + 86400000 * 5).toISOString(),
     endTime: new Date(Date.now() + 86400000 * 5 + 3600000).toISOString(),
     status: BookingStatus.PENDING,
     client: {
-      id: 'c2',
-      name: 'Tomasz Lewandowski',
-      profilePictureUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tomasz',
+      id: "c2",
+      name: "Tomasz Lewandowski",
+      profilePictureUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Tomasz",
     },
     trainer: {
-      id: 't2',
-      name: 'Anna Nowak',
-      profilePictureUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Anna',
+      id: "t2",
+      name: "Anna Nowak",
+      profilePictureUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Anna",
     },
     service: {
-      id: 's2',
-      name: 'Konsultacja Dietetyczna',
+      id: "s2",
+      name: "Konsultacja Dietetyczna",
       price: 200,
       durationMinutes: 45,
     },
@@ -50,23 +52,25 @@ export const mockBookings: BookingDto[] = [
     updatedAt: new Date().toISOString(),
   },
   {
-    id: '3',
-    startTime: new Date(Date.now() - 86400000 * 2).toISOString(), // -2 days
+    id: "3",
+    // -2 days
+    startTime: new Date(Date.now() - 86400000 * 2).toISOString(),
     endTime: new Date(Date.now() - 86400000 * 2 + 3600000).toISOString(),
-    status: BookingStatus.ACCEPTED, // Completed in past
+    // Completed in past
+    status: BookingStatus.ACCEPTED,
     client: {
-      id: 'c1',
-      name: 'Maria Wiśniewska',
-      profilePictureUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Maria',
+      id: "c1",
+      name: "Maria Wiśniewska",
+      profilePictureUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Maria",
     },
     trainer: {
-      id: 't1',
-      name: 'Jan Kowalski',
-      profilePictureUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jan',
+      id: "t1",
+      name: "Jan Kowalski",
+      profilePictureUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jan",
     },
     service: {
-      id: 's1',
-      name: 'Trening Personalny',
+      id: "s1",
+      name: "Trening Personalny",
       price: 150,
       durationMinutes: 60,
     },
@@ -74,27 +78,28 @@ export const mockBookings: BookingDto[] = [
     updatedAt: new Date().toISOString(),
   },
   {
-    id: '4',
-    startTime: new Date(Date.now() - 86400000 * 5).toISOString(), // -5 days
+    id: "4",
+    // -5 days
+    startTime: new Date(Date.now() - 86400000 * 5).toISOString(),
     endTime: new Date(Date.now() - 86400000 * 5 + 3600000).toISOString(),
     status: BookingStatus.CANCELLED,
     client: {
-      id: 'c3',
-      name: 'Katarzyna Dąbrowska',
-      profilePictureUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Katarzyna',
+      id: "c3",
+      name: "Katarzyna Dąbrowska",
+      profilePictureUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Katarzyna",
     },
     trainer: {
-      id: 't3',
-      name: 'Piotr Zieliński',
-      profilePictureUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Piotr',
+      id: "t3",
+      name: "Piotr Zieliński",
+      profilePictureUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Piotr",
     },
     service: {
-      id: 's3',
-      name: 'Plan Treningowy',
+      id: "s3",
+      name: "Plan Treningowy",
       price: 100,
       durationMinutes: 30,
     },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
-]
+];

@@ -1,40 +1,40 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue"
-import type { TrainerProfile, UpdateTrainerProfileDto, Specialization } from "@/types/trainer"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { AlertCircle, Loader2 } from "lucide-vue-next"
-import SpecializationSelect from "./SpecializationSelect.vue"
-import { getAllSpecializations } from "@/lib/api/trainers"
+import { ref, watch, onMounted } from "vue";
+import type { TrainerProfile, UpdateTrainerProfileDto, Specialization } from "@/types/trainer";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle, Loader2 } from "lucide-vue-next";
+import SpecializationSelect from "./SpecializationSelect.vue";
+import { getAllSpecializations } from "@/lib/api/trainers";
 
 interface Props {
-  initialData: TrainerProfile
+  initialData: TrainerProfile;
 }
 
 interface FormData {
-  description: string
-  city: string
-  profilePictureUrl: string
-  specializationIds: string[]
+  description: string;
+  city: string;
+  profilePictureUrl: string;
+  specializationIds: string[];
 }
 
 interface FormErrors {
-  description?: string
-  city?: string
-  profilePictureUrl?: string
-  specializationIds?: string
-  general?: string
+  description?: string;
+  city?: string;
+  profilePictureUrl?: string;
+  specializationIds?: string;
+  general?: string;
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  submit: [data: UpdateTrainerProfileDto]
-  cancel: []
-}>()
+  submit: [data: UpdateTrainerProfileDto];
+  cancel: [];
+}>();
 
 // Form state
 const formData = ref<FormData>({
@@ -42,14 +42,14 @@ const formData = ref<FormData>({
   city: "",
   profilePictureUrl: "",
   specializationIds: [],
-})
+});
 
-const errors = ref<FormErrors>({})
-const isSubmitting = ref(false)
+const errors = ref<FormErrors>({});
+const isSubmitting = ref(false);
 
 // Specializations state
-const specializations = ref<Specialization[]>([])
-const isLoadingSpecializations = ref(false)
+const specializations = ref<Specialization[]>([]);
+const isLoadingSpecializations = ref(false);
 
 // Initialize form with initial data
 watch(
@@ -61,93 +61,93 @@ watch(
         city: newData.city || "",
         profilePictureUrl: newData.profilePictureUrl || "",
         specializationIds: newData.specializations.map((s) => s.id),
-      }
+      };
     }
   },
-  { immediate: true },
-)
+  { immediate: true }
+);
 
 // Load specializations on mount
 onMounted(async () => {
-  isLoadingSpecializations.value = true
+  isLoadingSpecializations.value = true;
   try {
-    specializations.value = await getAllSpecializations()
-  } catch (error: any) {
-    errors.value.general = "Nie udało się pobrać listy specjalizacji"
+    specializations.value = await getAllSpecializations();
+  } catch (_error: any) {
+    errors.value.general = "Nie udało się pobrać listy specjalizacji";
   } finally {
-    isLoadingSpecializations.value = false
+    isLoadingSpecializations.value = false;
   }
-})
+});
 
 // Validation
 function validateForm(): boolean {
-  errors.value = {}
+  errors.value = {};
 
   // Description validation (optional, max 500 chars)
   if (formData.value.description && formData.value.description.length > 500) {
-    errors.value.description = "Opis nie może przekraczać 500 znaków"
+    errors.value.description = "Opis nie może przekraczać 500 znaków";
   }
 
   // City validation (optional)
   if (formData.value.city && formData.value.city.length > 100) {
-    errors.value.city = "Nazwa miasta jest zbyt długa"
+    errors.value.city = "Nazwa miasta jest zbyt długa";
   }
 
   // Profile picture URL validation (optional, must be valid URL)
   if (formData.value.profilePictureUrl) {
     try {
-      new URL(formData.value.profilePictureUrl)
+      new URL(formData.value.profilePictureUrl);
     } catch {
-      errors.value.profilePictureUrl = "Podaj poprawny adres URL"
+      errors.value.profilePictureUrl = "Podaj poprawny adres URL";
     }
   }
 
-  return Object.keys(errors.value).length === 0
+  return Object.keys(errors.value).length === 0;
 }
 
 // Handle form submission
 function handleSubmit() {
   if (!validateForm()) {
-    return
+    return;
   }
 
-  isSubmitting.value = true
+  isSubmitting.value = true;
 
   // Prepare DTO - only include changed fields
-  const dto: UpdateTrainerProfileDto = {}
+  const dto: UpdateTrainerProfileDto = {};
 
   if (formData.value.description !== (props.initialData.description || "")) {
-    dto.description = formData.value.description || undefined
+    dto.description = formData.value.description || undefined;
   }
 
   if (formData.value.city !== (props.initialData.city || "")) {
-    dto.city = formData.value.city || undefined
+    dto.city = formData.value.city || undefined;
   }
 
   if (formData.value.profilePictureUrl !== (props.initialData.profilePictureUrl || "")) {
-    dto.profilePictureUrl = formData.value.profilePictureUrl || undefined
+    dto.profilePictureUrl = formData.value.profilePictureUrl || undefined;
   }
 
   // Always include specializationIds if changed
-  const initialIds = props.initialData.specializations.map((s) => s.id).sort()
-  const currentIds = [...formData.value.specializationIds].sort()
+  const initialIds = props.initialData.specializations.map((s) => s.id).sort();
+  const currentIds = [...formData.value.specializationIds].sort();
   if (JSON.stringify(initialIds) !== JSON.stringify(currentIds)) {
-    dto.specializationIds = formData.value.specializationIds
+    dto.specializationIds = formData.value.specializationIds;
   }
 
-  emit("submit", dto)
+  emit("submit", dto);
 }
 
 // Handle cancel
 function handleCancel() {
-  errors.value = {}
-  emit("cancel")
+  errors.value = {};
+  emit("cancel");
 }
 
 // Clear specific field error
 function clearError(field: keyof FormErrors) {
   if (errors.value[field]) {
-    delete errors.value[field]
+    delete errors.value[field];
   }
 }
 </script>
@@ -162,7 +162,7 @@ function clearError(field: keyof FormErrors) {
       <AlertDescription>{{ errors.general }}</AlertDescription>
     </Alert>
 
-    <form @submit.prevent="handleSubmit" class="space-y-6">
+    <form class="space-y-6" @submit.prevent="handleSubmit">
       <!-- Profile Picture URL -->
       <div class="space-y-2">
         <Label for="profilePictureUrl">Zdjęcie profilowe (URL)</Label>
@@ -209,9 +209,7 @@ function clearError(field: keyof FormErrors) {
           :class="{ 'border-destructive': errors.description }"
           @input="clearError('description')"
         />
-        <p class="text-xs text-muted-foreground">
-          {{ formData.description.length }} / 500 znaków
-        </p>
+        <p class="text-xs text-muted-foreground">{{ formData.description.length }} / 500 znaków</p>
         <p v-if="errors.description" class="text-sm text-destructive">
           {{ errors.description }}
         </p>
@@ -237,9 +235,9 @@ function clearError(field: keyof FormErrors) {
         <Button
           type="button"
           variant="outline"
-          @click="handleCancel"
           :disabled="isSubmitting"
           class="flex-1"
+          @click="handleCancel"
         >
           Anuluj
         </Button>
@@ -247,4 +245,3 @@ function clearError(field: keyof FormErrors) {
     </form>
   </div>
 </template>
-

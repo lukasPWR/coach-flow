@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
+import { computed } from "vue";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -10,43 +10,44 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import type { TrainerFiltersState, SpecializationOption } from '@/types/trainer'
+} from "@/components/ui/select";
+import type { TrainerFiltersState, SpecializationOption } from "@/types/trainer";
 
 interface Props {
-  availableSpecializations: SpecializationOption[]
-  currentFilters: TrainerFiltersState
+  availableSpecializations: SpecializationOption[];
+  currentFilters: TrainerFiltersState;
 }
 
 interface Emits {
-  (e: 'update:city', value: string): void
-  (e: 'update:specializationId', value: string | null): void
-  (e: 'clear'): void
+  "update:city": [value: string];
+  "update:specializationId": [value: string | null];
+  clear: [];
 }
 
-const props = defineProps<Props>()
-const emit = defineEmits<Emits>()
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 
 // Local model for city input
 const cityModel = computed({
   get: () => props.currentFilters.city,
-  set: (value: string) => emit('update:city', value),
-})
+  set: (value: string) => emit("update:city", value),
+});
 
 // Handle specialization change
-function handleSpecializationChange(value: string) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function handleSpecializationChange(value: any) {
   // If "all" is selected, emit null
-  if (value === 'all') {
-    emit('update:specializationId', null)
-  } else {
-    emit('update:specializationId', value)
+  if (value === "all" || value === null) {
+    emit("update:specializationId", null);
+  } else if (typeof value === "string") {
+    emit("update:specializationId", value);
   }
 }
 
 // Check if any filters are active
 const hasActiveFilters = computed(() => {
-  return props.currentFilters.city !== '' || props.currentFilters.specializationId !== null
-})
+  return props.currentFilters.city !== "" || props.currentFilters.specializationId !== null;
+});
 </script>
 
 <template>
@@ -80,7 +81,7 @@ const hasActiveFilters = computed(() => {
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectItem value="all">Wszystkie</SelectItem>
+            <SelectItem value="all"> Wszystkie </SelectItem>
             <SelectItem
               v-for="spec in availableSpecializations"
               :key="spec.value"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch } from "vue";
 import {
   Dialog,
   DialogContent,
@@ -7,58 +7,59 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import type { Service, ServiceType, ServiceFormValues } from '@/types/services'
+} from "@/components/ui/select";
+import type { Service, ServiceType, ServiceFormValues } from "@/types/services";
 
 interface Props {
-  open: boolean
-  serviceToEdit: Service | null
-  serviceTypes: ServiceType[]
-  isSubmitting?: boolean
+  open: boolean;
+  serviceToEdit: Service | null;
+  serviceTypes: ServiceType[];
+  isSubmitting?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isSubmitting: false,
-})
+});
 
 const emit = defineEmits<{
-  'update:open': [value: boolean]
-  submit: [formData: ServiceFormValues]
-}>()
+  "update:open": [value: boolean];
+  submit: [formData: ServiceFormValues];
+}>();
 
 // Form state
 const formData = ref<ServiceFormValues>({
-  serviceTypeId: '',
+  serviceTypeId: "",
   price: 0,
-  durationMinutes: 60, // Default 60 minutes for MVP
-})
+  // Default 60 minutes for MVP
+  durationMinutes: 60,
+});
 
 // Validation errors
 const errors = ref<{
-  serviceTypeId?: string
-  price?: string
-  durationMinutes?: string
-  general?: string
-}>({})
+  serviceTypeId?: string;
+  price?: string;
+  durationMinutes?: string;
+  general?: string;
+}>({});
 
 // Computed
-const isEditMode = computed(() => props.serviceToEdit !== null)
-const dialogTitle = computed(() => (isEditMode.value ? 'Edytuj usługę' : 'Dodaj usługę'))
+const isEditMode = computed(() => props.serviceToEdit !== null);
+const dialogTitle = computed(() => (isEditMode.value ? "Edytuj usługę" : "Dodaj usługę"));
 const dialogDescription = computed(() =>
   isEditMode.value
-    ? 'Zmień cenę usługi. Typ usługi nie może być zmieniony.'
-    : 'Wybierz typ usługi i ustaw cenę.',
-)
+    ? "Zmień cenę usługi. Typ usługi nie może być zmieniony."
+    : "Wybierz typ usługi i ustaw cenę."
+);
 
 // Watch for changes in serviceToEdit prop
 watch(
@@ -68,15 +69,15 @@ watch(
       // Edit mode - populate form with existing data
       // Note: /trainers/me doesn't return serviceTypeId, so we need to find it
       // by matching the service type name
-      let serviceTypeId = newService.serviceTypeId || ''
+      let serviceTypeId = newService.serviceTypeId || "";
 
       if (!serviceTypeId && newService.serviceType?.name) {
         // Find serviceTypeId by matching the name
         const matchingType = props.serviceTypes.find(
-          (type) => type.name === newService.serviceType?.name,
-        )
+          (type) => type.name === newService.serviceType?.name
+        );
         if (matchingType) {
-          serviceTypeId = matchingType.id
+          serviceTypeId = matchingType.id;
         }
       }
 
@@ -84,78 +85,78 @@ watch(
         serviceTypeId,
         price: newService.price,
         durationMinutes: newService.durationMinutes,
-      }
+      };
     } else {
       // Create mode - reset form
-      resetForm()
+      resetForm();
     }
-    errors.value = {}
+    errors.value = {};
   },
-  { immediate: true },
-)
+  { immediate: true }
+);
 
 // Watch for dialog open state changes
 watch(
   () => props.open,
   (isOpen) => {
     if (!isOpen) {
-      resetForm()
-      errors.value = {}
+      resetForm();
+      errors.value = {};
     }
-  },
-)
+  }
+);
 
 // Form validation
 function validate(): boolean {
-  errors.value = {}
+  errors.value = {};
 
   if (!formData.value.serviceTypeId) {
-    errors.value.serviceTypeId = 'Wybierz typ usługi'
+    errors.value.serviceTypeId = "Wybierz typ usługi";
   }
 
   if (formData.value.price === null || formData.value.price === undefined) {
-    errors.value.price = 'Podaj cenę usługi'
+    errors.value.price = "Podaj cenę usługi";
   } else if (formData.value.price < 0) {
-    errors.value.price = 'Cena nie może być ujemna'
+    errors.value.price = "Cena nie może być ujemna";
   }
 
   if (formData.value.durationMinutes === null || formData.value.durationMinutes === undefined) {
-    errors.value.durationMinutes = 'Podaj czas trwania'
+    errors.value.durationMinutes = "Podaj czas trwania";
   } else if (formData.value.durationMinutes < 15) {
-    errors.value.durationMinutes = 'Czas trwania musi wynosić co najmniej 15 minut'
+    errors.value.durationMinutes = "Czas trwania musi wynosić co najmniej 15 minut";
   } else if (formData.value.durationMinutes > 180) {
-    errors.value.durationMinutes = 'Czas trwania nie może przekraczać 180 minut'
+    errors.value.durationMinutes = "Czas trwania nie może przekraczać 180 minut";
   } else if (formData.value.durationMinutes % 15 !== 0) {
-    errors.value.durationMinutes = 'Czas trwania musi być wielokrotnością 15 minut'
+    errors.value.durationMinutes = "Czas trwania musi być wielokrotnością 15 minut";
   }
 
-  return Object.keys(errors.value).length === 0
+  return Object.keys(errors.value).length === 0;
 }
 
 // Handle form submission
 function handleSubmit() {
-  if (!validate()) return
+  if (!validate()) return;
 
-  emit('submit', { ...formData.value })
+  emit("submit", { ...formData.value });
 }
 
 // Reset form to initial state
 function resetForm() {
   formData.value = {
-    serviceTypeId: '',
+    serviceTypeId: "",
     price: 0,
     durationMinutes: 60,
-  }
+  };
 }
 
 // Handle dialog close
 function handleClose() {
-  emit('update:open', false)
+  emit("update:open", false);
 }
 
 // Handle dialog open change
 function handleOpenChange(open: boolean) {
-  emit('update:open', open)
+  emit("update:open", open);
 }
 </script>
 
@@ -240,7 +241,7 @@ function handleOpenChange(open: boolean) {
           Anuluj
         </Button>
         <Button type="submit" :disabled="isSubmitting" @click="handleSubmit">
-          {{ isSubmitting ? 'Zapisywanie...' : 'Zapisz' }}
+          {{ isSubmitting ? "Zapisywanie..." : "Zapisz" }}
         </Button>
       </DialogFooter>
     </DialogContent>

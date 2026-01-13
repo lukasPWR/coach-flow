@@ -1,49 +1,49 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useTrainerProfile } from '@/composables/useTrainerProfile'
-import { useAuthStore } from '@/stores/auth'
-import TrainerHeader from '@/components/trainers/profile/TrainerHeader.vue'
-import TrainerBio from '@/components/trainers/profile/TrainerBio.vue'
-import TrainerServicesList from '@/components/trainers/profile/TrainerServicesList.vue'
-import TrainerAvailabilityWidget from '@/components/trainers/profile/TrainerAvailabilityWidget.vue'
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
-import { AlertCircle } from 'lucide-vue-next'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import type { TrainerServiceViewModel } from '@/types/trainer'
+import { computed, nextTick, onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useTrainerProfile } from "@/composables/useTrainerProfile";
+import { useAuthStore } from "@/stores/auth";
+import TrainerHeader from "@/components/trainers/profile/TrainerHeader.vue";
+import TrainerBio from "@/components/trainers/profile/TrainerBio.vue";
+import TrainerServicesList from "@/components/trainers/profile/TrainerServicesList.vue";
+import TrainerAvailabilityWidget from "@/components/trainers/profile/TrainerAvailabilityWidget.vue";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AlertCircle } from "lucide-vue-next";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import type { TrainerServiceViewModel } from "@/types/trainer";
 
-const route = useRoute()
-const router = useRouter()
-const authStore = useAuthStore()
-const trainerId = route.params.id as string
+const route = useRoute();
+const router = useRouter();
+const authStore = useAuthStore();
+const trainerId = route.params.id as string;
 
-const { trainer, isLoading, error, loadTrainer } = useTrainerProfile(trainerId)
-const selectedService = ref<TrainerServiceViewModel | null>(null)
-const availabilityRef = ref<HTMLElement | null>(null)
+const { trainer, isLoading, error, loadTrainer } = useTrainerProfile(trainerId);
+const selectedService = ref<TrainerServiceViewModel | null>(null);
+const availabilityRef = ref<HTMLElement | null>(null);
 
-const isAuthenticated = computed(() => authStore.isAuthenticated)
+const isAuthenticated = computed(() => authStore.isAuthenticated);
 
 const goToDashboard = () => {
   if (authStore.isTrainer) {
-    router.push('/trainer/dashboard')
+    router.push("/trainer/dashboard");
   } else {
-    router.push('/dashboard')
+    router.push("/dashboard");
   }
-}
+};
 
 const handleSelectService = async (service: TrainerServiceViewModel) => {
-  selectedService.value = service
+  selectedService.value = service;
 
-  if (window.matchMedia('(max-width: 1023px)').matches && availabilityRef.value) {
-    await nextTick()
-    availabilityRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  if (window.matchMedia("(max-width: 1023px)").matches && availabilityRef.value) {
+    await nextTick();
+    availabilityRef.value.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-}
+};
 
 onMounted(() => {
-  loadTrainer()
-})
+  loadTrainer();
+});
 </script>
 
 <template>
@@ -59,17 +59,17 @@ onMounted(() => {
 
         <div class="flex items-center gap-2">
           <Button variant="ghost" size="sm" as-child>
-            <router-link to="/trainers">Wszyscy trenerzy</router-link>
+            <router-link to="/trainers"> Wszyscy trenerzy </router-link>
           </Button>
           <Button v-if="isAuthenticated" variant="default" size="sm" @click="goToDashboard">
             Dashboard
           </Button>
           <template v-else>
             <Button variant="ghost" size="sm" as-child>
-              <router-link to="/login">Zaloguj się</router-link>
+              <router-link to="/login"> Zaloguj się </router-link>
             </Button>
             <Button size="sm" as-child>
-              <router-link to="/register">Zarejestruj się</router-link>
+              <router-link to="/register"> Zarejestruj się </router-link>
             </Button>
           </template>
         </div>

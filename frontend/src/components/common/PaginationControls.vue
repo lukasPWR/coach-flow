@@ -1,15 +1,8 @@
 <template>
   <div class="flex items-center justify-between px-2 pt-4">
-    <div class="text-sm text-muted-foreground">
-      Strona {{ currentPage }} z {{ totalPages }}
-    </div>
+    <div class="text-sm text-muted-foreground">Strona {{ currentPage }} z {{ totalPages }}</div>
     <div class="flex items-center space-x-2">
-      <Button
-        variant="outline"
-        size="sm"
-        :disabled="currentPage <= 1"
-        @click="$emit('prev')"
-      >
+      <Button variant="outline" size="sm" :disabled="currentPage <= 1" @click="$emit('prev')">
         Poprzednia
       </Button>
       <Button
@@ -25,16 +18,15 @@
 </template>
 
 <script setup lang="ts">
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 
 defineProps<{
-  currentPage: number
-  totalPages: number
-}>()
+  currentPage: number;
+  totalPages: number;
+}>();
 
 defineEmits<{
-  (e: 'prev'): void
-  (e: 'next'): void
-}>()
+  prev: [];
+  next: [];
+}>();
 </script>
-

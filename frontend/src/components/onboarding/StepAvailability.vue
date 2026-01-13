@@ -1,114 +1,114 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date'
-import { useOnboarding } from '@/composables/useOnboarding'
-import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
-import { Plus, Trash2 } from 'lucide-vue-next'
-import type { CreateUnavailabilityDto } from '@/types/onboarding'
+import { ref, computed, onMounted } from "vue";
+import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date";
+import { useOnboarding } from "@/composables/useOnboarding";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Plus, Trash2 } from "lucide-vue-next";
+import type { CreateUnavailabilityDto } from "@/types/onboarding";
 
 const { unavailabilities, fetchUnavailabilities, submitUnavailability, removeUnavailability } =
-  useOnboarding()
+  useOnboarding();
 
 // Use CalendarDate from @internationalized/date (required by radix-vue)
-const selectedDate = ref<CalendarDate>(today(getLocalTimeZone()))
+const selectedDate = ref<CalendarDate>(today(getLocalTimeZone()));
 
 // Load existing unavailabilities on mount
 onMounted(async () => {
-  await fetchUnavailabilities()
-})
+  await fetchUnavailabilities();
+});
 
-const startTime = ref('09:00')
-const endTime = ref('17:00')
+const startTime = ref("09:00");
+const endTime = ref("17:00");
 
 const formattedSelectedDate = computed(() => {
-  if (!selectedDate.value) return ''
+  if (!selectedDate.value) return "";
   // Convert CalendarDate to displayable string
-  return `${selectedDate.value.day}.${selectedDate.value.month}.${selectedDate.value.year}`
-})
+  return `${selectedDate.value.day}.${selectedDate.value.month}.${selectedDate.value.year}`;
+});
 
 const handleAddUnavailability = async () => {
-  if (!selectedDate.value || !startTime.value || !endTime.value) return
+  if (!selectedDate.value || !startTime.value || !endTime.value) return;
 
   // Convert CalendarDate to native Date for ISO string generation
-  const [startHour, startMinute] = startTime.value.split(':').map(Number)
-  const [endHour, endMinute] = endTime.value.split(':').map(Number)
+  const [startHour, startMinute] = startTime.value.split(":").map(Number);
+  const [endHour, endMinute] = endTime.value.split(":").map(Number);
 
   const startDateTime = new Date(
     selectedDate.value.year,
     selectedDate.value.month - 1,
     selectedDate.value.day,
     startHour,
-    startMinute,
-  )
+    startMinute
+  );
 
   const endDateTime = new Date(
     selectedDate.value.year,
     selectedDate.value.month - 1,
     selectedDate.value.day,
     endHour,
-    endMinute,
-  )
+    endMinute
+  );
 
   if (endDateTime <= startDateTime) {
-    alert('Data zakończenia musi być późniejsza niż data rozpoczęcia')
-    return
+    alert("Data zakończenia musi być późniejsza niż data rozpoczęcia");
+    return;
   }
 
   const payload: CreateUnavailabilityDto = {
     startTime: startDateTime.toISOString(),
     endTime: endDateTime.toISOString(),
-  }
+  };
 
   try {
-    await submitUnavailability(payload)
-    alert('Niedostępność dodana pomyślnie!')
+    await submitUnavailability(payload);
+    alert("Niedostępność dodana pomyślnie!");
   } catch (error: any) {
-    console.error('Failed to add unavailability', error)
-    console.error('Error response:', error.response?.data)
-    const errorMsg = error.response?.data?.message || 'Nie udało się dodać niedostępności'
-    alert(Array.isArray(errorMsg) ? errorMsg.join(', ') : errorMsg)
+    console.error("Failed to add unavailability", error);
+    console.error("Error response:", error.response?.data);
+    const errorMsg = error.response?.data?.message || "Nie udało się dodać niedostępności";
+    alert(Array.isArray(errorMsg) ? errorMsg.join(", ") : errorMsg);
   }
-}
+};
 
 const formatTimeRange = (start: string, end: string) => {
-  const s = new Date(start)
-  const e = new Date(end)
+  const s = new Date(start);
+  const e = new Date(end);
   return `${s.toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-  })} - ${e.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
-}
+    hour: "2-digit",
+    minute: "2-digit",
+  })} - ${e.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+};
 
 const formatDate = (dateStr: string) => {
-  return new Date(dateStr).toLocaleDateString()
-}
+  return new Date(dateStr).toLocaleDateString();
+};
 
 // Get unavailabilities for the currently displayed month (for the legend)
 const getUnavailabilitiesForMonth = () => {
-  if (!selectedDate.value) return []
+  if (!selectedDate.value) return [];
 
   return unavailabilities.value.filter((unavail) => {
-    const unavailDate = new Date(unavail.startTime)
+    const unavailDate = new Date(unavail.startTime);
     return (
       unavailDate.getFullYear() === selectedDate.value.year &&
       unavailDate.getMonth() + 1 === selectedDate.value.month
-    )
-  })
-}
+    );
+  });
+};
 
 const handleRemoveUnavailability = async (id: string) => {
   try {
-    await removeUnavailability(id)
-    alert('Niedostępność usunięta pomyślnie!')
+    await removeUnavailability(id);
+    alert("Niedostępność usunięta pomyślnie!");
   } catch (error) {
-    console.error('Failed to remove unavailability', error)
-    alert('Nie udało się usunąć niedostępności')
+    console.error("Failed to remove unavailability", error);
+    alert("Nie udało się usunąć niedostępności");
   }
-}
+};
 </script>
 
 <template>
@@ -152,18 +152,18 @@ const handleRemoveUnavailability = async (id: string) => {
 
       <Card>
         <CardHeader>
-          <CardTitle class="text-base">Dodaj przerwę / urlop</CardTitle>
+          <CardTitle class="text-base"> Dodaj przerwę / urlop </CardTitle>
           <CardDescription>Określ godziny, w których nie przyjmujesz rezerwacji.</CardDescription>
         </CardHeader>
         <CardContent class="space-y-4">
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
               <Label>Od godziny</Label>
-              <Input type="time" v-model="startTime" />
+              <Input v-model="startTime" type="time" />
             </div>
             <div class="space-y-2">
               <Label>Do godziny</Label>
-              <Input type="time" v-model="endTime" />
+              <Input v-model="endTime" type="time" />
             </div>
           </div>
           <Button class="w-full" @click="handleAddUnavailability" :disabled="!selectedDate">

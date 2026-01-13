@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch } from "vue";
 import {
   Dialog,
   DialogContent,
@@ -7,52 +7,52 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import type { UnavailabilityFormData, UnavailabilityModalMode } from '@/types/calendar'
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import type { UnavailabilityFormData, UnavailabilityModalMode } from "@/types/calendar";
 
 interface Props {
-  isOpen: boolean
-  initialData: UnavailabilityFormData | null
-  mode: UnavailabilityModalMode
-  isLoading?: boolean
+  isOpen: boolean;
+  initialData: UnavailabilityFormData | null;
+  mode: UnavailabilityModalMode;
+  isLoading?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isLoading: false,
-})
+});
 
 const emit = defineEmits<{
-  close: []
-  save: [data: UnavailabilityFormData]
-  delete: [id: string]
-}>()
+  close: [];
+  save: [data: UnavailabilityFormData];
+  delete: [id: string];
+}>();
 
 // Formularz
 const formData = ref<UnavailabilityFormData>({
-  startTime: '',
-  endTime: '',
-})
+  startTime: "",
+  endTime: "",
+});
 
 // Błędy walidacji
 const errors = ref<{
-  startTime?: string
-  endTime?: string
-  general?: string
-}>({})
+  startTime?: string;
+  endTime?: string;
+  general?: string;
+}>({});
 
 // Computed
-const isEditMode = computed(() => props.mode === 'EDIT')
+const isEditMode = computed(() => props.mode === "EDIT");
 const dialogTitle = computed(() =>
-  isEditMode.value ? 'Edytuj niedostępność' : 'Dodaj niedostępność',
-)
+  isEditMode.value ? "Edytuj niedostępność" : "Dodaj niedostępność"
+);
 const dialogDescription = computed(() =>
   isEditMode.value
-    ? 'Zmień czas niedostępności lub usuń ją.'
-    : 'Ustaw okres, w którym nie będziesz dostępny dla klientów.',
-)
+    ? "Zmień czas niedostępności lub usuń ją."
+    : "Ustaw okres, w którym nie będziesz dostępny dla klientów."
+);
 
 // Obserwuj zmiany initialData i aktualizuj formularz
 watch(
@@ -63,65 +63,65 @@ watch(
         id: newData.id,
         startTime: newData.startTime,
         endTime: newData.endTime,
-      }
+      };
     } else {
       formData.value = {
-        startTime: '',
-        endTime: '',
-      }
+        startTime: "",
+        endTime: "",
+      };
     }
-    errors.value = {}
+    errors.value = {};
   },
-  { immediate: true },
-)
+  { immediate: true }
+);
 
 // Walidacja formularza
 function validate(): boolean {
-  errors.value = {}
+  errors.value = {};
 
   if (!formData.value.startTime) {
-    errors.value.startTime = 'Podaj datę i godzinę rozpoczęcia'
+    errors.value.startTime = "Podaj datę i godzinę rozpoczęcia";
   }
 
   if (!formData.value.endTime) {
-    errors.value.endTime = 'Podaj datę i godzinę zakończenia'
+    errors.value.endTime = "Podaj datę i godzinę zakończenia";
   }
 
   if (formData.value.startTime && formData.value.endTime) {
-    const start = new Date(formData.value.startTime)
-    const end = new Date(formData.value.endTime)
+    const start = new Date(formData.value.startTime);
+    const end = new Date(formData.value.endTime);
 
     if (end <= start) {
-      errors.value.endTime = 'Data zakończenia musi być późniejsza niż rozpoczęcia'
+      errors.value.endTime = "Data zakończenia musi być późniejsza niż rozpoczęcia";
     }
   }
 
-  return Object.keys(errors.value).length === 0
+  return Object.keys(errors.value).length === 0;
 }
 
 // Obsługa zapisu
 function handleSave() {
-  if (!validate()) return
+  if (!validate()) return;
 
-  emit('save', { ...formData.value })
+  emit("save", { ...formData.value });
 }
 
 // Obsługa usuwania
 function handleDelete() {
   if (formData.value.id) {
-    emit('delete', formData.value.id)
+    emit("delete", formData.value.id);
   }
 }
 
 // Obsługa zamknięcia
 function handleClose() {
-  emit('close')
+  emit("close");
 }
 
 // Obsługa zmiany stanu dialogu
 function handleOpenChange(open: boolean) {
   if (!open) {
-    handleClose()
+    handleClose();
   }
 }
 </script>
@@ -188,7 +188,7 @@ function handleOpenChange(open: boolean) {
             Anuluj
           </Button>
           <Button type="submit" :disabled="isLoading" @click="handleSave">
-            {{ isLoading ? 'Zapisywanie...' : 'Zapisz' }}
+            {{ isLoading ? "Zapisywanie..." : "Zapisz" }}
           </Button>
         </div>
       </DialogFooter>

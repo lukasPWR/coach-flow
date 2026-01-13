@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AuthLayout from '@/components/layouts/AuthLayout.vue'
-import LoginForm from '@/components/auth/LoginForm.vue'
+import AuthLayout from "@/components/layouts/AuthLayout.vue";
+import LoginForm from "@/components/auth/LoginForm.vue";
 </script>
 
 <template>
@@ -8,4 +8,3 @@ import LoginForm from '@/components/auth/LoginForm.vue'
     <LoginForm />
   </AuthLayout>
 </template>
-

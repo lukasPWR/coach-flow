@@ -191,7 +191,8 @@ export class ServicesService {
   private mapToResponseDto(service: Service): ServiceResponseDto {
     return {
       id: service.id,
-      price: Number(service.price), // Convert decimal to number
+      // Convert decimal to number
+      price: Number(service.price),
       durationMinutes: service.durationMinutes,
       trainer: {
         id: service.trainer.id,
