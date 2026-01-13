@@ -69,7 +69,7 @@ const getDayRangeParams = (date: CalendarDate) => {
 const loadAvailability = async () => {
   try {
     isLoadingUnavailabilities.value = true;
-    const { from, to } = getDayRangeParams(selectedDate.value);
+    const { from, to } = getDayRangeParams(selectedDate.value as CalendarDate);
     const [unavailabilityResult, bookedResult] = await Promise.allSettled([
       api.get<Unavailability[]>(`/trainers/${props.trainerId}/unavailabilities`, {
         params: { from, to },
@@ -120,7 +120,7 @@ const workHours = {
 const isServiceSelected = computed(() => !!props.selectedService);
 
 const dailyUnavailabilities = computed(() => {
-  const { from, to } = getDayRange(selectedDate.value);
+  const { from, to } = getDayRange(selectedDate.value as CalendarDate);
   return unavailabilities.value.filter((unavail) => {
     const start = new Date(unavail.startTime);
     const end = new Date(unavail.endTime);
@@ -129,7 +129,7 @@ const dailyUnavailabilities = computed(() => {
 });
 
 const dailyBookedSlots = computed(() => {
-  const { from, to } = getDayRange(selectedDate.value);
+  const { from, to } = getDayRange(selectedDate.value as CalendarDate);
   return bookedSlots.value.filter((slot) => {
     const start = new Date(slot.startTime);
     const end = new Date(slot.endTime);
@@ -144,7 +144,7 @@ const blockedRanges = computed(() => {
 const timeSlots = computed<TimeSlot[]>(() => {
   if (!props.selectedService) return [];
   return buildTimeSlots({
-    date: selectedDate.value,
+    date: selectedDate.value as CalendarDate,
     durationMinutes: props.selectedService.durationMinutes,
     unavailabilities: blockedRanges.value,
     workHours,
@@ -184,7 +184,7 @@ const formatDate = (date: CalendarDate) => {
 
 const selectedSlotLabel = computed(() => {
   if (!selectedSlot.value) return null;
-  return `${formatDate(selectedDate.value)} - ${formatTime(selectedSlot.value.start)}`;
+  return `${formatDate(selectedDate.value as CalendarDate)} - ${formatTime(selectedSlot.value.start)}`;
 });
 
 const handleSelectSlot = (slot: TimeSlot) => {
@@ -286,7 +286,7 @@ const handleBooking = async () => {
         </div>
 
         <div class="space-y-2">
-          <p class="text-sm font-medium">Dostępne godziny na {{ formatDate(selectedDate) }}</p>
+          <p class="text-sm font-medium">Dostępne godziny na {{ formatDate(selectedDate as CalendarDate) }}</p>
           <div v-if="timeSlots.length > 0" class="grid grid-cols-2 gap-2 sm:grid-cols-3">
             <Button
               v-for="slot in timeSlots"

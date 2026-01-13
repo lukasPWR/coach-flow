@@ -34,11 +34,12 @@ const cityModel = computed({
 });
 
 // Handle specialization change
-function handleSpecializationChange(value: string) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function handleSpecializationChange(value: any) {
   // If "all" is selected, emit null
-  if (value === "all") {
+  if (value === "all" || value === null) {
     emit("update:specializationId", null);
-  } else {
+  } else if (typeof value === "string") {
     emit("update:specializationId", value);
   }
 }

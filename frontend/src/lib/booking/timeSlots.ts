@@ -1,4 +1,4 @@
-import { CalendarDate, getLocalTimeZone } from "@internationalized/date";
+import { type DateValue, getLocalTimeZone } from "@internationalized/date";
 import type { TimeSlot } from "@/types/bookings";
 
 export type WorkHours = {
@@ -43,7 +43,7 @@ export const buildTimeSlots = ({
   workHours = { start: 8, end: 20 },
   now = new Date(),
 }: {
-  date: CalendarDate;
+  date: DateValue;
   durationMinutes: number;
   unavailabilities: UnavailabilityRange[];
   workHours?: WorkHours;

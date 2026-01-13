@@ -29,7 +29,8 @@
           <div class="flex items-center gap-3 pt-1">
             <Avatar class="h-8 w-8">
               <AvatarImage
-                :src="booking.trainer.profilePictureUrl || undefined"
+                v-if="booking.trainer.profilePictureUrl"
+                :src="booking.trainer.profilePictureUrl"
                 :alt="booking.trainer.name"
               />
               <AvatarFallback>{{ initials }}</AvatarFallback>

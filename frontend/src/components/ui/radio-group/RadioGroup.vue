@@ -7,7 +7,11 @@ import {
 } from "radix-vue";
 import { cn } from "@/lib/utils";
 
-const props = defineProps<RadioGroupRootProps>();
+interface Props extends RadioGroupRootProps {
+  class?: string;
+}
+
+const props = defineProps<Props>();
 const emits = defineEmits<RadioGroupRootEmits>();
 
 const forwarded = useForwardPropsEmits(props, emits);
