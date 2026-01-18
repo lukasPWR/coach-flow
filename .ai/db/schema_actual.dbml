@@ -1,0 +1,304 @@
+// ZINTEGROWANY SCHEMAT BAZY DANYCH COACHFLOW
+// Moduły: Rezerwacje (Booking) + Plany Treningowe (Training Plans)
+
+Project CoachFlow_Unified {
+  database_type: "PostgreSQL"
+  Note: 'Unified platform schema: Booking System + Training Plans Module'
+}
+
+// --- ENUMS (EXISTING) ---
+
+Enum user_role {
+  TRAINER
+  CLIENT
+  ADMIN
+}
+
+Enum booking_status {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+// --- ENUMS (NEW - TRAINING PLANS) ---
+
+Enum muscle_group_type {
+  CHEST
+  BACK
+  SHOULDERS
+  BICEPS
+  TRICEPS
+  QUADRICEPS
+  HAMSTRINGS
+  GLUTES
+  CALVES
+  CORE
+  FOREARMS
+  TRAPS
+  ADDUCTORS
+  ABDUCTORS
+  FULL_BODY
+}
+
+Enum plan_status {
+  ACTIVE
+  ARCHIVED
+}
+
+// --- CORE & AUTH TABLES ---
+
+Table users {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  name varchar(255) [not null]
+  email varchar(255) [not null, unique]
+  password_hash varchar(255) [not null]
+  role user_role [not null, default: 'CLIENT']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  deleted_at timestamptz
+  
+  Note: 'Core user authentication and profile data'
+  
+  indexes {
+    email [unique]
+    role
+  }
+}
+
+// --- PROFILES & SERVICES TABLES ---
+
+Table trainer_profiles {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  user_id uuid [not null, unique]
+  description text
+  city varchar(255)
+  profile_picture_url varchar(255)
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  
+  Note: 'Extended profile information for trainers'
+  
+  indexes {
+    user_id [unique]
+  }
+}
+
+Table specializations {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  name varchar(255) [not null, unique]
+  
+  Note: 'Dictionary table for trainer specializations'
+  
+  indexes {
+    name [unique]
+  }
+}
+
+Table trainer_specializations {
+  trainer_profile_id uuid [not null]
+  specialization_id uuid [not null]
+  
+  Note: 'Many-to-many relationship between trainers and specializations'
+  
+  indexes {
+    (trainer_profile_id, specialization_id) [pk]
+  }
+}
+
+Table service_types {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  name varchar(255) [not null, unique]
+  
+  Note: 'Dictionary table for service types'
+  
+  indexes {
+    name [unique]
+  }
+}
+
+Table services {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  trainer_id uuid [not null]
+  service_type_id uuid [not null]
+  price decimal(10,2) [not null, note: 'Price in PLN']
+  duration_minutes integer [not null, default: 60]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  deleted_at timestamptz
+  
+  Note: 'Services offered by trainers'
+  
+  indexes {
+    trainer_id
+    service_type_id
+    (trainer_id, service_type_id)
+  }
+}
+
+// --- BOOKING MODULE TABLES ---
+
+Table bookings {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  client_id uuid [not null]
+  trainer_id uuid [not null]
+  service_id uuid [not null]
+  start_time timestamptz [not null]
+  end_time timestamptz [not null]
+  status booking_status [not null, default: 'PENDING']
+  reminder_sent_at timestamptz
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  
+  Note: 'Main transactional table for booking requests'
+  
+  indexes {
+    client_id
+    trainer_id
+    service_id
+    start_time
+    status
+    (trainer_id, start_time)
+    (client_id, start_time)
+  }
+}
+
+Table unavailabilities {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  trainer_id uuid [not null]
+  start_time timestamptz [not null]
+  end_time timestamptz [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  
+  Note: 'Trainer-defined unavailable time blocks'
+  
+  indexes {
+    trainer_id
+    (trainer_id, start_time)
+  }
+}
+
+Table booking_bans {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  client_id uuid [not null]
+  trainer_id uuid [not null]
+  banned_until timestamptz [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  
+  Note: '7-day booking ban for clients'
+  
+  indexes {
+    (client_id, trainer_id)
+    banned_until
+  }
+}
+
+// --- TRAINING PLANS MODULE TABLES (NEW) ---
+
+Table exercises {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  trainer_id uuid [note: 'Nullable for system exercises (Seed Data)']
+  name varchar(255) [not null]
+  muscle_group muscle_group_type [not null]
+  is_system boolean [not null, default: false]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  deleted_at timestamptz [note: 'Soft delete support']
+
+  Note: 'Exercise library containing both system and trainer-defined exercises'
+
+  indexes {
+    (trainer_id)
+    (is_system)
+    (muscle_group)
+  }
+}
+
+Table training_plans {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  trainer_id uuid [not null]
+  client_id uuid [not null]
+  name varchar(255) [not null]
+  description text
+  status plan_status [not null, default: 'ACTIVE']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  Note: 'Header table for a training plan assigned to a client'
+
+  indexes {
+    (trainer_id)
+    (client_id)
+    (status)
+  }
+}
+
+Table training_units {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  training_plan_id uuid [not null]
+  name varchar(255) [not null]
+  sort_order integer [not null, default: 0]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  Note: 'Represents a single workout day/unit within a plan (e.g., Push Day)'
+
+  indexes {
+    (training_plan_id)
+  }
+}
+
+Table plan_exercises {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  training_unit_id uuid [not null]
+  exercise_id uuid [not null]
+  sets varchar(50) [note: 'Text to allow ranges like 3-4']
+  reps varchar(50) [note: 'Text to allow ranges like 8-12']
+  weight varchar(50) [note: 'Text for weight or RPE']
+  tempo varchar(50)
+  rest varchar(50)
+  notes text
+  sort_order integer [not null, default: 0]
+  is_completed boolean [not null, default: false]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  Note: 'Specific exercise instance in a plan unit with parameters'
+
+  indexes {
+    (training_unit_id)
+  }
+}
+
+// --- RELATIONSHIPS (EXISTING) ---
+
+Ref: trainer_profiles.user_id > users.id [delete: cascade, update: cascade]
+Ref: trainer_specializations.trainer_profile_id > trainer_profiles.id [delete: cascade, update: cascade]
+Ref: trainer_specializations.specialization_id > specializations.id [delete: cascade, update: cascade]
+Ref: services.trainer_id > users.id [delete: cascade, update: cascade]
+Ref: services.service_type_id > service_types.id [delete: restrict, update: cascade]
+Ref: bookings.client_id > users.id [delete: restrict, update: cascade]
+Ref: bookings.trainer_id > users.id [delete: restrict, update: cascade]
+Ref: bookings.service_id > services.id [delete: restrict, update: cascade]
+Ref: unavailabilities.trainer_id > users.id [delete: cascade, update: cascade]
+Ref: booking_bans.client_id > users.id [delete: cascade, update: cascade]
+Ref: booking_bans.trainer_id > users.id [delete: cascade, update: cascade]
+
+// --- RELATIONSHIPS (NEW) ---
+
+// Exercises linked to Trainer (User)
+Ref: exercises.trainer_id > users.id [delete: set null, update: cascade] 
+
+// Training Plans linked to Trainer and Client (Users)
+Ref: training_plans.trainer_id > users.id [delete: restrict, update: cascade]
+Ref: training_plans.client_id > users.id [delete: restrict, update: cascade]
+
+// Plan Hierarchy
+Ref: training_units.training_plan_id > training_plans.id [delete: cascade, update: cascade]
+Ref: plan_exercises.training_unit_id > training_units.id [delete: cascade, update: cascade]
+
+// Exercise definition link
+// Note: delete: no action allows keeping history even if exercise definition is soft-deleted
+Ref: plan_exercises.exercise_id > exercises.id [delete: no action, update: cascade]

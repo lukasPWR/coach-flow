@@ -1,0 +1,112 @@
+// ASSUMPTIONS:
+// - Database type: PostgreSQL
+// - UUID used for Primary Keys
+// - Column names converted to snake_case for PostgreSQL conventions (ORM handles mapping)
+// - Users table is external but referenced
+
+Project coachflow_training_plans {
+  database_type: "PostgreSQL"
+  Note: 'Training Plans Module Schema based on @prd-training-plans.md and @training-plans-db-plan.md'
+}
+
+Enum muscle_group_type {
+  CHEST
+  BACK
+  SHOULDERS
+  BICEPS
+  TRICEPS
+  QUADRICEPS
+  HAMSTRINGS
+  GLUTES
+  CALVES
+  CORE
+  FOREARMS
+  TRAPS
+  ADDUCTORS
+  ABDUCTORS
+  FULL_BODY
+}
+
+Enum plan_status {
+  ACTIVE
+  ARCHIVED
+}
+
+Table users {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  // External table stub for relationships
+}
+
+Table exercises {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  trainer_id uuid [note: 'Nullable for system exercises']
+  name varchar(255) [not null]
+  muscle_group muscle_group_type [not null]
+  is_system boolean [not null, default: false]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  deleted_at timestamptz [note: 'Soft delete']
+
+  indexes {
+    (trainer_id)
+    (is_system)
+    (muscle_group)
+  }
+}
+
+Table training_plans {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  trainer_id uuid [not null]
+  client_id uuid [not null]
+  name varchar(255) [not null]
+  description text
+  status plan_status [not null, default: 'ACTIVE']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (trainer_id)
+    (client_id)
+    (status)
+  }
+}
+
+Table training_units {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  training_plan_id uuid [not null]
+  name varchar(255) [not null]
+  sort_order integer [not null, default: 0]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (training_plan_id)
+  }
+}
+
+Table plan_exercises {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  training_unit_id uuid [not null]
+  exercise_id uuid [not null]
+  sets varchar(50)
+  reps varchar(50)
+  weight varchar(50)
+  tempo varchar(50)
+  rest varchar(50)
+  notes text
+  sort_order integer [not null, default: 0]
+  is_completed boolean [not null, default: false]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (training_unit_id)
+  }
+}
+
+Ref: exercises.trainer_id > users.id
+Ref: training_plans.trainer_id > users.id
+Ref: training_plans.client_id > users.id
+Ref: training_units.training_plan_id > training_plans.id [delete: cascade, update: cascade]
+Ref: plan_exercises.training_unit_id > training_units.id [delete: cascade, update: cascade]
+Ref: plan_exercises.exercise_id > exercises.id [delete: no action, update: cascade] // No cascade delete to preserve history
