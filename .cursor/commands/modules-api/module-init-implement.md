@@ -12,13 +12,13 @@ Wygeneruj **podstawową** strukturę folderów i plików dla modułów backendu 
 
 MUSISZ używać następujących plików jako jedynego źródła prawdy:
 
-- **GŁÓWNY PLAN IMPLEMENTACJI:** `@.ai/module-plan.md` - To jest Twój główny dokument i pojedyncze źródło prawdy dotyczące tego, co masz zaimplementować.
-- **Zasady Architektury Backendu:** `@backend.mdc` - Stosuj się do zasad struktury projektu.
-- **Standardy Kodowania NestJS:** `@nest.mdc` - Stosuj się do konwencji nazewnictwa i stylu.
+- **GŁÓWNY PLAN IMPLEMENTACJI:** {{MODULE_PLAN}} - To jest Twój główny dokument i pojedyncze źródło prawdy dotyczące tego, co masz zaimplementować.
+- **Zasady Architektury Backendu:** {{BACKEND_PLAN}} - Stosuj się do zasad struktury projektu.
+- **Standardy Kodowania NestJS:** {{NEST_PLAN}} - Stosuj się do konwencji nazewnictwa i stylu.
 
 ## Główne Instrukcje
 
-1.  **Analiza Planu:** Dokładnie przeanalizuj plik `@.ai/module-plan.md`. Twoim zadaniem jest zaimplementowanie modułów i encji dla WSZYSTKICH zdefiniowanych w nim domen.
+1.  **Analiza Planu:** Dokładnie przeanalizuj plik {{MODULE_PLAN}}. Twoim zadaniem jest zaimplementowanie modułów i encji dla WSZYSTKICH zdefiniowanych w nim domen.
 2.  **Struktura Projektu:** Dla każdej domeny w planie, utwórz odpowiednią strukturę katalogów w `src/` (`src/[nazwa-domeny]/` oraz `src/[nazwa-domeny]/entities`). Na tym etapie katalog `dto` nie jest potrzebny.
 3.  **Generowanie Kodu:** Wygeneruj pliki `[domena].module.ts` oraz `entities/[domena].entity.ts` dla każdej domeny, ściśle trzymając się specyfikacji z planu oraz wzorców podanych poniżej.
 4.  **Łączenie Modułów:** Po wygenerowaniu wszystkich modułów domenowych, zaimportuj je wszystkie do głównego modułu aplikacji w `src/app.module.ts`.
