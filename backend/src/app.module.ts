@@ -13,6 +13,10 @@ import { ServicesModule } from "./services/services.module";
 import { BookingsModule } from "./bookings/bookings.module";
 import { UnavailabilitiesModule } from "./unavailabilities/unavailabilities.module";
 import { BookingBansModule } from "./booking-bans/booking-bans.module";
+import { ExercisesModule } from "./exercises/exercises.module";
+import { TrainingPlansModule } from "./training-plans/training-plans.module";
+import { TrainingUnitsModule } from "./training-units/training-units.module";
+import { PlanExercisesModule } from "./plan-exercises/plan-exercises.module";
 import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { RolesGuard } from "./common/guards/roles.guard";
 
@@ -32,6 +36,10 @@ import { RolesGuard } from "./common/guards/roles.guard";
     BookingsModule,
     UnavailabilitiesModule,
     BookingBansModule,
+    ExercisesModule,
+    TrainingPlansModule,
+    TrainingUnitsModule,
+    PlanExercisesModule,
   ],
   controllers: [AppController],
   providers: [
