@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import { TrainingPlansRepository } from "./repositories/training-plans.repository";
 import { TrainingPlanQueryDto } from "./dto/training-plan-query.dto";
