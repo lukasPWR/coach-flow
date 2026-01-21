@@ -11,6 +11,7 @@ import { CreateUnavailabilitiesTable1730736000008 } from "./migrations/173073600
 import { CreateSpecializationsTable1730736000003 } from "./migrations/1730736000003-CreateSpecializationsTable";
 import { CreateTrainerProfilesTable1730736000004 } from "./migrations/1730736000004-CreateTrainerProfilesTable";
 import { CreateTokenTables1731687000000 } from "./migrations/1731687000000-CreateTokenTables";
+import { CreateTrainingPlansModule1737158400000 } from "./migrations/1737158400000-CreateTrainingPlansModule";
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { CreateTokenTables1731687000000 } from "./migrations/1731687000000-Creat
           CreateUnavailabilitiesTable1730736000008,
           CreateBookingBansTable1730736000009,
           CreateTokenTables1731687000000,
+          CreateTrainingPlansModule1737158400000,
         ],
         migrationsRun: true,
       }),

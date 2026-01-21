@@ -45,10 +45,12 @@ applyTo: 'backend/src/*'
 
 ### Data Access (Repositories)
 
-- Use the Repository pattern for all database interactions.
-- Inject TypeORM repositories (`@InjectRepository(Entity)`) into services.
-- Encapsulate complex queries or reusable database logic in custom repositories.
-- Services should not contain raw SQL or complex Query Builder logic; this should be moved to a custom repository.
+**CRITICAL: Always use custom repositories for database operations.**
+
+- **NEVER use QueryBuilder directly in services** - all database queries must be encapsulated in custom repositories.
+- Create custom repositories that extend TypeORM `Repository<Entity>` for each domain entity.
+- Place custom repositories in `[module]/repositories/` directory.
+- Services should only call repository methods, never construct queries directly.
 
 ### Configuration
 
