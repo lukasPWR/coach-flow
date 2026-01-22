@@ -19,12 +19,15 @@ import { CreateTrainingPlanDto } from "./dto/create-training-plan.dto";
 import { UpdateTrainingPlanDto } from "./dto/update-training-plan.dto";
 import { TrainingPlanResponseDto } from "./dto/training-plan-response.dto";
 import { TrainingPlanDetailsResponseDto } from "./dto/training-plan-details-response.dto";
+import { TrainingUnitResponseDto } from "./dto/training-unit-response.dto";
 import { JwtAuthGuard } from "../common/guards/jwt-auth.guard";
 import { RolesGuard } from "../common/guards/roles.guard";
 import { Roles } from "../common/decorators/roles.decorator";
 import { UserRole } from "../users/interfaces/user-role.enum";
 import type { IRequestApp } from "../common/interfaces/request-app.interface";
 import { PlanStatus } from "./interfaces/plan-status.enum";
+import { TrainingUnitsService } from "../training-units/training-units.service";
+import { CreateTrainingUnitDto } from "../training-units/dto/create-training-unit.dto";
 
 /**
  * Controller handling training plans API endpoints
@@ -34,7 +37,10 @@ import { PlanStatus } from "./interfaces/plan-status.enum";
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class TrainingPlansController {
-  constructor(private readonly trainingPlansService: TrainingPlansService) {}
+  constructor(
+    private readonly trainingPlansService: TrainingPlansService,
+    private readonly trainingUnitsService: TrainingUnitsService
+  ) {}
 
   /**
    * GET /training-plans
@@ -220,5 +226,56 @@ export class TrainingPlansController {
     @Request() request: IRequestApp
   ): Promise<TrainingPlanResponseDto> {
     return this.trainingPlansService.update(id, updateTrainingPlanDto, request.user);
+  }
+
+  /**
+   * POST /training-plans/:planId/units
+   * Creates a new training unit (e.g., "Day A", "Push Day") within a training plan
+   * Only trainers can add units, and only to their own plans
+   */
+  @Post(":planId/units")
+  @HttpCode(HttpStatus.CREATED)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.TRAINER)
+  @ApiOperation({
+    summary: "Create new training unit",
+    description:
+      "Creates a new training unit within a training plan. " +
+      "Only trainers can create units, and only in plans they own. " +
+      "The unit is created empty (exercises are added later). " +
+      "If sortOrder is not provided, the unit is added at the end.",
+  })
+  @ApiParam({
+    name: "planId",
+    description: "Training plan UUID",
+    type: String,
+  })
+  @ApiResponse({
+    status: 201,
+    description: "Training unit created successfully",
+    type: TrainingUnitResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: "Invalid request body or UUID format",
+  })
+  @ApiResponse({
+    status: 401,
+    description: "Missing or invalid JWT token",
+  })
+  @ApiResponse({
+    status: 403,
+    description: "Access denied - user is not a trainer",
+  })
+  @ApiResponse({
+    status: 404,
+    description: "Training plan not found or access denied",
+  })
+  async createUnit(
+    @Param("planId", ParseUUIDPipe) planId: string,
+    @Body() createTrainingUnitDto: CreateTrainingUnitDto,
+    @Request() request: IRequestApp
+  ): Promise<TrainingUnitResponseDto> {
+    return this.trainingUnitsService.create(planId, createTrainingUnitDto, request.user.userId);
   }
 }
