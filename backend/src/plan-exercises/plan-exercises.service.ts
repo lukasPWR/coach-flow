@@ -226,4 +226,32 @@ export class PlanExercisesService {
       }
     );
   }
+
+  /**
+   * Removes an exercise from a training plan
+   * Only the trainer who owns the plan can remove exercises
+   * Deletes the plan exercise entry, not the exercise definition itself
+   *
+   * @param id - UUID of the plan exercise entry to remove
+   * @param userId - ID of the authenticated user (trainer)
+   * @returns Promise that resolves when the exercise is removed
+   * @throws NotFoundException if plan exercise doesn't exist
+   * @throws ForbiddenException if trainer doesn't own the plan
+   */
+  async remove(id: string, userId: string): Promise<void> {
+    // 1. Fetch the plan exercise with relations needed for authorization
+    const planExercise = await this.planExercisesRepository.findOneWithOwnership({ id });
+
+    if (!planExercise) {
+      throw new NotFoundException(`Plan exercise with ID ${id} not found`);
+    }
+
+    // 2. Authorization - Verify that the authenticated user owns the plan
+    if (planExercise.trainingUnit.trainingPlan.trainerId !== userId) {
+      throw new ForbiddenException("You cannot delete this exercise");
+    }
+
+    // 3. Remove the plan exercise from database
+    await this.planExercisesRepository.remove(planExercise);
+  }
 }

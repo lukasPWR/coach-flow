@@ -1,6 +1,7 @@
 import {
   Controller,
   Patch,
+  Delete,
   Body,
   Param,
   UseGuards,
@@ -135,5 +136,50 @@ export class PlanExercisesController {
     @Request() req: IRequestApp
   ): Promise<PlanExerciseResponseDto> {
     return await this.planExercisesService.toggleCompletion(id, toggleDto, req.user.userId);
+  }
+
+  /**
+   * DELETE /plan-exercises/:id
+   * Removes an exercise from a training plan
+   * Only trainers can remove exercises from their plans
+   */
+  @Delete(":id")
+  @HttpCode(HttpStatus.OK)
+  @Roles(UserRole.TRAINER)
+  @ApiOperation({
+    summary: "Remove exercise from plan",
+    description:
+      "Removes a specific exercise from a training plan. " +
+      "This operation deletes only the assignment of the exercise to the training unit (record in plan_exercises table), " +
+      "not the exercise definition itself from the library. " +
+      "Only the trainer who owns the plan can perform this action.",
+  })
+  @ApiParam({
+    name: "id",
+    description: "UUID of the plan exercise entry to remove",
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Exercise successfully removed from plan",
+  })
+  @ApiResponse({
+    status: 400,
+    description: "Invalid UUID format",
+  })
+  @ApiResponse({
+    status: 401,
+    description: "Missing or invalid JWT token",
+  })
+  @ApiResponse({
+    status: 403,
+    description: "User is not a trainer or doesn't have access to this exercise",
+  })
+  @ApiResponse({
+    status: 404,
+    description: "Plan exercise not found",
+  })
+  async remove(@Param("id", ParseUUIDPipe) id: string, @Request() req: IRequestApp): Promise<void> {
+    return await this.planExercisesService.remove(id, req.user.userId);
   }
 }
