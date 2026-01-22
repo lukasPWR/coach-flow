@@ -1,27 +1,27 @@
-import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
+import { ApiProperty } from "@nestjs/swagger";
 
 /**
- * Response DTO for plan exercise within a training unit
- * Contains flattened exercise name and all exercise parameters
+ * Response DTO for a plan exercise
+ * Represents an exercise within a training plan with all its parameters
  */
 export class PlanExerciseResponseDto {
   @ApiProperty({
-    description: "Plan exercise UUID",
-    example: "123e4567-e89b-12d3-a456-426614174001",
+    description: "UUID of the plan exercise entry",
+    example: "123e4567-e89b-12d3-a456-426614174000",
   })
   @Expose()
   id: string;
 
   @ApiProperty({
-    description: "Exercise UUID from library",
-    example: "123e4567-e89b-12d3-a456-426614174002",
+    description: "UUID of the exercise from the library",
+    example: "123e4567-e89b-12d3-a456-426614174001",
   })
   @Expose()
   exerciseId: string;
 
   @ApiProperty({
-    description: "Exercise name (flattened from exercise relation)",
+    description: "Name of the exercise (flattened from relation)",
     example: "Bench Press",
   })
   @Expose()
@@ -29,14 +29,14 @@ export class PlanExerciseResponseDto {
 
   @ApiProperty({
     description: "Number of sets",
-    example: "4",
+    example: "3",
     nullable: true,
   })
   @Expose()
   sets: string | null;
 
   @ApiProperty({
-    description: "Number of repetitions or range",
+    description: "Number of repetitions",
     example: "8-12",
     nullable: true,
   })
@@ -44,24 +44,24 @@ export class PlanExerciseResponseDto {
   reps: string | null;
 
   @ApiProperty({
-    description: "Weight specification",
-    example: "80kg",
+    description: "Weight to use",
+    example: "20kg",
     nullable: true,
   })
   @Expose()
   weight: string | null;
 
   @ApiProperty({
-    description: "Exercise tempo",
-    example: "3-1-1-0",
+    description: "Tempo of execution",
+    example: "2010",
     nullable: true,
   })
   @Expose()
   tempo: string | null;
 
   @ApiProperty({
-    description: "Rest time between sets",
-    example: "90s",
+    description: "Rest period between sets",
+    example: "60s",
     nullable: true,
   })
   @Expose()
@@ -76,14 +76,14 @@ export class PlanExerciseResponseDto {
   notes: string | null;
 
   @ApiProperty({
-    description: "Sort order within unit",
-    example: 0,
+    description: "Sort order within the unit",
+    example: 1,
   })
   @Expose()
   sortOrder: number;
 
   @ApiProperty({
-    description: "Completion status (for clients)",
+    description: "Whether the exercise was completed by the client",
     example: false,
   })
   @Expose()

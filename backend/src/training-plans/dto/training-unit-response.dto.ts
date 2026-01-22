@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose, Type } from "class-transformer";
-import { PlanExerciseResponseDto } from "./plan-exercise-response.dto";
+import { PlanExerciseResponseDto } from "../../plan-exercises/dto/plan-exercise-response.dto";
 
 /**
  * Response DTO for training unit with nested exercises

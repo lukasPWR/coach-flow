@@ -11,10 +11,13 @@ import {
   HttpStatus,
   ParseUUIDPipe,
 } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiBody } from "@nestjs/swagger";
 import { TrainingUnitsService } from "./training-units.service";
 import { TrainingUnitResponseDto } from "../training-plans/dto/training-unit-response.dto";
 import { UpdateTrainingUnitDto } from "./dto/update-training-unit.dto";
+import { PlanExercisesService } from "../plan-exercises/plan-exercises.service";
+import { CreatePlanExerciseDto } from "../plan-exercises/dto/create-plan-exercise.dto";
+import { PlanExerciseResponseDto } from "../plan-exercises/dto/plan-exercise-response.dto";
 import { JwtAuthGuard } from "../common/guards/jwt-auth.guard";
 import { RolesGuard } from "../common/guards/roles.guard";
 import { Roles } from "../common/decorators/roles.decorator";
@@ -29,7 +32,63 @@ import type { IRequestApp } from "../common/interfaces/request-app.interface";
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
 export class TrainingUnitsController {
-  constructor(private readonly trainingUnitsService: TrainingUnitsService) {}
+  constructor(
+    private readonly trainingUnitsService: TrainingUnitsService,
+    private readonly planExercisesService: PlanExercisesService
+  ) {}
+
+  /**
+   * POST /training-units/:unitId/exercises
+   * Adds an exercise to a training unit
+   * Only trainers can add exercises to their units
+   */
+  @Post(":unitId/exercises")
+  @HttpCode(HttpStatus.CREATED)
+  @Roles(UserRole.TRAINER)
+  @ApiOperation({
+    summary: "Add an exercise to a training unit",
+    description:
+      "Adds a specific exercise from the exercise library to a training unit. " +
+      "Defines training parameters such as sets, reps, weight, tempo, rest, and notes. " +
+      "Only the trainer who owns the plan can add exercises to its units.",
+  })
+  @ApiParam({
+    name: "unitId",
+    description: "UUID of the training unit to add the exercise to",
+    type: String,
+  })
+  @ApiBody({
+    type: CreatePlanExerciseDto,
+    description: "Exercise details and training parameters",
+  })
+  @ApiResponse({
+    status: 201,
+    description: "Exercise successfully added to the training unit",
+    type: PlanExerciseResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: "Invalid UUID format or validation error in request body",
+  })
+  @ApiResponse({
+    status: 401,
+    description: "Missing or invalid JWT token",
+  })
+  @ApiResponse({
+    status: 403,
+    description: "User is not a trainer",
+  })
+  @ApiResponse({
+    status: 404,
+    description: "Training unit not found, exercise not found, or user doesn't have access",
+  })
+  async addExercise(
+    @Param("unitId", ParseUUIDPipe) unitId: string,
+    @Body() createPlanExerciseDto: CreatePlanExerciseDto,
+    @Request() req: IRequestApp
+  ): Promise<PlanExerciseResponseDto> {
+    return await this.planExercisesService.create(unitId, createPlanExerciseDto, req.user.userId);
+  }
 
   /**
    * POST /training-units/:id/duplicate
