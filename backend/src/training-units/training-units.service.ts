@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import { DataSource } from "typeorm";
 import { TrainingUnitsRepository } from "./repositories/training-units.repository";
@@ -7,6 +7,7 @@ import { CreateTrainingUnitDto } from "./dto/create-training-unit.dto";
 import { UpdateTrainingUnitDto } from "./dto/update-training-unit.dto";
 import { TrainingUnitResponseDto } from "../training-plans/dto/training-unit-response.dto";
 import { TrainingUnit } from "./entities/training-unit.entity";
+import { PlanExercise } from "../plan-exercises/entities/plan-exercise.entity";
 
 /**
  * Service handling business logic for training units
@@ -120,8 +121,8 @@ export class TrainingUnitsService {
       const savedUnit = await manager.save(TrainingUnit, newUnit);
 
       // Duplicate all exercises from source unit
-      const newExercises = sourceUnit.planExercises.map((exercise, index) => {
-        return manager.create("PlanExercise", {
+      const newExercises = sourceUnit.planExercises.map((exercise) => {
+        return manager.create(PlanExercise, {
           trainingUnitId: savedUnit.id,
           exerciseId: exercise.exerciseId,
           sets: exercise.sets,
@@ -131,12 +132,13 @@ export class TrainingUnitsService {
           rest: exercise.rest,
           notes: exercise.notes,
           sortOrder: exercise.sortOrder,
-          isCompleted: false, // Reset completion status for duplicated exercises
+          // Reset completion status for duplicated exercises
+          isCompleted: false,
         });
       });
 
       // Save all duplicated exercises in bulk
-      const savedExercises = newExercises.length > 0 ? await manager.save("PlanExercise", newExercises) : [];
+      const savedExercises = newExercises.length > 0 ? await manager.save(PlanExercise, newExercises) : [];
 
       // Map to response DTO with exercises
       return plainToInstance(
