@@ -11,10 +11,10 @@ import { TrainerProfile } from "./entities/trainer-profile.entity";
 import { User } from "../users/entities/user.entity";
 import { Specialization } from "../specializations/entities/specialization.entity";
 import { Service } from "../services/entities/service.entity";
-import { Booking } from "../bookings/entities/booking.entity";
 import { CreateTrainerProfileDto } from "./dto/create-trainer-profile.dto";
 import { UpdateTrainerProfileDto } from "./dto/update-trainer-profile.dto";
 import { TrainerProfileResponseDto, SpecializationDto, ServiceDto } from "./dto/trainer-profile-response.dto";
+import { TrainerClientResponseDto } from "./dto/trainer-client.response.dto";
 import { FindTrainersQueryDto } from "./dto/find-trainers-query.dto";
 import { PaginatedTrainersResponseDto, PaginationMetaDto } from "./dto/paginated-trainers.response.dto";
 import { TrainerPublicProfileResponseDto } from "./dto/trainer-public-profile.response.dto";
@@ -24,9 +24,9 @@ import {
   SpecializationDto as PublicSpecializationDto,
 } from "./dto/public-trainer-profile.response.dto";
 import { UserRole } from "../users/interfaces/user-role.enum";
-import { BookingStatus } from "../bookings/interfaces/booking-status.enum";
 import { GetUnavailabilitiesQueryDto } from "../unavailabilities/dto/get-unavailabilities-query.dto";
 import { BookedSlotResponseDto } from "../bookings/dto/booked-slot-response.dto";
+import { BookingsRepository } from "../bookings/repositories/bookings.repository";
 
 @Injectable()
 export class TrainerProfilesService {
@@ -39,8 +39,7 @@ export class TrainerProfilesService {
     private readonly specializationRepository: Repository<Specialization>,
     @InjectRepository(Service)
     private readonly serviceRepository: Repository<Service>,
-    @InjectRepository(Booking)
-    private readonly bookingRepository: Repository<Booking>
+    private readonly bookingsRepository: BookingsRepository
   ) {}
 
   /**
@@ -443,36 +442,30 @@ export class TrainerProfilesService {
   /**
    * Retrieves booked slots for a trainer, filtered by optional date range.
    * Used by public booking flow to mark occupied time slots.
+   *
+   * @param trainerId - UUID of the trainer
+   * @param query - Query parameters with optional from/to date filters
+   * @returns Array of booked slots with startTime and endTime
    */
   async findBookedSlotsByTrainerId(
     trainerId: string,
     query: GetUnavailabilitiesQueryDto
   ): Promise<BookedSlotResponseDto[]> {
     const { from, to } = query;
+    return this.bookingsRepository.findBookedSlotsByTrainerId(trainerId, from, to);
+  }
 
-    const queryBuilder = this.bookingRepository
-      .createQueryBuilder("booking")
-      .select(["booking.startTime", "booking.endTime"])
-      .where("booking.trainerId = :trainerId", { trainerId })
-      .andWhere("booking.status != :cancelledStatus", {
-        cancelledStatus: BookingStatus.CANCELLED,
-      });
-
-    if (from && to) {
-      queryBuilder
-        .andWhere("booking.startTime < :to", { to: new Date(to) })
-        .andWhere("booking.endTime > :from", { from: new Date(from) });
-    } else if (from) {
-      queryBuilder.andWhere("booking.endTime >= :from", { from: new Date(from) });
-    } else if (to) {
-      queryBuilder.andWhere("booking.startTime <= :to", { to: new Date(to) });
-    }
-
-    const bookings = await queryBuilder.getMany();
-
-    return bookings.map((booking) => ({
-      startTime: booking.startTime,
-      endTime: booking.endTime,
-    }));
+  /**
+   * Retrieves a list of unique clients (users with CLIENT role) who have
+   * booking history with the specified trainer.
+   *
+   * Used for training plan creation - allows trainer to select from
+   * their existing clients.
+   *
+   * @param trainerId - UUID of the trainer (from JWT token)
+   * @returns Array of unique clients with minimal data (id, name, email)
+   */
+  async getUniqueClients(trainerId: string): Promise<TrainerClientResponseDto[]> {
+    return this.bookingsRepository.findUniqueClientsByTrainerId(trainerId);
   }
 }
