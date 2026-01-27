@@ -55,7 +55,7 @@ const handleCreatePlan = async (values: CreatePlanForm) => {
 };
 
 const navigateToPlan = (planId: string) => {
-  router.push({ name: 'training-plan-details', params: { id: planId } });
+  router.push({ name: 'trainer-plan-edit', params: { id: planId } });
 };
 
 // Simple client-side search filtering if needed, or just visual
