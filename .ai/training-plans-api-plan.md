@@ -213,6 +213,26 @@
 
 ---
 
+### E. Zasoby Wspierające (Helpers)
+
+**1. Pobierz listę klientów trenera**
+*   **Metoda:** `GET`
+*   **URL:** `/trainer/clients`
+*   **Opis:** Zwraca listę unikalnych użytkowników (role: CLIENT), którzy posiadają przynajmniej jedną rezerwację (status: PENDING, ACCEPTED, REJECTED, CANCELLED) u zalogowanego trenera. Służy do zasilania listy wyboru przy tworzeniu planu.
+*   **Odpowiedź JSON:**
+    ```json
+    [
+      {
+        "id": "uuid",
+        "name": "Jan Kowalski",
+        "email": "jan@example.com"
+      }
+    ]
+    ```
+*   **Kody sukcesu:** 200 OK.
+
+---
+
 ## 3. Uwierzytelnianie i autoryzacja
 
 Mechanizm oparty na istniejącym systemie CoachFlow (NestJS Guards + JWT).
@@ -227,7 +247,7 @@ Mechanizm oparty na istniejącym systemie CoachFlow (NestJS Guards + JWT).
 
 **Warunki walidacji:**
 1.  **Muscle Group**: Musi być jedną z wartości ENUM (`CHEST`, `BACK`, itp.).
-2.  **Client Assignment**: Przy tworzeniu planu, `clientId` musi wskazywać na istniejącego użytkownika o roli `CLIENT`, który jest podopiecznym danego trenera (relacja biznesowa).
+2.  **Client Assignment**: Przy tworzeniu planu, `clientId` musi wskazywać na istniejącego użytkownika, który jest "klientem" trenera (posiada historię rezerwacji).
 3.  **Plan Status**: Zmiana statusu dozwolona tylko na wartości z ENUM (`ACTIVE`, `ARCHIVED`).
 
 **Logika biznesowa:**
