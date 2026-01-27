@@ -86,6 +86,12 @@ const router = createRouter({
       meta: { requiresAuth: true, requiresRole: "TRAINER" },
     },
     {
+      path: "/trainer/exercises",
+      name: "trainer-exercises",
+      component: () => import("@/views/trainer/ExerciseLibraryView.vue"),
+      meta: { requiresAuth: true, requiresRole: "TRAINER" },
+    },
+    {
       path: "/bookings",
       name: "trainer-bookings",
       component: () => import("@/views/trainer/BookingsView.vue"),

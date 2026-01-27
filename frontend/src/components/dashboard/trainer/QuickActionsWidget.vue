@@ -19,6 +19,14 @@ const quickActions = [
     color: "success" as const,
   },
   {
+    id: "exercises",
+    title: "Biblioteka ćwiczeń",
+    description: "Zarządzaj bazą swoich ćwiczeń",
+    icon: "🏋️",
+    route: "/trainer/exercises",
+    color: "secondary" as const,
+  },
+  {
     id: "profile",
     title: "Profil",
     description: "Zaktualizuj swój profil i zdjęcie",
