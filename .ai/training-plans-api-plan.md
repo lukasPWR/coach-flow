@@ -231,6 +231,21 @@
     ```
 *   **Kody sukcesu:** 200 OK.
 
+**2. Pobierz klienta po ID**
+*   **Metoda:** `GET`
+*   **URL:** `/trainer/clients/:id`
+*   **Opis:** Pobiera dane pojedynczego klienta. Endpoint weryfikuje, czy dany klient faktycznie jest klientem zalogowanego trenera (czy istnieje powiązanie przez rezerwację), aby zapobiec dostępowi do danych osób postronnych.
+*   **Odpowiedź JSON:**
+    ```json
+    {
+      "id": "uuid",
+      "name": "Jan Kowalski",
+      "email": "jan@example.com"
+    }
+    ```
+*   **Kody sukcesu:** 200 OK.
+*   **Błędy:** 403 Forbidden (Brak relacji trener-klient), 404 Not Found.
+
 ---
 
 ## 3. Uwierzytelnianie i autoryzacja

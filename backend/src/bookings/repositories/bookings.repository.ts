@@ -55,6 +55,36 @@ export class BookingsRepository extends Repository<Booking> {
   }
 
   /**
+   * Finds a specific client of a trainer by verifying booking relationship.
+   * Returns client data only if there exists at least one booking between
+   * the trainer and the client.
+   *
+   * @param trainerId - UUID of the trainer
+   * @param clientId - UUID of the client to find
+   * @returns Client data if relationship exists, null otherwise
+   */
+  async findClientOfTrainer(trainerId: string, clientId: string): Promise<TrainerClientData | null> {
+    const result = await this.createQueryBuilder("booking")
+      .innerJoin("booking.client", "client")
+      .where("booking.trainerId = :trainerId", { trainerId })
+      .andWhere("booking.clientId = :clientId", { clientId })
+      .andWhere("client.role = :role", { role: UserRole.CLIENT })
+      .select(["client.id", "client.name", "client.email"])
+      .limit(1)
+      .getRawOne();
+
+    if (!result) {
+      return null;
+    }
+
+    return {
+      id: result.client_id,
+      name: result.client_name,
+      email: result.client_email,
+    };
+  }
+
+  /**
    * Finds booked time slots for a trainer within optional date range.
    * Excludes cancelled bookings.
    *

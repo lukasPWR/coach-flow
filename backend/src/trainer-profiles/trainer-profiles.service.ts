@@ -468,4 +468,39 @@ export class TrainerProfilesService {
   async getUniqueClients(trainerId: string): Promise<TrainerClientResponseDto[]> {
     return this.bookingsRepository.findUniqueClientsByTrainerId(trainerId);
   }
+
+  /**
+   * Retrieves details of a specific client for the authenticated trainer.
+   * Validates that the trainer has a booking relationship with the client.
+   *
+   * @param trainerId - UUID of the trainer (from JWT token)
+   * @param clientId - UUID of the client to retrieve
+   * @returns Client data (id, name, email)
+   * @throws NotFoundException if client does not exist
+   * @throws ForbiddenException if client is not associated with this trainer
+   */
+  async getClientById(trainerId: string, clientId: string): Promise<TrainerClientResponseDto> {
+    // First check if the user exists
+    const userExists = await this.userRepository.findOne({
+      where: { id: clientId },
+      select: ["id"],
+    });
+
+    if (!userExists) {
+      throw new NotFoundException("Client not found");
+    }
+
+    // Check trainer-client relationship through bookings
+    const clientData = await this.bookingsRepository.findClientOfTrainer(trainerId, clientId);
+
+    if (!clientData) {
+      throw new ForbiddenException("Client is not associated with this trainer");
+    }
+
+    return {
+      id: clientData.id,
+      name: clientData.name,
+      email: clientData.email,
+    };
+  }
 }
