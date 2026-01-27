@@ -27,6 +27,14 @@ const quickActions = [
     color: "secondary" as const,
   },
   {
+    id: "plans",
+    title: "Plany Treningowe",
+    description: "Twórz i zarządzaj planami treningowymi",
+    icon: "📝",
+    route: "/trainer/plans",
+    color: "primary" as const,
+  },
+  {
     id: "profile",
     title: "Profil",
     description: "Zaktualizuj swój profil i zdjęcie",
