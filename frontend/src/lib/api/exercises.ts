@@ -5,9 +5,9 @@ import type { CreateExerciseDto, Exercise, ExerciseFilters } from "@/types/exerc
  * Get all exercises with optional filtering
  */
 export async function getExercises(filters?: ExerciseFilters): Promise<Exercise[]> {
-  const params = new URLSearchParams();
-  if (filters?.search) params.append("search", filters.search);
-  if (filters?.muscleGroup) params.append("muscleGroup", filters.muscleGroup);
+  const params: Record<string, string> = {};
+  if (filters?.search) params.search = filters.search;
+  if (filters?.muscleGroup) params.muscleGroup = filters.muscleGroup;
 
   const response = await api.get<Exercise[]>("/exercises", { params });
   return response.data;

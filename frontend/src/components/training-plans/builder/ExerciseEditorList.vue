@@ -26,15 +26,22 @@ const localExercises = computed({
     <div
       v-if="exercises.length === 0"
       class="text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg"
-      Brak
-      ćwiczeń
-      w
-      tej
-      jednostce.
-      <
-      div
     >
-      <!-- 
+      Brak ćwiczeń w tej jednostce.
+    </div>
+
+    <!-- Fallback list without drag & drop for debugging -->
+    <div v-else class="space-y-2">
+      <PlanExerciseCard
+        v-for="element in localExercises"
+        :key="element.id"
+        :exercise="element"
+        @update="(id, data) => emit('update-exercise', id, data)"
+        @remove="(id) => emit('remove-exercise', id)"
+      />
+    </div>
+
+    <!-- 
     <draggable 
         v-model="localExercises" 
         item-key="id"
@@ -51,17 +58,5 @@ const localExercises = computed({
         </template>
     </draggable>
     -->
-
-      <!-- Fallback list without drag & drop for debugging -->
-      <div class="space-y-2">
-        <PlanExerciseCard 
-          v-for="element in localExercises"
-          :key="element.id"
-          :exercise="element"
-          @update="(id, data) => emit('update-exercise', id, data)"
-          @remove="(id) => emit('remove-exercise', id)"
-        />
-      </div>
-    </div>
   </div>
 </template>

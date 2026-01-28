@@ -30,8 +30,7 @@ const formattedDate = computed(() => {
 </script>
 
 <template>
-  <Card v-if="activePlan"
-class="border-primary/20 shadow-md">
+  <Card v-if="activePlan" class="border-primary/20 shadow-md">
     <CardHeader class="pb-3">
       <div class="flex items-start justify-between">
         <div class="space-y-1">
@@ -44,8 +43,7 @@ class="border-primary/20 shadow-md">
           </CardDescription>
         </div>
         <div class="flex items-center gap-2">
-          <Button variant="ghost"
-size="sm" class="text-xs h-8" @click="goToAllPlans">
+          <Button variant="ghost" size="sm" class="text-xs h-8" @click="goToAllPlans">
             Wszystkie
           </Button>
           <div class="hidden sm:block">
@@ -73,8 +71,7 @@ size="sm" class="text-xs h-8" @click="goToAllPlans">
             </div>
             <!-- Future: Add sessions count or progress here if available -->
           </div>
-          <p v-if="activePlan.description"
-class="text-sm text-muted-foreground line-clamp-2 mt-2">
+          <p v-if="activePlan.description" class="text-sm text-muted-foreground line-clamp-2 mt-2">
             {{ activePlan.description }}
           </p>
         </div>

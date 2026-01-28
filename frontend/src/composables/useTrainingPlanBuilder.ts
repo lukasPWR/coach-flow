@@ -51,7 +51,7 @@ export function useTrainingPlanBuilder(planId: string) {
       ]);
 
       plan.value = planData;
-      clients.value = clientsData || []; // Ensure array
+      clients.value = clientsData || [];
 
       // Set initial active unit
       if (plan.value.units.length > 0 && !activeUnitId.value) {
@@ -109,7 +109,7 @@ export function useTrainingPlanBuilder(planId: string) {
 
   const deleteUnit = async (unitId: string) => {
     if (!plan.value) return;
-    if (!confirm("Czy na pewno chcesz usunąć tę jednostkę?")) return;
+    if (!window.confirm("Czy na pewno chcesz usunąć tę jednostkę?")) return;
 
     try {
       await deleteTrainingUnit(unitId);

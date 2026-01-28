@@ -45,7 +45,7 @@ export function useTrainingPlans() {
     isLoading.value = true;
     try {
       await createTrainingPlan(data);
-      await fetchPlans(); // Refresh list
+      await fetchPlans();
       return true;
     } catch (e: any) {
       error.value = e.message || "Failed to create training plan";
