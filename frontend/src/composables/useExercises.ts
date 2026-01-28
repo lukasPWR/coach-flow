@@ -1,7 +1,7 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query';
-import { ref } from 'vue';
-import { getExercises, createExercise, deleteExercise } from '@/lib/api/exercises';
-import type { CreateExerciseDto, ExerciseFilters } from '@/types/exercises';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
+import { ref } from "vue";
+import { getExercises, createExercise, deleteExercise } from "@/lib/api/exercises";
+import type { CreateExerciseDto, ExerciseFilters } from "@/types/exercises";
 
 export function useExercises() {
   const queryClient = useQueryClient();
@@ -14,7 +14,7 @@ export function useExercises() {
     isError,
     error,
   } = useQuery({
-    queryKey: ['exercises', filters],
+    queryKey: ["exercises", filters],
     queryFn: () => getExercises(filters.value),
     // Keep previous data while fetching new data to avoid flickering
     placeholderData: (previousData) => previousData,
@@ -24,7 +24,7 @@ export function useExercises() {
   const { mutateAsync: createExerciseMutation, isPending: isCreating } = useMutation({
     mutationFn: (data: CreateExerciseDto) => createExercise(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['exercises'] });
+      queryClient.invalidateQueries({ queryKey: ["exercises"] });
     },
   });
 
@@ -32,7 +32,7 @@ export function useExercises() {
   const { mutateAsync: deleteExerciseMutation, isPending: isDeleting } = useMutation({
     mutationFn: (id: string) => deleteExercise(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['exercises'] });
+      queryClient.invalidateQueries({ queryKey: ["exercises"] });
     },
   });
 

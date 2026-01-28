@@ -1,15 +1,15 @@
-import { api } from './client';
-import type { CreateExerciseDto, Exercise, ExerciseFilters } from '@/types/exercises';
+import { api } from "./client";
+import type { CreateExerciseDto, Exercise, ExerciseFilters } from "@/types/exercises";
 
 /**
  * Get all exercises with optional filtering
  */
 export async function getExercises(filters?: ExerciseFilters): Promise<Exercise[]> {
   const params = new URLSearchParams();
-  if (filters?.search) params.append('search', filters.search);
-  if (filters?.muscleGroup) params.append('muscleGroup', filters.muscleGroup);
+  if (filters?.search) params.append("search", filters.search);
+  if (filters?.muscleGroup) params.append("muscleGroup", filters.muscleGroup);
 
-  const response = await api.get<Exercise[]>('/exercises', { params });
+  const response = await api.get<Exercise[]>("/exercises", { params });
   return response.data;
 }
 
@@ -17,7 +17,7 @@ export async function getExercises(filters?: ExerciseFilters): Promise<Exercise[
  * Create a new exercise
  */
 export async function createExercise(data: CreateExerciseDto): Promise<Exercise> {
-  const response = await api.post<Exercise>('/exercises', data);
+  const response = await api.post<Exercise>("/exercises", data);
   return response.data;
 }
 

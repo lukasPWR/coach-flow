@@ -72,19 +72,23 @@ onMounted(async () => {
       class="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
     >
       <div class="container flex h-16 items-center justify-between px-4">
-        <router-link to="/" class="flex items-center gap-2 font-semibold">
+        <router-link to="/"
+class="flex items-center gap-2 font-semibold">
           <span class="text-xl font-bold text-primary">CoachFlow</span>
         </router-link>
 
         <div class="flex items-center gap-2">
-          <Button v-if="isAuthenticated" variant="default" size="sm" @click="goToDashboard">
+          <Button v-if="isAuthenticated"
+variant="default" size="sm" @click="goToDashboard">
             Dashboard
           </Button>
           <template v-else>
-            <Button variant="ghost" size="sm" as-child>
+            <Button variant="ghost"
+size="sm" as-child>
               <router-link to="/login"> Zaloguj się </router-link>
             </Button>
-            <Button size="sm" as-child>
+            <Button size="sm"
+as-child>
               <router-link to="/register"> Zarejestruj się </router-link>
             </Button>
           </template>
@@ -104,7 +108,8 @@ onMounted(async () => {
           <!-- Mobile filter trigger -->
           <Sheet v-model:open="isFilterSheetOpen">
             <SheetTrigger as-child>
-              <Button variant="outline" class="lg:hidden">
+              <Button variant="outline"
+class="lg:hidden">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -122,7 +127,8 @@ onMounted(async () => {
                 Filtry
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" class="w-[300px] sm:w-[400px]">
+            <SheetContent side="left"
+class="w-[300px] sm:w-[400px]">
               <SheetHeader>
                 <SheetTitle>Filtry wyszukiwania</SheetTitle>
               </SheetHeader>
@@ -160,7 +166,8 @@ onMounted(async () => {
         <!-- Trainers list section -->
         <main class="flex-1 min-w-0">
           <!-- Error state -->
-          <Alert v-if="error" variant="destructive" class="mb-6">
+          <Alert v-if="error"
+variant="destructive" class="mb-6">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -172,20 +179,26 @@ onMounted(async () => {
               stroke-linecap="round"
               stroke-linejoin="round"
             >
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" x2="12" y1="8" y2="12" />
-              <line x1="12" x2="12.01" y1="16" y2="16" />
+              <circle cx="12"
+cy="12" r="10" />
+              <line x1="12"
+x2="12" y1="8" y2="12" />
+              <line x1="12"
+x2="12.01" y1="16" y2="16" />
             </svg>
             <AlertTitle>Błąd</AlertTitle>
             <AlertDescription class="flex items-center justify-between">
               <span>{{ error }}</span>
-              <Button variant="outline" size="sm" @click="retry"> Spróbuj ponownie </Button>
+              <Button
+variant="outline" size="sm" @click="retry"> Spróbuj ponownie </Button>
             </AlertDescription>
           </Alert>
 
           <!-- Loading skeleton (initial load) -->
-          <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            <TrainerCardSkeleton v-for="i in 6" :key="i" />
+          <div v-if="isLoading"
+class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <TrainerCardSkeleton v-for="i in 6"
+:key="i" />
           </div>
 
           <!-- Empty state -->
@@ -206,13 +219,15 @@ onMounted(async () => {
               class="text-muted-foreground mb-4"
             >
               <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
+              <circle cx="9"
+cy="7" r="4" />
               <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
               <path d="M16 3.13a4 4 0 0 1 0 7.75" />
             </svg>
             <h3 class="text-xl font-semibold mb-2">Nie znaleziono trenerów</h3>
             <p class="text-muted-foreground mb-4">Spróbuj zmienić kryteria wyszukiwania</p>
-            <Button variant="outline" @click="clearFilters"> Wyczyść filtry </Button>
+            <Button
+variant="outline" @click="clearFilters"> Wyczyść filtry </Button>
           </div>
 
           <!-- Trainers grid -->
@@ -224,7 +239,8 @@ onMounted(async () => {
 
             <!-- Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              <TrainerCard v-for="trainer in trainers" :key="trainer.id" :trainer="trainer" />
+              <TrainerCard v-for="trainer in trainers"
+:key="trainer.id" :trainer="trainer" />
             </div>
 
             <!-- Infinite scroll trigger -->
@@ -239,7 +255,8 @@ onMounted(async () => {
               v-if="isFetchingMore"
               class="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
             >
-              <TrainerCardSkeleton v-for="i in 3" :key="`loading-${i}`" />
+              <TrainerCardSkeleton v-for="i in 3"
+:key="`loading-${i}`" />
             </div>
 
             <!-- End of list message -->

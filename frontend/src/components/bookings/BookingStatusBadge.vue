@@ -1,5 +1,6 @@
 <template>
-  <Badge :variant="variant" class="whitespace-nowrap">
+  <Badge :variant="variant"
+class="whitespace-nowrap">
     {{ label }}
   </Badge>
 </template>

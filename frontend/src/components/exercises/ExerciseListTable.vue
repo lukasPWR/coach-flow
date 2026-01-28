@@ -43,17 +43,21 @@ defineEmits<{
         </tr>
       </thead>
       <tbody class="[&_tr:last-child]:border-0">
-        <tr v-if="isLoading" class="border-b transition-colors hover:bg-muted/50">
-          <td colspan="4" class="p-4 text-center text-muted-foreground">Ładowanie...</td>
+        <tr v-if="isLoading"
+class="border-b transition-colors hover:bg-muted/50">
+          <td
+colspan="4" class="p-4 text-center text-muted-foreground">Ładowanie...</td>
         </tr>
-        <tr v-else-if="exercises.length === 0" class="border-b transition-colors hover:bg-muted/50">
-          <td colspan="4" class="p-4 text-center text-muted-foreground">
+        <tr v-else-if="exercises.length === 0"
+class="border-b transition-colors hover:bg-muted/50">
+          <td colspan="4"
+class="p-4 text-center text-muted-foreground">
             Brak ćwiczeń spełniających kryteria.
           </td>
         </tr>
         <tr
-          v-else
           v-for="exercise in exercises"
+          v-else
           :key="exercise.id"
           class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
         >

@@ -48,7 +48,8 @@ const handleNext = async () => {
       <p class="text-muted-foreground">Skonfiguruj swój profil trenera w 3 prostych krokach.</p>
     </div>
 
-    <OnboardingStepper :current-step="state.currentStep" :steps="steps" />
+    <OnboardingStepper :current-step="state.currentStep"
+:steps="steps" />
 
     <Card class="mt-6">
       <CardHeader>
@@ -56,7 +57,8 @@ const handleNext = async () => {
         <CardDescription>{{ steps[state.currentStep - 1].description }}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div v-if="state.isLoading" class="flex justify-center py-8">
+        <div v-if="state.isLoading"
+class="flex justify-center py-8">
           <Loader2 class="w-8 h-8 animate-spin text-primary" />
         </div>
 
@@ -86,11 +88,13 @@ const handleNext = async () => {
         "
         @click="handleNext"
       >
-        <span v-if="state.isLoading" class="mr-2"><Loader2 class="w-4 h-4 animate-spin" /></span>
+        <span v-if="state.isLoading"
+class="mr-2"><Loader2 class="w-4 h-4 animate-spin" /></span>
         {{ state.currentStep === 1 ? "Zapisz i Dalej" : "Dalej" }}
       </Button>
 
-      <Button v-else :disabled="state.isLoading" @click="finishOnboarding">
+      <Button v-else
+:disabled="state.isLoading" @click="finishOnboarding">
         Zakończ Onboarding
       </Button>
     </div>

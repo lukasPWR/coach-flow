@@ -30,7 +30,8 @@ const formattedDate = computed(() => {
 </script>
 
 <template>
-  <Card v-if="activePlan" class="border-primary/20 shadow-md">
+  <Card v-if="activePlan"
+class="border-primary/20 shadow-md">
     <CardHeader class="pb-3">
       <div class="flex items-start justify-between">
         <div class="space-y-1">
@@ -43,7 +44,8 @@ const formattedDate = computed(() => {
           </CardDescription>
         </div>
         <div class="flex items-center gap-2">
-          <Button variant="ghost" size="sm" class="text-xs h-8" @click="goToAllPlans">
+          <Button variant="ghost"
+size="sm" class="text-xs h-8" @click="goToAllPlans">
             Wszystkie
           </Button>
           <div class="hidden sm:block">
@@ -61,7 +63,9 @@ const formattedDate = computed(() => {
         class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-lg border p-4 bg-muted/40"
       >
         <div class="space-y-1">
-          <h3 class="font-semibold text-lg">{{ activePlan.name }}</h3>
+          <h3 class="font-semibold text-lg">
+            {{ activePlan.name }}
+          </h3>
           <div class="flex items-center gap-4 text-sm text-muted-foreground">
             <div class="flex items-center gap-1">
               <Calendar class="h-3.5 w-3.5" />
@@ -69,12 +73,13 @@ const formattedDate = computed(() => {
             </div>
             <!-- Future: Add sessions count or progress here if available -->
           </div>
-          <p v-if="activePlan.description" class="text-sm text-muted-foreground line-clamp-2 mt-2">
+          <p v-if="activePlan.description"
+class="text-sm text-muted-foreground line-clamp-2 mt-2">
             {{ activePlan.description }}
           </p>
         </div>
 
-        <Button @click="goToPlan" class="shrink-0 w-full sm:w-auto gap-2">
+        <Button class="shrink-0 w-full sm:w-auto gap-2" @click="goToPlan">
           Otwórz Plan
           <ArrowRight class="h-4 w-4" />
         </Button>

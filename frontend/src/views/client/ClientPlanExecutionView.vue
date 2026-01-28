@@ -49,35 +49,43 @@ watch(
   <div class="container max-w-lg mx-auto py-4 space-y-6 min-h-[calc(100vh-4rem)]">
     <!-- Header -->
     <div class="flex items-center gap-4">
-      <Button variant="ghost" size="icon" @click="goBack">
+      <Button variant="ghost"
+size="icon" @click="goBack">
         <ArrowLeft class="h-5 w-5" />
       </Button>
-      <div v-if="plan" class="flex-1">
-        <h1 class="text-xl font-bold truncate">{{ plan.name }}</h1>
-        <p class="text-sm text-muted-foreground" v-if="plan.description">
+      <div v-if="plan"
+class="flex-1">
+        <h1 class="text-xl font-bold truncate">
+          {{ plan.name }}
+        </h1>
+        <p v-if="plan.description" class="text-sm text-muted-foreground">
           {{ plan.description }}
         </p>
       </div>
-      <div v-else-if="isLoading" class="flex-1 space-y-2">
-        <div class="h-6 w-3/4 bg-muted animate-pulse rounded"></div>
-        <div class="h-4 w-1/2 bg-muted animate-pulse rounded"></div>
+      <div v-else-if="isLoading"
+class="flex-1 space-y-2">
+        <div class="h-6 w-3/4 bg-muted animate-pulse rounded" />
+        <div class="h-4 w-1/2 bg-muted animate-pulse rounded" />
       </div>
     </div>
 
     <!-- Error State -->
-    <Alert v-if="error" variant="destructive">
+    <Alert v-if="error"
+variant="destructive">
       <AlertCircle class="h-4 w-4" />
       <AlertTitle>Błąd</AlertTitle>
       <AlertDescription class="flex flex-col gap-2">
         <p>{{ error }}</p>
-        <Button variant="outline" size="sm" class="w-fit" @click="loadData">
+        <Button variant="outline"
+size="sm" class="w-fit" @click="loadData">
           Spróbuj ponownie
         </Button>
       </AlertDescription>
     </Alert>
 
     <!-- Loading State -->
-    <div v-else-if="isLoading" class="flex justify-center py-12">
+    <div v-else-if="isLoading"
+class="flex justify-center py-12">
       <Loader2 class="h-8 w-8 animate-spin text-primary" />
     </div>
 
@@ -90,12 +98,13 @@ watch(
     </div>
 
     <!-- Content -->
-    <div v-else-if="plan" class="space-y-6">
+    <div v-else-if="plan"
+class="space-y-6">
       <!-- Unit Selector -->
       <UnitSelector
         v-if="plan.units.length > 0"
-        :units="plan.units"
         v-model:selected-unit-id="selectedUnitId"
+        :units="plan.units"
       />
 
       <!-- Exercise List -->

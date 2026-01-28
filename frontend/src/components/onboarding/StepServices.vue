@@ -66,7 +66,8 @@ const formatCurrency = (amount: number) => {
       <h3 class="text-lg font-medium">Twoje usługi</h3>
       <Dialog v-model:open="isDialogOpen">
         <DialogTrigger as-child>
-          <Button size="sm" class="gap-2">
+          <Button size="sm"
+class="gap-2">
             <Plus class="w-4 h-4" />
             Dodaj usługę
           </Button>
@@ -87,7 +88,8 @@ const formatCurrency = (amount: number) => {
                   <SelectValue placeholder="Wybierz typ usługi" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem v-for="type in serviceTypes" :key="type.id" :value="type.id">
+                  <SelectItem v-for="type in serviceTypes"
+:key="type.id" :value="type.id">
                     {{ type.name }}
                   </SelectItem>
                 </SelectContent>
@@ -119,7 +121,8 @@ const formatCurrency = (amount: number) => {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" @click="isDialogOpen = false"> Anuluj </Button>
+            <Button
+variant="outline" @click="isDialogOpen = false"> Anuluj </Button>
             <Button
               :disabled="!newService.serviceTypeId || newService.price <= 0"
               @click="handleAddService"
@@ -141,8 +144,10 @@ const formatCurrency = (amount: number) => {
     </div>
 
     <!-- Services List -->
-    <div v-else class="grid gap-4 md:grid-cols-2">
-      <Card v-for="service in state.addedServices" :key="service.id" class="relative group">
+    <div v-else
+class="grid gap-4 md:grid-cols-2">
+      <Card v-for="service in state.addedServices"
+:key="service.id" class="relative group">
         <CardHeader class="pb-2">
           <CardTitle class="text-base font-medium flex justify-between items-start">
             <span>{{ getServiceName(service) }}</span>

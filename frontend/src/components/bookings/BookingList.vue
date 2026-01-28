@@ -1,6 +1,7 @@
 <template>
   <div class="space-y-4">
-    <div v-if="currentIsLoading" class="space-y-4">
+    <div v-if="currentIsLoading"
+class="space-y-4">
       <div
         v-for="i in 3"
         :key="i"
@@ -30,7 +31,8 @@
       @prev="handlePrevPage"
     />
 
-    <div v-else class="flex flex-col items-center justify-center py-12 text-center space-y-3">
+    <div v-else
+class="flex flex-col items-center justify-center py-12 text-center space-y-3">
       <div class="bg-muted/20 p-4 rounded-full">
         <CalendarX class="h-8 w-8 text-muted-foreground" />
       </div>

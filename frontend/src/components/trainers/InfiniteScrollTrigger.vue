@@ -77,5 +77,6 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="triggerRef" class="h-4 w-full" aria-hidden="true" />
+  <div ref="triggerRef"
+class="h-4 w-full" aria-hidden="true" />
 </template>

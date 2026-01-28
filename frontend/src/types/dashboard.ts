@@ -62,7 +62,7 @@ export interface QuickAction {
  */
 export interface DashboardNotificationDTO {
   id: string;
-  type: 'PLAN_ASSIGNED' | 'PLAN_UPDATED' | 'INFO';
+  type: "PLAN_ASSIGNED" | "PLAN_UPDATED" | "INFO";
   title: string;
   message: string;
   date: string;

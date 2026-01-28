@@ -26,7 +26,8 @@ const onCheckboxChange = (checked: boolean) => {
     >
       <div class="flex items-center gap-3 flex-1">
         <div @click.stop>
-          <Checkbox :checked="exercise.isCompleted" @update:checked="onCheckboxChange" />
+          <Checkbox :checked="exercise.isCompleted"
+@update:checked="onCheckboxChange" />
         </div>
         <span class="font-medium text-base">{{ exercise.exerciseName }}</span>
       </div>
@@ -36,32 +37,45 @@ const onCheckboxChange = (checked: boolean) => {
       />
     </div>
 
-    <div v-show="isOpen" class="p-4 pt-0 bg-muted/20 space-y-4">
+    <div v-show="isOpen"
+class="p-4 pt-0 bg-muted/20 space-y-4">
       <!-- Details Grid -->
       <div class="grid grid-cols-2 gap-4">
         <div class="space-y-1">
           <span class="text-xs text-muted-foreground uppercase">Sets</span>
-          <p class="text-2xl font-bold">{{ exercise.sets || "-" }}</p>
+          <p class="text-2xl font-bold">
+            {{ exercise.sets || "-" }}
+          </p>
         </div>
         <div class="space-y-1">
           <span class="text-xs text-muted-foreground uppercase">Reps</span>
-          <p class="text-2xl font-bold">{{ exercise.reps || "-" }}</p>
+          <p class="text-2xl font-bold">
+            {{ exercise.reps || "-" }}
+          </p>
         </div>
-        <div class="space-y-1" v-if="exercise.weight">
+        <div v-if="exercise.weight" class="space-y-1">
           <span class="text-xs text-muted-foreground uppercase">Weight</span>
-          <p class="text-lg font-semibold">{{ exercise.weight }}</p>
+          <p class="text-lg font-semibold">
+            {{ exercise.weight }}
+          </p>
         </div>
-        <div class="space-y-1" v-if="exercise.rpe">
+        <div v-if="exercise.rpe" class="space-y-1">
           <span class="text-xs text-muted-foreground uppercase">RPE</span>
-          <p class="text-lg font-semibold">{{ exercise.rpe }}</p>
+          <p class="text-lg font-semibold">
+            {{ exercise.rpe }}
+          </p>
         </div>
-        <div class="space-y-1" v-if="exercise.tempo">
+        <div v-if="exercise.tempo" class="space-y-1">
           <span class="text-xs text-muted-foreground uppercase">Tempo</span>
-          <p class="text-lg font-semibold">{{ exercise.tempo }}</p>
+          <p class="text-lg font-semibold">
+            {{ exercise.tempo }}
+          </p>
         </div>
-        <div class="space-y-1" v-if="exercise.rest">
+        <div v-if="exercise.rest" class="space-y-1">
           <span class="text-xs text-muted-foreground uppercase">Rest</span>
-          <p class="text-lg font-semibold">{{ exercise.rest }}</p>
+          <p class="text-lg font-semibold">
+            {{ exercise.rest }}
+          </p>
         </div>
       </div>
 

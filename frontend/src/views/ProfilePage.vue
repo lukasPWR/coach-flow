@@ -146,7 +146,8 @@ onMounted(() => {
             class="ml-auto -mr-1 p-1 rounded hover:bg-black/5 dark:hover:bg-white/10"
             @click="notification.show = false"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4"
+fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -163,17 +164,20 @@ onMounted(() => {
       <!-- Header -->
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold">Mój Profil</h1>
-        <Button variant="outline" @click="handleLogout"> Wyloguj się </Button>
+        <Button
+variant="outline" @click="handleLogout"> Wyloguj się </Button>
       </div>
 
       <!-- Loading state -->
-      <div v-if="isLoading" class="space-y-4">
+      <div v-if="isLoading"
+class="space-y-4">
         <Skeleton class="h-[200px] w-full rounded-lg" />
         <Skeleton class="h-[100px] w-full rounded-lg" />
       </div>
 
       <!-- Error state -->
-      <Alert v-else-if="error" variant="destructive">
+      <Alert v-else-if="error"
+variant="destructive">
         <AlertCircle class="h-4 w-4" />
         <AlertDescription>{{ error }}</AlertDescription>
       </Alert>
@@ -181,7 +185,8 @@ onMounted(() => {
       <!-- Profile view/edit -->
       <template v-else-if="profile">
         <!-- View mode -->
-        <TrainerProfileView v-if="!isEditing" :profile="profile" @edit="handleEdit" />
+        <TrainerProfileView v-if="!isEditing"
+:profile="profile" @edit="handleEdit" />
 
         <!-- Edit mode -->
         <TrainerProfileForm

@@ -4,7 +4,8 @@
       <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div class="space-y-4 flex-1">
           <div class="flex flex-wrap items-center gap-2">
-            <Badge variant="outline" class="font-normal">
+            <Badge variant="outline"
+class="font-normal">
               {{ booking.service.name }}
             </Badge>
             <BookingStatusBadge :status="booking.status" />
@@ -42,7 +43,8 @@
           </div>
         </div>
 
-        <div v-if="booking.canCancel || booking.canReschedule" class="flex justify-end sm:ml-2">
+        <div v-if="booking.canCancel || booking.canReschedule"
+class="flex justify-end sm:ml-2">
           <BookingActionsMenu
             :can-cancel="booking.canCancel"
             :can-reschedule="booking.canReschedule"

@@ -1,5 +1,6 @@
 <template>
-  <Dialog :open="open" @update:open="$emit('update:open', $event)">
+  <Dialog :open="open"
+@update:open="$emit('update:open', $event)">
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Anuluj rezerwację</DialogTitle>
@@ -19,13 +20,16 @@
           </p>
         </div>
       </div>
-      <div v-else class="text-sm text-muted-foreground">
+      <div v-else
+class="text-sm text-muted-foreground">
         Spokojnie, jeśli anulujesz teraz, nie poniesiesz żadnych konsekwencji.
       </div>
 
       <DialogFooter>
-        <Button variant="outline" @click="$emit('update:open', false)"> Wróć </Button>
-        <Button variant="destructive" :disabled="isLoading" @click="handleConfirm">
+        <Button
+variant="outline" @click="$emit('update:open', false)"> Wróć </Button>
+        <Button variant="destructive"
+:disabled="isLoading" @click="handleConfirm">
           {{ isLoading ? "Anulowanie..." : "Potwierdź anulowanie" }}
         </Button>
       </DialogFooter>

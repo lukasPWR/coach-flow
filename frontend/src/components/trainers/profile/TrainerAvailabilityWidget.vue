@@ -252,22 +252,27 @@ const handleBooking = async () => {
           v-if="toastMessage"
           :variant="toastMessage.type === 'error' ? 'destructive' : 'default'"
         >
-          <AlertCircle v-if="toastMessage.type === 'error'" class="h-4 w-4" />
+          <AlertCircle v-if="toastMessage.type === 'error'"
+class="h-4 w-4" />
           <AlertTitle>{{ toastMessage.type === "error" ? "Błąd" : "Sukces" }}</AlertTitle>
           <AlertDescription>{{ toastMessage.text }}</AlertDescription>
         </Alert>
       </Transition>
 
-      <div v-if="!isServiceSelected" class="rounded-md border border-dashed p-4 text-sm">
+      <div v-if="!isServiceSelected"
+class="rounded-md border border-dashed p-4 text-sm">
         Zaznacz usługę w sekcji po lewej, aby zobaczyć dostępne terminy rezerwacji.
       </div>
 
-      <div v-else class="space-y-4">
+      <div v-else
+class="space-y-4">
         <div class="flex justify-center">
-          <Calendar v-model="selectedDate as any" mode="single" class="rounded-md border" />
+          <Calendar v-model="selectedDate as any"
+mode="single" class="rounded-md border" />
         </div>
 
-        <div v-if="isLoadingUnavailabilities" class="text-sm text-muted-foreground">
+        <div v-if="isLoadingUnavailabilities"
+class="text-sm text-muted-foreground">
           Ładowanie dostępności...
         </div>
         <div
@@ -286,8 +291,11 @@ const handleBooking = async () => {
         </div>
 
         <div class="space-y-2">
-          <p class="text-sm font-medium">Dostępne godziny na {{ formatDate(selectedDate as CalendarDate) }}</p>
-          <div v-if="timeSlots.length > 0" class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <p class="text-sm font-medium">
+            Dostępne godziny na {{ formatDate(selectedDate as CalendarDate) }}
+          </p>
+          <div v-if="timeSlots.length > 0"
+class="grid grid-cols-2 gap-2 sm:grid-cols-3">
             <Button
               v-for="slot in timeSlots"
               :key="slot.start.toISOString()"
@@ -302,23 +310,27 @@ const handleBooking = async () => {
               {{ formatTime(slot.start) }}
             </Button>
           </div>
-          <div v-else class="text-sm text-muted-foreground">
+          <div v-else
+class="text-sm text-muted-foreground">
             Brak dostępnych terminów w tym dniu.
           </div>
         </div>
 
-        <div v-if="props.selectedService" class="rounded-md border bg-muted/30 p-3 text-sm">
+        <div v-if="props.selectedService"
+class="rounded-md border bg-muted/30 p-3 text-sm">
           <div class="font-medium">Wybrana usługa</div>
           <div class="text-muted-foreground">
             {{ props.selectedService.name }} - {{ props.selectedService.durationFormatted }} -
             {{ props.selectedService.priceFormatted }}
           </div>
-          <div v-if="selectedSlotLabel" class="mt-2 text-muted-foreground">
+          <div v-if="selectedSlotLabel"
+class="mt-2 text-muted-foreground">
             Termin: <span class="font-medium text-foreground">{{ selectedSlotLabel }}</span>
           </div>
         </div>
 
-        <Button class="w-full" :disabled="!selectedSlot || isSubmitting" @click="handleBooking">
+        <Button class="w-full"
+:disabled="!selectedSlot || isSubmitting" @click="handleBooking">
           {{ isSubmitting ? "Rezerwuję..." : "Zarezerwuj termin" }}
         </Button>
       </div>

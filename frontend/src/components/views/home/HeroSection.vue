@@ -19,7 +19,7 @@ const handleBecomeTrainer = (): void => {
       <h1
         class="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-tight text-foreground/95"
       >
-        CoachFlow<br class="hidden sm:inline" />
+        CoachFlow<br class="hidden sm:inline" >
         Twoje centrum zarządzania treningiem
       </h1>
       <p

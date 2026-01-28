@@ -15,7 +15,8 @@ defineProps<{
     <CardHeader class="pb-3">
       <div class="flex items-center justify-between">
         <CardTitle class="flex items-center gap-2 text-lg">
-          <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 text-primary"
+fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -25,7 +26,8 @@ defineProps<{
           </svg>
           Dzisiejszy plan
         </CardTitle>
-        <span v-if="!isLoading && sessions.length > 0" class="text-sm text-muted-foreground">
+        <span v-if="!isLoading && sessions.length > 0"
+class="text-sm text-muted-foreground">
           {{ sessions.length }}
           {{ sessions.length === 1 ? "sesja" : sessions.length < 5 ? "sesje" : "sesji" }}
         </span>
@@ -36,7 +38,8 @@ defineProps<{
       <!-- Loading state -->
       <template v-if="isLoading">
         <div class="space-y-3">
-          <div v-for="i in 4" :key="i" class="flex items-center gap-4">
+          <div v-for="i in 4"
+:key="i" class="flex items-center gap-4">
             <Skeleton class="h-10 w-20 rounded" />
             <Skeleton class="h-2.5 w-2.5 rounded-full" />
             <div class="flex-1 space-y-2">
@@ -72,8 +75,10 @@ defineProps<{
       </div>
 
       <!-- Sessions list -->
-      <div v-else class="space-y-1">
-        <ScheduleItem v-for="session in sessions" :key="session.id" :session="session" />
+      <div v-else
+class="space-y-1">
+        <ScheduleItem v-for="session in sessions"
+:key="session.id" :session="session" />
       </div>
     </CardContent>
   </Card>

@@ -7,41 +7,52 @@
       <div class="container flex h-16 items-center justify-between px-4">
         <!-- Logo and Brand -->
         <div class="flex items-center gap-6">
-          <router-link to="/" class="flex items-center gap-2 font-semibold">
+          <router-link to="/"
+class="flex items-center gap-2 font-semibold">
             <span class="text-xl font-bold text-primary">CoachFlow</span>
           </router-link>
 
           <!-- Navigation Links -->
-          <nav v-if="isAuthenticated" class="hidden md:flex items-center gap-1">
-            <Button v-if="isTrainer" variant="ghost" size="sm" as-child>
+          <nav v-if="isAuthenticated"
+class="hidden md:flex items-center gap-1">
+            <Button v-if="isTrainer"
+variant="ghost" size="sm" as-child>
               <router-link to="/trainer/dashboard"> Dashboard </router-link>
             </Button>
-            <Button v-if="isClient" variant="ghost" size="sm" as-child>
+            <Button v-if="isClient"
+variant="ghost" size="sm" as-child>
               <router-link to="/dashboard"> Dashboard </router-link>
             </Button>
-            <Button v-if="isTrainer" variant="ghost" size="sm" as-child>
+            <Button v-if="isTrainer"
+variant="ghost" size="sm" as-child>
               <router-link to="/bookings"> Rezerwacje </router-link>
             </Button>
-            <Button v-if="isClient" variant="ghost" size="sm" as-child>
+            <Button v-if="isClient"
+variant="ghost" size="sm" as-child>
               <router-link to="/my-bookings"> Moje rezerwacje </router-link>
             </Button>
-            <Button v-if="isClient" variant="ghost" size="sm" as-child>
+            <Button v-if="isClient"
+variant="ghost" size="sm" as-child>
               <router-link to="/client/plans"> Moje plany </router-link>
             </Button>
-            <Button v-if="isTrainer" variant="ghost" size="sm" as-child>
+            <Button v-if="isTrainer"
+variant="ghost" size="sm" as-child>
               <router-link to="/calendar"> Kalendarz </router-link>
             </Button>
-            <Button v-if="isTrainer" variant="ghost" size="sm" as-child>
+            <Button v-if="isTrainer"
+variant="ghost" size="sm" as-child>
               <router-link to="/trainer/services"> Usługi </router-link>
             </Button>
-            <Button variant="ghost" size="sm" as-child>
+            <Button variant="ghost"
+size="sm" as-child>
               <router-link to="/trainers"> Trenerzy </router-link>
             </Button>
           </nav>
         </div>
 
         <!-- User Menu -->
-        <div v-if="isAuthenticated" class="flex items-center gap-2">
+        <div v-if="isAuthenticated"
+class="flex items-center gap-2">
           <!-- User Info -->
           <div class="hidden sm:flex items-center gap-3 mr-2">
             <div class="text-right">
@@ -63,7 +74,8 @@
           </div>
 
           <!-- Logout Button -->
-          <Button variant="outline" size="sm" :disabled="isLoggingOut" @click="handleLogout">
+          <Button variant="outline"
+size="sm" :disabled="isLoggingOut" @click="handleLogout">
             <LogOut class="h-4 w-4 mr-2" />
             <span class="hidden sm:inline">Wyloguj</span>
           </Button>
@@ -71,7 +83,8 @@
           <!-- Mobile Menu Toggle -->
           <Sheet v-model:open="mobileMenuOpen">
             <SheetTrigger as-child>
-              <Button variant="ghost" size="icon" class="md:hidden">
+              <Button variant="ghost"
+size="icon" class="md:hidden">
                 <Menu class="h-5 w-5" />
               </Button>
             </SheetTrigger>
@@ -191,11 +204,14 @@
         </div>
 
         <!-- Guest Actions -->
-        <div v-else class="flex items-center gap-2">
-          <Button variant="ghost" size="sm" as-child>
+        <div v-else
+class="flex items-center gap-2">
+          <Button variant="ghost"
+size="sm" as-child>
             <router-link to="/login"> Zaloguj się </router-link>
           </Button>
-          <Button size="sm" as-child>
+          <Button size="sm"
+as-child>
             <router-link to="/register"> Zarejestruj się </router-link>
           </Button>
         </div>

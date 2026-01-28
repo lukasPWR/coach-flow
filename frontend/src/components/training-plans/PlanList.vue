@@ -15,8 +15,10 @@ defineEmits<{
 </script>
 
 <template>
-  <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div v-for="n in 6" :key="n" class="h-full">
+  <div v-if="isLoading"
+class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div v-for="n in 6"
+:key="n" class="h-full">
       <div class="flex flex-col space-y-3 h-full border rounded-xl p-6 bg-card">
         <div class="flex justify-between items-start">
           <Skeleton class="h-[24px] w-3/4 rounded-md" />
@@ -46,7 +48,8 @@ defineEmits<{
     </p>
   </div>
 
-  <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div v-else
+class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <PlanTile
       v-for="plan in plans"
       :key="plan.id"

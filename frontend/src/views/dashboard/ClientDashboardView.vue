@@ -7,11 +7,14 @@
 
     <NotificationWidget :notifications="notifications" />
 
-    <DashboardStats :upcoming-count="upcomingCount" :pending-count="pendingCount" />
+    <DashboardStats :upcoming-count="upcomingCount"
+:pending-count="pendingCount" />
 
-    <ActivePlanCard :active-plan="activePlan" :loading="trainingLoading" />
+    <ActivePlanCard :active-plan="activePlan"
+:loading="trainingLoading" />
 
-    <Tabs default-value="upcoming" class="space-y-4">
+    <Tabs default-value="upcoming"
+class="space-y-4">
       <TabsList>
         <TabsTrigger value="upcoming"> Nadchodzące </TabsTrigger>
         <TabsTrigger value="pending"> Oczekujące </TabsTrigger>
@@ -28,7 +31,8 @@
           @reschedule="openRescheduleDialog"
         >
           <template #empty-action>
-            <Button variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
+            <Button
+variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
           </template>
         </BookingList>
       </TabsContent>
@@ -42,7 +46,8 @@
           @reschedule="openRescheduleDialog"
         >
           <template #empty-action>
-            <Button variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
+            <Button
+variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
           </template>
         </BookingList>
       </TabsContent>
@@ -57,7 +62,8 @@
           @reschedule="openRescheduleDialog"
         >
           <template #empty-action>
-            <Button variant="link" class="mt-2" @click="goToTrainers">
+            <Button variant="link"
+class="mt-2" @click="goToTrainers">
               Umów pierwszy trening
             </Button>
           </template>

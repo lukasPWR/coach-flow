@@ -40,12 +40,14 @@ const handlePlanSelect = (planId: string) => {
       <PlanStatusTabs v-model="activeTab" />
     </div>
 
-    <Alert v-if="error" variant="destructive">
+    <Alert v-if="error"
+variant="destructive">
       <AlertCircle class="h-4 w-4" />
       <AlertTitle>Błąd</AlertTitle>
       <AlertDescription> {{ error }}. Spróbuj odświeżyć stronę. </AlertDescription>
     </Alert>
 
-    <PlanList :plans="plans" :is-loading="isLoading" @select-plan="handlePlanSelect" />
+    <PlanList :plans="plans"
+:is-loading="isLoading" @select-plan="handlePlanSelect" />
   </div>
 </template>

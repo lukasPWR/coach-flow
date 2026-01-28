@@ -77,7 +77,8 @@ const navigateToPlan = (planId: string) => {
 
     <!-- Filters & Tabs -->
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-      <PlanStatusTabs :model-value="filterStatus" @update:model-value="handleStatusChange" />
+      <PlanStatusTabs :model-value="filterStatus"
+@update:model-value="handleStatusChange" />
       <!-- Optional Search (Visual placeholder for future implementation) -->
       <!-- 
       <div class="relative w-full sm:w-[300px]">
@@ -93,7 +94,8 @@ const navigateToPlan = (planId: string) => {
     </div>
 
     <!-- Content -->
-    <div v-if="isLoading" class="flex justify-center py-12">
+    <div v-if="isLoading"
+class="flex justify-center py-12">
       <Loader2 class="h-8 w-8 animate-spin text-muted-foreground" />
     </div>
 
@@ -112,12 +114,14 @@ const navigateToPlan = (planId: string) => {
             : "Nie masz żadnych zarchiwizowanych planów."
         }}
       </p>
-      <Button variant="outline" @click="openCreateModal" v-if="filterStatus === PlanStatus.ACTIVE">
+      <Button variant="outline"
+@click="openCreateModal" v-if="filterStatus === PlanStatus.ACTIVE">
         Utwórz swój pierwszy plan
       </Button>
     </div>
 
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div v-else
+class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       <PlanCard
         v-for="plan in plans"
         :key="plan.id"

@@ -23,7 +23,8 @@ const colorClasses = computed(() => {
 </script>
 
 <template>
-  <RouterLink :to="to" class="block group">
+  <RouterLink :to="to"
+class="block group">
     <Card
       class="h-full transition-all duration-200 hover:shadow-md hover:border-primary/30 cursor-pointer"
     >

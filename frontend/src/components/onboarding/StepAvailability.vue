@@ -124,14 +124,17 @@ const handleRemoveUnavailability = async (id: string) => {
       <div class="space-y-3">
         <div class="border rounded-md p-4 flex justify-center">
           <!-- Calendar now uses CalendarDate from @internationalized/date -->
-          <Calendar v-model="selectedDate as any" class="rounded-md border" />
+          <Calendar v-model="selectedDate as any"
+class="rounded-md border" />
         </div>
 
         <!-- Legend showing unavailability indicators -->
-        <div v-if="unavailabilities.length > 0" class="text-xs text-muted-foreground space-y-1">
+        <div v-if="unavailabilities.length > 0"
+class="text-xs text-muted-foreground space-y-1">
           <p class="font-medium">Twoje niedostępności:</p>
           <ul class="list-disc list-inside space-y-0.5">
-            <li v-for="unavail in getUnavailabilitiesForMonth()" :key="unavail.id">
+            <li v-for="unavail in getUnavailabilitiesForMonth()"
+:key="unavail.id">
               {{ formatDate(unavail.startTime) }} -
               {{ formatTimeRange(unavail.startTime, unavail.endTime) }}
             </li>
@@ -159,14 +162,17 @@ const handleRemoveUnavailability = async (id: string) => {
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
               <Label>Od godziny</Label>
-              <Input v-model="startTime" type="time" />
+              <Input v-model="startTime"
+type="time" />
             </div>
             <div class="space-y-2">
               <Label>Do godziny</Label>
-              <Input v-model="endTime" type="time" />
+              <Input v-model="endTime"
+type="time" />
             </div>
           </div>
-          <Button class="w-full" @click="handleAddUnavailability" :disabled="!selectedDate">
+          <Button class="w-full"
+@click="handleAddUnavailability" :disabled="!selectedDate">
             <Plus class="w-4 h-4 mr-2" />
             Dodaj niedostępność
           </Button>
@@ -174,7 +180,8 @@ const handleRemoveUnavailability = async (id: string) => {
       </Card>
 
       <!-- List of added unavailabilities -->
-      <div v-if="unavailabilities.length > 0" class="space-y-2">
+      <div v-if="unavailabilities.length > 0"
+class="space-y-2">
         <h4 class="text-sm font-medium">Dodane wyjątki:</h4>
         <div class="space-y-2">
           <div

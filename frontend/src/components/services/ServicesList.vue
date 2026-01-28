@@ -65,8 +65,10 @@ function formatDuration(minutes: number): string {
 <template>
   <div class="space-y-4">
     <!-- Loading State -->
-    <div v-if="isLoading" class="space-y-4">
-      <Card v-for="i in 3" :key="i">
+    <div v-if="isLoading"
+class="space-y-4">
+      <Card v-for="i in 3"
+:key="i">
         <CardContent class="p-6">
           <div class="flex items-center justify-between">
             <div class="space-y-2 flex-1">
@@ -87,7 +89,8 @@ function formatDuration(minutes: number): string {
       v-else-if="services.length > 0"
       class="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 lg:grid-cols-1"
     >
-      <Card v-for="service in services" :key="service.id" class="hover:shadow-md transition-shadow">
+      <Card v-for="service in services"
+:key="service.id" class="hover:shadow-md transition-shadow">
         <CardContent class="p-6">
           <div class="flex items-start justify-between gap-4">
             <!-- Service Info -->
@@ -99,7 +102,8 @@ function formatDuration(minutes: number): string {
               </div>
 
               <div class="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary" class="font-medium">
+                <Badge variant="secondary"
+class="font-medium">
                   {{ formatPrice(service.price) }}
                 </Badge>
                 <Badge variant="outline">
@@ -133,7 +137,8 @@ function formatDuration(minutes: number): string {
     </div>
 
     <!-- Empty State -->
-    <div v-else class="flex flex-col items-center justify-center py-12 text-center space-y-3">
+    <div v-else
+class="flex flex-col items-center justify-center py-12 text-center space-y-3">
       <div class="bg-muted/20 p-4 rounded-full">
         <Package class="h-8 w-8 text-muted-foreground" />
       </div>

@@ -62,8 +62,12 @@ const onInput = () => {
     <div class="flex-1 space-y-3">
       <div class="flex justify-between items-start">
         <div>
-          <h4 class="font-semibold text-sm">{{ exercise.exerciseName }}</h4>
-          <p class="text-xs text-muted-foreground">{{ exercise.muscleGroup }}</p>
+          <h4 class="font-semibold text-sm">
+            {{ exercise.exerciseName }}
+          </h4>
+          <p class="text-xs text-muted-foreground">
+            {{ exercise.muscleGroup }}
+          </p>
         </div>
         <Button
           variant="ghost"
@@ -80,31 +84,36 @@ const onInput = () => {
           <label class="text-[10px] uppercase font-bold text-muted-foreground tracking-wider"
             >Serie</label
           >
-          <Input v-model="form.sets" @input="onInput" class="h-8 text-sm" placeholder="-" />
+          <Input v-model="form.sets"
+@input="onInput" class="h-8 text-sm" placeholder="-" />
         </div>
         <div class="space-y-1">
           <label class="text-[10px] uppercase font-bold text-muted-foreground tracking-wider"
             >Powt.</label
           >
-          <Input v-model="form.reps" @input="onInput" class="h-8 text-sm" placeholder="-" />
+          <Input v-model="form.reps"
+@input="onInput" class="h-8 text-sm" placeholder="-" />
         </div>
         <div class="space-y-1">
           <label class="text-[10px] uppercase font-bold text-muted-foreground tracking-wider"
             >Ciężar</label
           >
-          <Input v-model="form.weight" @input="onInput" class="h-8 text-sm" placeholder="-" />
+          <Input v-model="form.weight"
+@input="onInput" class="h-8 text-sm" placeholder="-" />
         </div>
         <div class="space-y-1">
           <label class="text-[10px] uppercase font-bold text-muted-foreground tracking-wider"
             >Tempo</label
           >
-          <Input v-model="form.tempo" @input="onInput" class="h-8 text-sm" placeholder="-" />
+          <Input v-model="form.tempo"
+@input="onInput" class="h-8 text-sm" placeholder="-" />
         </div>
         <div class="space-y-1">
           <label class="text-[10px] uppercase font-bold text-muted-foreground tracking-wider"
             >Przerwa</label
           >
-          <Input v-model="form.rest" @input="onInput" class="h-8 text-sm" placeholder="-" />
+          <Input v-model="form.rest"
+@input="onInput" class="h-8 text-sm" placeholder="-" />
         </div>
       </div>
 
@@ -114,9 +123,9 @@ const onInput = () => {
         >
         <Input
           v-model="form.notes"
-          @input="onInput"
           class="h-8 text-sm"
           placeholder="Opcjonalne instrukcje..."
+          @input="onInput"
         />
       </div>
     </div>

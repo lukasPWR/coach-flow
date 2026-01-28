@@ -233,19 +233,22 @@ onMounted(() => {
         :variant="toastMessage.type === 'error' ? 'destructive' : 'default'"
         class="mb-4"
       >
-        <AlertCircle v-if="toastMessage.type === 'error'" class="h-4 w-4" />
+        <AlertCircle v-if="toastMessage.type === 'error'"
+class="h-4 w-4" />
         <AlertTitle>{{ toastMessage.type === "error" ? "Błąd" : "Sukces" }}</AlertTitle>
         <AlertDescription>{{ toastMessage.text }}</AlertDescription>
       </Alert>
     </Transition>
 
     <!-- Błąd ładowania -->
-    <Alert v-if="error" variant="destructive" class="mb-4">
+    <Alert v-if="error"
+variant="destructive" class="mb-4">
       <AlertCircle class="h-4 w-4" />
       <AlertTitle>Nie udało się załadować kalendarza</AlertTitle>
       <AlertDescription class="flex items-center justify-between">
         <span>{{ error }}</span>
-        <Button variant="outline" size="sm" @click="handleRetry">
+        <Button variant="outline"
+size="sm" @click="handleRetry">
           <RefreshCw class="h-4 w-4 mr-2" />
           Spróbuj ponownie
         </Button>

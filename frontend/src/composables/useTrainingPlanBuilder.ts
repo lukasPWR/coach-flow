@@ -47,7 +47,7 @@ export function useTrainingPlanBuilder(planId: string) {
     try {
       const [planData, clientsData] = await Promise.all([
         getTrainingPlan(planId),
-        getTrainerClients()
+        getTrainerClients(),
       ]);
 
       plan.value = planData;
@@ -64,11 +64,7 @@ export function useTrainingPlanBuilder(planId: string) {
     }
   };
 
-  const updateHeader = async (data: {
-    name?: string;
-    clientId?: string;
-    status?: PlanStatus;
-  }) => {
+  const updateHeader = async (data: { name?: string; clientId?: string; status?: PlanStatus }) => {
     if (!plan.value) return;
 
     const previousData = { ...plan.value };
@@ -77,7 +73,7 @@ export function useTrainingPlanBuilder(planId: string) {
     if (data.status) plan.value.status = data.status;
 
     if (data.clientId) {
-      const selectedClient = clients.value.find(c => c.id === data.clientId);
+      const selectedClient = clients.value.find((c) => c.id === data.clientId);
       if (selectedClient) {
         plan.value.clientName = selectedClient.name;
       }
@@ -139,7 +135,7 @@ export function useTrainingPlanBuilder(planId: string) {
 
   const updateUnitName = async (unitId: string, name: string) => {
     if (!plan.value) return;
-    const unit = plan.value.units.find(u => u.id === unitId);
+    const unit = plan.value.units.find((u) => u.id === unitId);
     if (!unit) return;
 
     const previousName = unit.name;
@@ -153,7 +149,7 @@ export function useTrainingPlanBuilder(planId: string) {
       unit.name = previousName;
       savingStatus.value = "error";
     }
-  }
+  };
 
   const addExerciseToUnit = async (exerciseBase: Exercise) => {
     if (!activeUnitId.value || !plan.value) return;
@@ -168,10 +164,7 @@ export function useTrainingPlanBuilder(planId: string) {
     };
 
     try {
-      const newExercise = await apiAddExerciseToUnit(
-        activeUnitId.value,
-        dto
-      );
+      const newExercise = await apiAddExerciseToUnit(activeUnitId.value, dto);
       unit.exercises.push(newExercise);
       isExerciseModalOpen.value = false;
     } catch (error) {
@@ -181,11 +174,11 @@ export function useTrainingPlanBuilder(planId: string) {
 
   const removeExercise = async (exerciseId: string) => {
     if (!activeUnitId.value || !plan.value) return;
-    const unit = plan.value.units.find(u => u.id === activeUnitId.value);
+    const unit = plan.value.units.find((u) => u.id === activeUnitId.value);
     if (!unit) return;
 
     const previousExercises = [...unit.exercises];
-    unit.exercises = unit.exercises.filter(e => e.id !== exerciseId);
+    unit.exercises = unit.exercises.filter((e) => e.id !== exerciseId);
 
     try {
       await deletePlanExercise(exerciseId);
@@ -197,10 +190,10 @@ export function useTrainingPlanBuilder(planId: string) {
 
   const updateExercise = async (exerciseId: string, data: Partial<PlanExercise>) => {
     if (!activeUnitId.value || !plan.value) return;
-    const unit = plan.value.units.find(u => u.id === activeUnitId.value);
+    const unit = plan.value.units.find((u) => u.id === activeUnitId.value);
     if (!unit) return;
 
-    const exercise = unit.exercises.find(e => e.id === exerciseId);
+    const exercise = unit.exercises.find((e) => e.id === exerciseId);
     if (!exercise) return;
 
     Object.assign(exercise, data);
@@ -216,7 +209,7 @@ export function useTrainingPlanBuilder(planId: string) {
 
   const reorderExercises = async (newExercises: PlanExercise[]) => {
     if (!activeUnitId.value || !plan.value) return;
-    const unit = plan.value.units.find(u => u.id === activeUnitId.value);
+    const unit = plan.value.units.find((u) => u.id === activeUnitId.value);
     if (!unit) return;
 
     unit.exercises = newExercises;
@@ -235,7 +228,7 @@ export function useTrainingPlanBuilder(planId: string) {
     } catch (error) {
       savingStatus.value = "error";
     }
-  }
+  };
 
   return {
     plan,
@@ -254,6 +247,6 @@ export function useTrainingPlanBuilder(planId: string) {
     addExerciseToUnit,
     removeExercise,
     updateExercise,
-    reorderExercises
+    reorderExercises,
   };
 }

@@ -77,7 +77,8 @@ const clearError = (field: keyof FormErrors) => {
     </div>
 
     <!-- Success message -->
-    <Alert v-if="isSuccess" class="border-green-500 bg-green-50 dark:bg-green-950">
+    <Alert v-if="isSuccess"
+class="border-green-500 bg-green-50 dark:bg-green-950">
       <CheckCircle2 class="h-4 w-4 text-green-600 dark:text-green-400" />
       <AlertDescription class="text-green-800 dark:text-green-200">
         Link do resetowania hasła został wysłany na adres <strong>{{ formData.email }}</strong
@@ -86,12 +87,14 @@ const clearError = (field: keyof FormErrors) => {
     </Alert>
 
     <!-- General error alert -->
-    <Alert v-if="errors.general" variant="destructive">
+    <Alert v-if="errors.general"
+variant="destructive">
       <AlertCircle class="h-4 w-4" />
       <AlertDescription>{{ errors.general }}</AlertDescription>
     </Alert>
 
-    <form v-if="!isSuccess" @submit.prevent="handleSubmit" class="space-y-4">
+    <form v-if="!isSuccess"
+@submit.prevent="handleSubmit" class="space-y-4">
       <!-- Email field -->
       <div class="space-y-2">
         <Label for="email">Adres e-mail</Label>
@@ -103,21 +106,25 @@ const clearError = (field: keyof FormErrors) => {
           :class="{ 'border-destructive': errors.email }"
           @input="clearError('email')"
         />
-        <p v-if="errors.email" class="text-sm text-destructive">
+        <p v-if="errors.email"
+class="text-sm text-destructive">
           {{ errors.email }}
         </p>
       </div>
 
       <!-- Submit button -->
-      <Button type="submit" class="w-full" :disabled="isLoading">
-        <Loader2 v-if="isLoading" class="mr-2 h-4 w-4 animate-spin" />
+      <Button type="submit"
+class="w-full" :disabled="isLoading">
+        <Loader2 v-if="isLoading"
+class="mr-2 h-4 w-4 animate-spin" />
         {{ isLoading ? "Wysyłanie..." : "Wyślij link resetujący" }}
       </Button>
     </form>
 
     <!-- Back to login link -->
     <div class="text-center">
-      <a href="/login" class="inline-flex items-center text-sm text-primary hover:underline">
+      <a href="/login"
+class="inline-flex items-center text-sm text-primary hover:underline">
         <ArrowLeft class="mr-1 h-4 w-4" />
         Powrót do logowania
       </a>

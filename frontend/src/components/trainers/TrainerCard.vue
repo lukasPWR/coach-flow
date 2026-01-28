@@ -53,7 +53,8 @@ const truncatedDescription = computed(() => {
     <CardHeader class="pb-3">
       <div class="flex items-start gap-4">
         <Avatar class="h-16 w-16 border-2 border-muted">
-          <AvatarImage :src="trainer.profilePictureUrl" :alt="trainer.name" />
+          <AvatarImage :src="trainer.profilePictureUrl"
+:alt="trainer.name" />
           <AvatarFallback class="text-lg">
             {{ initials }}
           </AvatarFallback>
@@ -76,7 +77,8 @@ const truncatedDescription = computed(() => {
               class="inline-block"
             >
               <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-              <circle cx="12" cy="10" r="3" />
+              <circle cx="12"
+cy="10" r="3" />
             </svg>
             {{ trainer.city }}
           </CardDescription>
@@ -89,7 +91,8 @@ const truncatedDescription = computed(() => {
         {{ truncatedDescription }}
       </p>
 
-      <div v-if="trainer.specializations.length > 0" class="flex flex-wrap gap-2 mt-3">
+      <div v-if="trainer.specializations.length > 0"
+class="flex flex-wrap gap-2 mt-3">
         <Badge
           v-for="specialization in trainer.specializations"
           :key="specialization.id"

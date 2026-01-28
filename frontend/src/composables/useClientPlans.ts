@@ -49,10 +49,7 @@ export function useClientPlans() {
     }
   };
 
-  const toggleExerciseCompletion = async (
-    exerciseId: string,
-    isCompleted: boolean
-  ) => {
+  const toggleExerciseCompletion = async (exerciseId: string, isCompleted: boolean) => {
     if (!plan.value) return;
 
     // Find the exercise and its unit to update locally (Optimistic UI)

@@ -70,7 +70,8 @@ const onOpenChange = (value: boolean) => {
 </script>
 
 <template>
-  <Dialog :open="isOpen" @update:open="onOpenChange">
+  <Dialog :open="isOpen"
+@update:open="onOpenChange">
     <DialogContent class="sm:max-w-[500px]">
       <DialogHeader>
         <DialogTitle>Utwórz Plan Treningowy</DialogTitle>
@@ -79,18 +80,21 @@ const onOpenChange = (value: boolean) => {
         </DialogDescription>
       </DialogHeader>
 
-      <form @submit="onSubmit" class="space-y-4">
-        <FormField v-slot="{ componentField }" name="name">
+      <form class="space-y-4" @submit="onSubmit">
+        <FormField v-slot="{ componentField }"
+name="name">
           <FormItem>
             <FormLabel>Nazwa Planu</FormLabel>
             <FormControl>
-              <Input type="text" placeholder="np. Cykl Siłowy 1" v-bind="componentField" />
+              <Input type="text"
+placeholder="np. Cykl Siłowy 1" v-bind="componentField" />
             </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
 
-        <FormField v-slot="{ componentField }" name="clientId">
+        <FormField v-slot="{ componentField }"
+name="clientId">
           <FormItem>
             <FormLabel>Klient</FormLabel>
             <Select v-bind="componentField">
@@ -100,7 +104,8 @@ const onOpenChange = (value: boolean) => {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem v-for="client in clients" :key="client.id" :value="client.id">
+                <SelectItem v-for="client in clients"
+:key="client.id" :value="client.id">
                   {{ client.name }}
                 </SelectItem>
                 <div
@@ -115,7 +120,8 @@ const onOpenChange = (value: boolean) => {
           </FormItem>
         </FormField>
 
-        <FormField v-slot="{ componentField }" name="description">
+        <FormField v-slot="{ componentField }"
+name="description">
           <FormItem>
             <FormLabel>Opis (Opcjonalnie)</FormLabel>
             <FormControl>
@@ -130,9 +136,12 @@ const onOpenChange = (value: boolean) => {
         </FormField>
 
         <DialogFooter>
-          <Button type="button" variant="secondary" @click="onOpenChange(false)"> Anuluj </Button>
-          <Button type="submit" :disabled="isSubmitting">
-            <Loader2 v-if="isSubmitting" class="mr-2 h-4 w-4 animate-spin" />
+          <Button
+type="button" variant="secondary" @click="onOpenChange(false)"> Anuluj </Button>
+          <Button type="submit"
+:disabled="isSubmitting">
+            <Loader2 v-if="isSubmitting"
+class="mr-2 h-4 w-4 animate-spin" />
             Utwórz Plan
           </Button>
         </DialogFooter>

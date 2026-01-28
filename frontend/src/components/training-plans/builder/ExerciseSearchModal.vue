@@ -61,7 +61,8 @@ const handleSelect = (exercise: Exercise) => {
 </script>
 
 <template>
-  <Dialog :open="open" @update:open="(val) => emit('update:open', val)">
+  <Dialog :open="open"
+@update:open="(val) => emit('update:open', val)">
     <DialogContent class="sm:max-w-[500px] h-[80vh] flex flex-col">
       <DialogHeader>
         <DialogTitle>Dodaj Ćwiczenie</DialogTitle>
@@ -70,18 +71,22 @@ const handleSelect = (exercise: Exercise) => {
 
       <div class="relative">
         <Search class="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input v-model="searchQuery" placeholder="Szukaj ćwiczeń..." class="pl-8" />
+        <Input v-model="searchQuery"
+placeholder="Szukaj ćwiczeń..." class="pl-8" />
       </div>
 
       <!-- ScrollArea replaced with div due to missing component -->
       <div class="flex-1 mt-4 -mx-6 px-6 overflow-y-auto">
-        <div v-if="isLoading" class="flex justify-center py-8">
+        <div v-if="isLoading"
+class="flex justify-center py-8">
           <Loader2 class="w-6 h-6 animate-spin text-muted-foreground" />
         </div>
-        <div v-else-if="exercises.length === 0" class="text-center py-8 text-muted-foreground">
+        <div v-else-if="exercises.length === 0"
+class="text-center py-8 text-muted-foreground">
           Brak wyników.
         </div>
-        <div v-else class="space-y-2 pb-4">
+        <div v-else
+class="space-y-2 pb-4">
           <button
             v-for="exercise in exercises"
             :key="exercise.id"
@@ -89,8 +94,12 @@ const handleSelect = (exercise: Exercise) => {
             @click="handleSelect(exercise)"
           >
             <div>
-              <div class="font-medium">{{ exercise.name }}</div>
-              <div class="text-xs text-muted-foreground">{{ exercise.muscleGroup }}</div>
+              <div class="font-medium">
+                {{ exercise.name }}
+              </div>
+              <div class="text-xs text-muted-foreground">
+                {{ exercise.muscleGroup }}
+              </div>
             </div>
             <Plus class="w-4 h-4 text-muted-foreground" />
           </button>

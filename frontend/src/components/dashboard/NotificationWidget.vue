@@ -55,8 +55,12 @@ const handleClick = (notification: DashboardNotificationDTO) => {
               class="h-5 w-5 mt-0.5 text-primary shrink-0"
             />
             <div class="flex-1 space-y-1">
-              <p class="text-sm font-medium leading-none">{{ notification.title }}</p>
-              <p class="text-xs text-muted-foreground">{{ notification.message }}</p>
+              <p class="text-sm font-medium leading-none">
+                {{ notification.title }}
+              </p>
+              <p class="text-xs text-muted-foreground">
+                {{ notification.message }}
+              </p>
             </div>
             <div class="flex flex-col items-end gap-1">
               <span class="text-[10px] text-muted-foreground whitespace-nowrap">

@@ -158,12 +158,14 @@ const clearError = (field: keyof FormErrors) => {
     </div>
 
     <!-- General error alert -->
-    <Alert v-if="errors.general" variant="destructive">
+    <Alert v-if="errors.general"
+variant="destructive">
       <AlertCircle class="h-4 w-4" />
       <AlertDescription>{{ errors.general }}</AlertDescription>
     </Alert>
 
-    <form class="space-y-4" @submit.prevent="handleSubmit">
+    <form class="space-y-4"
+@submit.prevent="handleSubmit">
       <!-- Name field -->
       <div class="space-y-2">
         <Label for="name">Imię</Label>
@@ -175,7 +177,8 @@ const clearError = (field: keyof FormErrors) => {
           :class="{ 'border-destructive': errors.name }"
           @input="clearError('name')"
         />
-        <p v-if="errors.name" class="text-sm text-destructive">
+        <p v-if="errors.name"
+class="text-sm text-destructive">
           {{ errors.name }}
         </p>
       </div>
@@ -191,7 +194,8 @@ const clearError = (field: keyof FormErrors) => {
           :class="{ 'border-destructive': errors.email }"
           @input="clearError('email')"
         />
-        <p v-if="errors.email" class="text-sm text-destructive">
+        <p v-if="errors.email"
+class="text-sm text-destructive">
           {{ errors.email }}
         </p>
       </div>
@@ -207,7 +211,8 @@ const clearError = (field: keyof FormErrors) => {
           :class="{ 'border-destructive': errors.password }"
           @input="clearError('password')"
         />
-        <p v-if="errors.password" class="text-sm text-destructive">
+        <p v-if="errors.password"
+class="text-sm text-destructive">
           {{ errors.password }}
         </p>
       </div>
@@ -223,7 +228,8 @@ const clearError = (field: keyof FormErrors) => {
           :class="{ 'border-destructive': errors.confirmPassword }"
           @input="clearError('confirmPassword')"
         />
-        <p v-if="errors.confirmPassword" class="text-sm text-destructive">
+        <p v-if="errors.confirmPassword"
+class="text-sm text-destructive">
           {{ errors.confirmPassword }}
         </p>
       </div>
@@ -233,14 +239,18 @@ const clearError = (field: keyof FormErrors) => {
         <Label>Wybierz typ konta</Label>
         <RadioGroup v-model="formData.role">
           <div class="flex items-center space-x-2">
-            <RadioGroupItem id="role-client" value="CLIENT" />
-            <Label for="role-client" class="font-normal cursor-pointer">
+            <RadioGroupItem id="role-client"
+value="CLIENT" />
+            <Label for="role-client"
+class="font-normal cursor-pointer">
               Użytkownik (Klient)
             </Label>
           </div>
           <div class="flex items-center space-x-2">
-            <RadioGroupItem id="role-trainer" value="TRAINER" />
-            <Label for="role-trainer" class="font-normal cursor-pointer"> Trener </Label>
+            <RadioGroupItem id="role-trainer"
+value="TRAINER" />
+            <Label for="role-trainer"
+class="font-normal cursor-pointer"> Trener </Label>
           </div>
         </RadioGroup>
       </div>
@@ -261,21 +271,27 @@ const clearError = (field: keyof FormErrors) => {
               }
             "
           />
-          <Label for="terms" class="text-sm font-normal leading-none cursor-pointer">
+          <Label for="terms"
+class="text-sm font-normal leading-none cursor-pointer">
             Akceptuję
-            <a href="#" class="text-primary hover:underline">regulamin</a>
+            <a href="#"
+class="text-primary hover:underline">regulamin</a>
             oraz
-            <a href="#" class="text-primary hover:underline">politykę prywatności</a>
+            <a href="#"
+class="text-primary hover:underline">politykę prywatności</a>
           </Label>
         </div>
-        <p v-if="errors.termsAccepted" class="text-sm text-destructive">
+        <p v-if="errors.termsAccepted"
+class="text-sm text-destructive">
           {{ errors.termsAccepted }}
         </p>
       </div>
 
       <!-- Submit button -->
-      <Button type="submit" class="w-full" :disabled="isLoading">
-        <Loader2 v-if="isLoading" class="mr-2 h-4 w-4 animate-spin" />
+      <Button type="submit"
+class="w-full" :disabled="isLoading">
+        <Loader2 v-if="isLoading"
+class="mr-2 h-4 w-4 animate-spin" />
         {{ isLoading ? "Rejestracja..." : "Zarejestruj się" }}
       </Button>
     </form>
@@ -283,7 +299,8 @@ const clearError = (field: keyof FormErrors) => {
     <!-- Login link -->
     <div class="text-center text-sm">
       <span class="text-muted-foreground">Masz już konto?</span>
-      <a href="/login" class="text-primary hover:underline ml-1">Zaloguj się</a>
+      <a href="/login"
+class="text-primary hover:underline ml-1">Zaloguj się</a>
     </div>
   </div>
 </template>

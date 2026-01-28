@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { Plus } from 'lucide-vue-next';
-import { Button } from '@/components/ui/button';
+import { ref } from "vue";
+import { Plus } from "lucide-vue-next";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,21 +9,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import ExerciseFiltersSidebar from '@/components/exercises/ExerciseFiltersSidebar.vue';
-import ExerciseListTable from '@/components/exercises/ExerciseListTable.vue';
-import ExerciseFormDialog from '@/components/exercises/ExerciseFormDialog.vue';
-import { useExercises } from '@/composables/useExercises';
-import type { CreateExerciseDto } from '@/types/exercises';
+} from "@/components/ui/dialog";
+import ExerciseFiltersSidebar from "@/components/exercises/ExerciseFiltersSidebar.vue";
+import ExerciseListTable from "@/components/exercises/ExerciseListTable.vue";
+import ExerciseFormDialog from "@/components/exercises/ExerciseFormDialog.vue";
+import { useExercises } from "@/composables/useExercises";
+import type { CreateExerciseDto } from "@/types/exercises";
 
-const {
-  exercises,
-  isLoading,
-  filters,
-  createExercise,
-  isCreating,
-  deleteExercise,
-} = useExercises();
+const { exercises, isLoading, filters, createExercise, isCreating, deleteExercise } =
+  useExercises();
 
 const isCreateModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
@@ -34,7 +28,7 @@ const handleCreate = async (values: CreateExerciseDto) => {
     await createExercise(values);
     isCreateModalOpen.value = false;
   } catch (error) {
-    console.error('Failed to create exercise:', error);
+    console.error("Failed to create exercise:", error);
     // W przyszłości można dodać obsługę toastów
   }
 };
@@ -51,7 +45,7 @@ const handleDelete = async () => {
       isDeleteModalOpen.value = false;
       exerciseToDeleteId.value = null;
     } catch (error) {
-      console.error('Failed to delete exercise:', error);
+      console.error("Failed to delete exercise:", error);
     }
   }
 };
@@ -69,10 +63,7 @@ const handleDelete = async () => {
 
     <div class="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
       <aside class="lg:w-1/4">
-        <ExerciseFiltersSidebar
-          :filters="filters"
-          @update:filters="filters = $event"
-        />
+        <ExerciseFiltersSidebar :filters="filters" @update:filters="filters = $event" />
       </aside>
       <div class="flex-1 lg:max-w-4xl">
         <ExerciseListTable
@@ -94,18 +85,22 @@ const handleDelete = async () => {
         <DialogHeader>
           <DialogTitle>Czy na pewno chcesz usunąć to ćwiczenie?</DialogTitle>
           <DialogDescription>
-            Tej operacji nie można cofnąć. Ćwiczenie zostanie usunięte z Twojej biblioteki,
-            ale pozostanie w historycznych planach treningowych. Nie będziesz mógł go jednak
-            użyć w nowych planach.
+            Tej operacji nie można cofnąć. Ćwiczenie zostanie usunięte z Twojej biblioteki, ale
+            pozostanie w historycznych planach treningowych. Nie będziesz mógł go jednak użyć w
+            nowych planach.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" @click="isDeleteModalOpen = false">
-            Anuluj
-          </Button>
-          <Button variant="destructive" @click="handleDelete">
-            Usuń
-          </Button>
+          <Button variant="outline"
+@click="isDeleteModalOpen = false"
+>
+Anuluj
+</Button>
+          <Button variant="destructive"
+@click="handleDelete"
+>
+Usuń
+</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

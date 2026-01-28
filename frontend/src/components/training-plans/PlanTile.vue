@@ -34,10 +34,12 @@ const formattedDate = computed(() => {
       </Badge>
     </CardHeader>
     <CardContent class="flex-grow">
-      <p v-if="plan.description" class="text-sm text-muted-foreground line-clamp-3">
+      <p v-if="plan.description"
+class="text-sm text-muted-foreground line-clamp-3">
         {{ plan.description }}
       </p>
-      <p v-else class="text-sm text-muted-foreground italic">Brak opisu</p>
+      <p
+v-else class="text-sm text-muted-foreground italic">Brak opisu</p>
     </CardContent>
     <CardFooter class="text-xs text-muted-foreground pt-0 mt-auto">
       <div class="flex items-center">

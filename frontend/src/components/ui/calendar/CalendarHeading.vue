@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 const props = defineProps<CalendarHeadingProps & { class?: HTMLAttributes["class"] }>();
 
 const delegatedProps = computed(() => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { class: _, ...delegated } = props;
   return delegated;
 });
@@ -15,7 +14,8 @@ const forwardedProps = useForwardProps(delegatedProps);
 </script>
 
 <template>
-  <CalendarHeading :class="cn('text-sm font-medium', props.class)" v-bind="forwardedProps">
+  <CalendarHeading :class="cn('text-sm font-medium', props.class)"
+v-bind="forwardedProps">
     <slot />
   </CalendarHeading>
 </template>

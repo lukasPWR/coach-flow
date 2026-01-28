@@ -27,9 +27,7 @@ export async function getTrainingPlans(
   return response.data;
 }
 
-export async function createTrainingPlan(
-  data: CreatePlanForm
-): Promise<TrainingPlanDTO> {
+export async function createTrainingPlan(data: CreatePlanForm): Promise<TrainingPlanDTO> {
   const response = await api.post<TrainingPlanDTO>(BASE_URL, data);
   return response.data;
 }
@@ -52,17 +50,12 @@ export async function createTrainingUnit(
   planId: string,
   data: CreateUnitDto
 ): Promise<TrainingUnit> {
-  const response = await api.post<TrainingUnit>(
-    `${BASE_URL}/${planId}/units`,
-    data
-  );
+  const response = await api.post<TrainingUnit>(`${BASE_URL}/${planId}/units`, data);
   return response.data;
 }
 
 export async function duplicateTrainingUnit(unitId: string): Promise<TrainingUnit> {
-  const response = await api.post<TrainingUnit>(
-    `/training-units/${unitId}/duplicate`
-  );
+  const response = await api.post<TrainingUnit>(`/training-units/${unitId}/duplicate`);
   return response.data;
 }
 
@@ -70,10 +63,7 @@ export async function updateTrainingUnit(
   unitId: string,
   data: UpdateUnitDto
 ): Promise<TrainingUnit> {
-  const response = await api.patch<TrainingUnit>(
-    `/training-units/${unitId}`,
-    data
-  );
+  const response = await api.patch<TrainingUnit>(`/training-units/${unitId}`, data);
   return response.data;
 }
 
@@ -86,10 +76,7 @@ export async function addExerciseToUnit(
   unitId: string,
   data: AddExerciseDto
 ): Promise<PlanExercise> {
-  const response = await api.post<PlanExercise>(
-    `/training-units/${unitId}/exercises`,
-    data
-  );
+  const response = await api.post<PlanExercise>(`/training-units/${unitId}/exercises`, data);
   return response.data;
 }
 
@@ -97,10 +84,7 @@ export async function updatePlanExercise(
   exerciseId: string,
   data: UpdatePlanExerciseDto
 ): Promise<PlanExercise> {
-  const response = await api.patch<PlanExercise>(
-    `/plan-exercises/${exerciseId}`,
-    data
-  );
+  const response = await api.patch<PlanExercise>(`/plan-exercises/${exerciseId}`, data);
   return response.data;
 }
 
@@ -112,10 +96,9 @@ export async function toggleExerciseCompletion(
   exerciseId: string,
   isCompleted: boolean
 ): Promise<PlanExercise> {
-  const response = await api.patch<PlanExercise>(
-    `/plan-exercises/${exerciseId}/completion`,
-    { isCompleted }
-  );
+  const response = await api.patch<PlanExercise>(`/plan-exercises/${exerciseId}/completion`, {
+    isCompleted,
+  });
   return response.data;
 }
 

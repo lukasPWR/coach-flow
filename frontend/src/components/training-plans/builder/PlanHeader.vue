@@ -62,9 +62,9 @@ const handleClientChange = (clientId: string) => {
     <div class="flex items-center gap-4 flex-1">
       <Input
         v-model="localName"
-        @input="handleNameInput"
         class="text-lg font-semibold h-10 w-full max-w-md"
         placeholder="Nazwa planu"
+        @input="handleNameInput"
       />
 
       <div class="w-[200px]">
@@ -77,11 +77,13 @@ const handleClientChange = (clientId: string) => {
           </SelectTrigger>
           <SelectContent>
             <template v-if="clients.length > 0">
-              <SelectItem v-for="client in clients" :key="client.id" :value="client.id">
+              <SelectItem v-for="client in clients"
+:key="client.id" :value="client.id">
                 {{ client.name }}
               </SelectItem>
             </template>
-            <div v-else class="p-2 text-sm text-muted-foreground text-center">Brak klientów</div>
+            <div
+v-else class="p-2 text-sm text-muted-foreground text-center">Brak klientów</div>
           </SelectContent>
         </Select>
       </div>
@@ -97,13 +99,16 @@ const handleClientChange = (clientId: string) => {
       </Badge>
 
       <div class="flex items-center text-xs text-muted-foreground w-24 justify-end">
-        <span v-if="savingStatus === 'saving'" class="flex items-center gap-1">
+        <span v-if="savingStatus === 'saving'"
+class="flex items-center gap-1">
           <Loader2 class="w-3 h-3 animate-spin" /> Zapisywanie...
         </span>
-        <span v-else-if="savingStatus === 'saved'" class="flex items-center gap-1 text-green-600">
+        <span v-else-if="savingStatus === 'saved'"
+class="flex items-center gap-1 text-green-600">
           <Save class="w-3 h-3" /> Zapisano
         </span>
-        <span v-else class="text-destructive">Błąd</span>
+        <span v-else
+class="text-destructive">Błąd</span>
       </div>
     </div>
   </div>

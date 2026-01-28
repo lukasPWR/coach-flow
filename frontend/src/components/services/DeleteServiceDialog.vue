@@ -43,7 +43,8 @@ function handleOpenChange(open: boolean) {
 </script>
 
 <template>
-  <Dialog :open="open" @update:open="handleOpenChange">
+  <Dialog :open="open"
+@update:open="handleOpenChange">
     <DialogContent class="sm:max-w-md">
       <DialogHeader>
         <DialogTitle>Czy na pewno chcesz usunąć usługę?</DialogTitle>
@@ -54,10 +55,12 @@ function handleOpenChange(open: boolean) {
       </DialogHeader>
 
       <DialogFooter class="gap-2">
-        <Button type="button" variant="outline" :disabled="isDeleting" @click="handleCancel">
+        <Button type="button"
+variant="outline" :disabled="isDeleting" @click="handleCancel">
           Anuluj
         </Button>
-        <Button type="button" variant="destructive" :disabled="isDeleting" @click="handleConfirm">
+        <Button type="button"
+variant="destructive" :disabled="isDeleting" @click="handleConfirm">
           {{ isDeleting ? "Usuwanie..." : "Usuń" }}
         </Button>
       </DialogFooter>
