@@ -3,7 +3,7 @@ import { ref } from "vue";
 import type { PlanExercise } from "@/types/training-plans";
 import ExerciseItem from "./ExerciseItem.vue";
 
-const props = defineProps<{
+defineProps<{
   exercises: PlanExercise[];
 }>();
 

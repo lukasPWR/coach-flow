@@ -3,7 +3,6 @@ import { computed } from "vue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bell, ChevronRight, CheckCircle2, Info } from "lucide-vue-next";
 import type { DashboardNotificationDTO } from "@/types/dashboard";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "vue-router";
 
 const props = defineProps<{

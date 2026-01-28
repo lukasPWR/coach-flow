@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
 import type { TrainingUnit } from "@/types/training-plans";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
-const props = defineProps<{
+defineProps<{
   units: TrainingUnit[];
   selectedUnitId: string;
 }>();
@@ -13,13 +11,9 @@ const emit = defineEmits<{
   (e: "update:selectedUnitId", id: string): void;
 }>();
 
-const scrollContainer = ref<HTMLElement | null>(null);
-
 const selectUnit = (id: string) => {
   emit("update:selectedUnitId", id);
 };
-
-// Scroll to selected unit on mount or change could be nice, but maybe overkill for MVP.
 </script>
 
 <template>

@@ -1,30 +1,28 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { Plus, Search, Loader2 } from 'lucide-vue-next';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useTrainingPlans } from '@/composables/useTrainingPlans';
-import PlanCard from '@/components/training-plans/PlanCard.vue';
-import PlanStatusTabs from '@/components/training-plans/PlanStatusTabs.vue';
-import CreatePlanModal from '@/components/training-plans/CreatePlanModal.vue';
-import { PlanStatus, type CreatePlanForm } from '@/types/training-plans';
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+import { Plus, Search, Loader2 } from "lucide-vue-next";
+import { Button } from "@/components/ui/button";
+import { useTrainingPlans } from "@/composables/useTrainingPlans";
+import PlanCard from "@/components/training-plans/PlanCard.vue";
+import PlanStatusTabs from "@/components/training-plans/PlanStatusTabs.vue";
+import CreatePlanModal from "@/components/training-plans/CreatePlanModal.vue";
+import { PlanStatus, type CreatePlanForm } from "@/types/training-plans";
 
 const router = useRouter();
-const { 
-  plans, 
-  isLoading, 
-  filterStatus, 
-  fetchPlans, 
-  clients, 
-  isLoadingClients, 
+const {
+  plans,
+  isLoading,
+  filterStatus,
+  fetchPlans,
+  clients,
+  isLoadingClients,
   fetchClients,
-  createPlan 
+  createPlan,
 } = useTrainingPlans();
 
 const isCreateModalOpen = ref(false);
 const isSubmitting = ref(false);
-const searchQuery = ref('');
 
 onMounted(() => {
   fetchPlans();
@@ -46,7 +44,7 @@ const handleCreatePlan = async (values: CreatePlanForm) => {
   isSubmitting.value = true;
   const success = await createPlan(values);
   isSubmitting.value = false;
-  
+
   if (success) {
     isCreateModalOpen.value = false;
     // Optional: Redirect to the newly created plan
@@ -55,7 +53,7 @@ const handleCreatePlan = async (values: CreatePlanForm) => {
 };
 
 const navigateToPlan = (planId: string) => {
-  router.push({ name: 'trainer-plan-edit', params: { id: planId } });
+  router.push({ name: "trainer-plan-edit", params: { id: planId } });
 };
 
 // Simple client-side search filtering if needed, or just visual
@@ -79,10 +77,7 @@ const navigateToPlan = (planId: string) => {
 
     <!-- Filters & Tabs -->
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-      <PlanStatusTabs 
-        :model-value="filterStatus" 
-        @update:model-value="handleStatusChange" 
-      />
+      <PlanStatusTabs :model-value="filterStatus" @update:model-value="handleStatusChange" />
       <!-- Optional Search (Visual placeholder for future implementation) -->
       <!-- 
       <div class="relative w-full sm:w-[300px]">
@@ -102,13 +97,20 @@ const navigateToPlan = (planId: string) => {
       <Loader2 class="h-8 w-8 animate-spin text-muted-foreground" />
     </div>
 
-    <div v-else-if="plans.length === 0" class="flex flex-col items-center justify-center py-12 text-center border rounded-lg bg-muted/10 border-dashed">
+    <div
+      v-else-if="plans.length === 0"
+      class="flex flex-col items-center justify-center py-12 text-center border rounded-lg bg-muted/10 border-dashed"
+    >
       <div class="p-4 rounded-full bg-muted mb-4">
         <Search class="h-6 w-6 text-muted-foreground" />
       </div>
       <h3 class="text-lg font-medium">Brak planów</h3>
       <p class="text-muted-foreground max-w-sm mt-1 mb-4">
-        {{ filterStatus === PlanStatus.ACTIVE ? "Nie masz żadnych aktywnych planów treningowych." : "Nie masz żadnych zarchiwizowanych planów." }}
+        {{
+          filterStatus === PlanStatus.ACTIVE
+            ? "Nie masz żadnych aktywnych planów treningowych."
+            : "Nie masz żadnych zarchiwizowanych planów."
+        }}
       </p>
       <Button variant="outline" @click="openCreateModal" v-if="filterStatus === PlanStatus.ACTIVE">
         Utwórz swój pierwszy plan
@@ -116,16 +118,16 @@ const navigateToPlan = (planId: string) => {
     </div>
 
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      <PlanCard 
-        v-for="plan in plans" 
-        :key="plan.id" 
-        :plan="plan" 
+      <PlanCard
+        v-for="plan in plans"
+        :key="plan.id"
+        :plan="plan"
         @click="navigateToPlan(plan.id)"
       />
     </div>
 
     <!-- Modals -->
-    <CreatePlanModal 
+    <CreatePlanModal
       v-model:is-open="isCreateModalOpen"
       :is-loading-clients="isLoadingClients"
       :clients="clients"

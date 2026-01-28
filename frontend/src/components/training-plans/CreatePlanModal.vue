@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { useForm } from 'vee-validate';
-import { toTypedSchema } from '@vee-validate/zod';
-import * as z from 'zod';
-import { Loader2 } from 'lucide-vue-next';
+import { watch } from "vue";
+import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
+import * as z from "zod";
+import { Loader2 } from "lucide-vue-next";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -13,24 +13,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+} from "@/components/ui/dialog";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { type CreatePlanForm, type ClientSimpleDTO } from '@/types/training-plans';
+} from "@/components/ui/select";
+import { type CreatePlanForm, type ClientSimpleDTO } from "@/types/training-plans";
 
 const props = defineProps<{
   isOpen: boolean;
@@ -40,14 +34,14 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:isOpen', value: boolean): void;
-  (e: 'submit', values: CreatePlanForm): void;
+  (e: "update:isOpen", value: boolean): void;
+  (e: "submit", values: CreatePlanForm): void;
 }>();
 
 const formSchema = toTypedSchema(
   z.object({
-    name: z.string().min(3, 'Nazwa musi mieć co najmniej 3 znaki'),
-    clientId: z.string().min(1, 'Wybierz klienta'),
+    name: z.string().min(3, "Nazwa musi mieć co najmniej 3 znaki"),
+    clientId: z.string().min(1, "Wybierz klienta"),
     description: z.string().optional(),
   })
 );
@@ -57,7 +51,7 @@ const form = useForm({
 });
 
 const onSubmit = form.handleSubmit((values) => {
-  emit('submit', values as CreatePlanForm);
+  emit("submit", values as CreatePlanForm);
 });
 
 // Reset form when modal opens
@@ -71,7 +65,7 @@ watch(
 );
 
 const onOpenChange = (value: boolean) => {
-  emit('update:isOpen', value);
+  emit("update:isOpen", value);
 };
 </script>
 
@@ -106,14 +100,13 @@ const onOpenChange = (value: boolean) => {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem 
-                  v-for="client in clients" 
-                  :key="client.id" 
-                  :value="client.id"
-                >
+                <SelectItem v-for="client in clients" :key="client.id" :value="client.id">
                   {{ client.name }}
                 </SelectItem>
-                <div v-if="clients.length === 0 && !isLoadingClients" class="p-2 text-sm text-center text-muted-foreground">
+                <div
+                  v-if="clients.length === 0 && !isLoadingClients"
+                  class="p-2 text-sm text-center text-muted-foreground"
+                >
                   Brak dostępnych klientów.
                 </div>
               </SelectContent>
@@ -126,10 +119,10 @@ const onOpenChange = (value: boolean) => {
           <FormItem>
             <FormLabel>Opis (Opcjonalnie)</FormLabel>
             <FormControl>
-              <Textarea 
-                placeholder="Dodaj notatki do tego planu..." 
-                class="resize-none" 
-                v-bind="componentField" 
+              <Textarea
+                placeholder="Dodaj notatki do tego planu..."
+                class="resize-none"
+                v-bind="componentField"
               />
             </FormControl>
             <FormMessage />
@@ -137,9 +130,7 @@ const onOpenChange = (value: boolean) => {
         </FormField>
 
         <DialogFooter>
-          <Button type="button" variant="secondary" @click="onOpenChange(false)">
-            Anuluj
-          </Button>
+          <Button type="button" variant="secondary" @click="onOpenChange(false)"> Anuluj </Button>
           <Button type="submit" :disabled="isSubmitting">
             <Loader2 v-if="isSubmitting" class="mr-2 h-4 w-4 animate-spin" />
             Utwórz Plan

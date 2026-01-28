@@ -1,10 +1,10 @@
 import { ref, computed } from "vue";
 import type {
   TrainingPlanDetails,
-  TrainingUnit,
   PlanExercise,
   AddExerciseDto,
   ClientSimpleDTO,
+  UpdatePlanExerciseDto,
 } from "@/types/training-plans";
 import { PlanStatus } from "@/types/training-plans";
 import {
@@ -28,9 +28,8 @@ export function useTrainingPlanBuilder(planId: string) {
   const savingStatus = ref<"saved" | "saving" | "error">("saved");
   const activeUnitId = ref<string | null>(null);
   const isExerciseModalOpen = ref(false);
-  
+
   const clients = ref<ClientSimpleDTO[]>([]);
-  const isLoadingClients = ref(false);
 
   // Computed
   const activeUnit = computed(() => {
@@ -39,7 +38,7 @@ export function useTrainingPlanBuilder(planId: string) {
   });
 
   const logError = (title: string, error: any) => {
-      console.error(title, error);
+    console.error(title, error);
   };
 
   // Actions
@@ -47,10 +46,10 @@ export function useTrainingPlanBuilder(planId: string) {
     isLoading.value = true;
     try {
       const [planData, clientsData] = await Promise.all([
-          getTrainingPlan(planId),
-          getTrainerClients()
+        getTrainingPlan(planId),
+        getTrainerClients()
       ]);
-      
+
       plan.value = planData;
       clients.value = clientsData || []; // Ensure array
 
@@ -76,12 +75,12 @@ export function useTrainingPlanBuilder(planId: string) {
     if (data.name) plan.value.name = data.name;
     if (data.clientId) plan.value.clientId = data.clientId;
     if (data.status) plan.value.status = data.status;
-    
+
     if (data.clientId) {
-        const selectedClient = clients.value.find(c => c.id === data.clientId);
-        if (selectedClient) {
-            plan.value.clientName = selectedClient.name;
-        }
+      const selectedClient = clients.value.find(c => c.id === data.clientId);
+      if (selectedClient) {
+        plan.value.clientName = selectedClient.name;
+      }
     }
 
     savingStatus.value = "saving";
@@ -137,24 +136,24 @@ export function useTrainingPlanBuilder(planId: string) {
       logError("Nie udało się zduplikować jednostki", error);
     }
   };
-  
-    const updateUnitName = async (unitId: string, name: string) => {
-        if (!plan.value) return;
-        const unit = plan.value.units.find(u => u.id === unitId);
-        if (!unit) return;
 
-        const previousName = unit.name;
-        unit.name = name;
-        savingStatus.value = "saving";
+  const updateUnitName = async (unitId: string, name: string) => {
+    if (!plan.value) return;
+    const unit = plan.value.units.find(u => u.id === unitId);
+    if (!unit) return;
 
-        try {
-            await updateTrainingUnit(unitId, { name });
-            savingStatus.value = "saved";
-        } catch (error) {
-             unit.name = previousName;
-             savingStatus.value = "error";
-        }
+    const previousName = unit.name;
+    unit.name = name;
+    savingStatus.value = "saving";
+
+    try {
+      await updateTrainingUnit(unitId, { name });
+      savingStatus.value = "saved";
+    } catch (error) {
+      unit.name = previousName;
+      savingStatus.value = "error";
     }
+  }
 
   const addExerciseToUnit = async (exerciseBase: Exercise) => {
     if (!activeUnitId.value || !plan.value) return;
@@ -181,61 +180,61 @@ export function useTrainingPlanBuilder(planId: string) {
   };
 
   const removeExercise = async (exerciseId: string) => {
-     if (!activeUnitId.value || !plan.value) return;
-      const unit = plan.value.units.find(u => u.id === activeUnitId.value);
-      if(!unit) return;
+    if (!activeUnitId.value || !plan.value) return;
+    const unit = plan.value.units.find(u => u.id === activeUnitId.value);
+    if (!unit) return;
 
-      const previousExercises = [...unit.exercises];
-      unit.exercises = unit.exercises.filter(e => e.id !== exerciseId);
+    const previousExercises = [...unit.exercises];
+    unit.exercises = unit.exercises.filter(e => e.id !== exerciseId);
 
-      try {
-          await deletePlanExercise(exerciseId);
-      } catch (error) {
-          unit.exercises = previousExercises;
-          logError("Nie udało się usunąć ćwiczenia", error);
-      }
+    try {
+      await deletePlanExercise(exerciseId);
+    } catch (error) {
+      unit.exercises = previousExercises;
+      logError("Nie udało się usunąć ćwiczenia", error);
+    }
   };
 
   const updateExercise = async (exerciseId: string, data: Partial<PlanExercise>) => {
-       if (!activeUnitId.value || !plan.value) return;
-      const unit = plan.value.units.find(u => u.id === activeUnitId.value);
-      if(!unit) return;
-      
-      const exercise = unit.exercises.find(e => e.id === exerciseId);
-      if(!exercise) return;
+    if (!activeUnitId.value || !plan.value) return;
+    const unit = plan.value.units.find(u => u.id === activeUnitId.value);
+    if (!unit) return;
 
-      Object.assign(exercise, data);
-      savingStatus.value = "saving";
+    const exercise = unit.exercises.find(e => e.id === exerciseId);
+    if (!exercise) return;
 
-      try {
-          await apiUpdatePlanExercise(exerciseId, data);
-          savingStatus.value = "saved";
-      } catch (error) {
-          savingStatus.value = "error";
-      }
+    Object.assign(exercise, data);
+    savingStatus.value = "saving";
+
+    try {
+      await apiUpdatePlanExercise(exerciseId, data as UpdatePlanExerciseDto);
+      savingStatus.value = "saved";
+    } catch (error) {
+      savingStatus.value = "error";
+    }
   };
-  
+
   const reorderExercises = async (newExercises: PlanExercise[]) => {
-      if (!activeUnitId.value || !plan.value) return;
-      const unit = plan.value.units.find(u => u.id === activeUnitId.value);
-      if(!unit) return;
-      
-      unit.exercises = newExercises;
-      
-      savingStatus.value = "saving";
-      try {
-          const updates = newExercises.map((ex, index) => {
-              if (ex.sortOrder !== index) {
-                   ex.sortOrder = index;
-                   return apiUpdatePlanExercise(ex.id, { sortOrder: index });
-              }
-              return Promise.resolve();
-          });
-          await Promise.all(updates);
-          savingStatus.value = "saved";
-      } catch (error) {
-          savingStatus.value = "error";
-      }
+    if (!activeUnitId.value || !plan.value) return;
+    const unit = plan.value.units.find(u => u.id === activeUnitId.value);
+    if (!unit) return;
+
+    unit.exercises = newExercises;
+
+    savingStatus.value = "saving";
+    try {
+      const updates = newExercises.map((ex, index) => {
+        if (ex.sortOrder !== index) {
+          ex.sortOrder = index;
+          return apiUpdatePlanExercise(ex.id, { sortOrder: index });
+        }
+        return Promise.resolve();
+      });
+      await Promise.all(updates);
+      savingStatus.value = "saved";
+    } catch (error) {
+      savingStatus.value = "error";
+    }
   }
 
   return {

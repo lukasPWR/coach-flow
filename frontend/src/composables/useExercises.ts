@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { getExercises, createExercise, deleteExercise } from '@/lib/api/exercises';
 import type { CreateExerciseDto, ExerciseFilters } from '@/types/exercises';
 
