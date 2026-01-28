@@ -2,9 +2,34 @@
 
 Platform for managing coaching sessions.
 
+## 🚀 Szybki Start (Docker)
+
+To najprostszy sposób na uruchomienie całej aplikacji (Frontend + Backend + Baza Danych) za pomocą jednej komendy.
+
+1.  **Skopiuj plik konfiguracyjny:**
+
+    ```bash
+    cp .env.example .env
+    ```
+
+    _(W systemie Windows użyj: `copy .env.example .env`)_
+
+2.  **Uruchom aplikację:**
+
+    ```bash
+    docker-compose up --build
+    ```
+
+    Poczekaj chwilę, aż kontenery się zbudują, a baza danych zainicjalizuje. Migracje uruchomią się automatycznie.
+
+3.  **Gotowe! Otwórz w przeglądarce:**
+    - **Aplikacja:** [http://localhost](http://localhost)
+    - API bezpośrednio: [http://localhost/api](http://localhost/api) (proxy do backendu)
+
 ## Tech Stack
 
 ### Frontend
+
 - **Framework**: Vue.js 3
 - **Language**: TypeScript 5
 - **Styling**: Tailwind CSS 4
@@ -14,6 +39,7 @@ Platform for managing coaching sessions.
 - **Testing**: Vitest + Testing Library
 
 ### Backend
+
 - **Framework**: NestJS
 - **Language**: TypeScript 5
 - **Database**: PostgreSQL
@@ -22,6 +48,7 @@ Platform for managing coaching sessions.
 - **Testing**: Jest + Supertest
 
 ### E2E Testing
+
 - **Framework**: Playwright
 - **Browser**: Chromium
 
@@ -59,6 +86,7 @@ npm run dev
 ```
 
 The application will be available at:
+
 - Frontend: http://localhost:5173
 - Backend: http://localhost:3000
 - API Documentation: http://localhost:3000/api
@@ -83,14 +111,6 @@ cd frontend && npm test
 npm run test:e2e
 ```
 
-### Test Coverage
-
-Current coverage goals:
-- Lines: 70%
-- Functions: 70%
-- Branches: 70%
-- Statements: 70%
-
 ## Project Structure
 
 ```
@@ -108,7 +128,6 @@ coachflow/
 │   └── utils/       # Helper utilities
 ├── .ai/             # AI configuration
 ├── .cursor/         # Cursor IDE rules
-├── TESTING.md       # Testing documentation
 └── package.json     # Root workspace configuration
 ```
 
@@ -119,14 +138,6 @@ coachflow/
 - Use ESLint and Prettier for code formatting
 - Follow conventional commits for commit messages
 - Use TypeScript strict mode
-
-### Git Workflow
-
-1. Create a feature branch from `main`
-2. Make your changes
-3. Run tests: `npm run test:all`
-4. Commit with conventional commits
-5. Create a pull request
 
 ### Conventional Commits
 
@@ -206,8 +217,6 @@ VITE_API_URL=http://localhost:3000
 
 ## Documentation
 
-- [Testing Guide](./TESTING.md) - Comprehensive testing documentation
-- [E2E Tests](./e2e/README.md) - Playwright E2E testing guide
 - [API Documentation](http://localhost:3000/api) - Swagger API docs (when backend is running)
 
 ## Contributing
