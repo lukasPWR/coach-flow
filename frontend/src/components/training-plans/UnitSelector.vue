@@ -8,7 +8,7 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "update:selectedUnitId", id: string): void;
+  (_e: "update:selectedUnitId", _id: string): void;
 }>();
 
 const selectUnit = (id: string) => {

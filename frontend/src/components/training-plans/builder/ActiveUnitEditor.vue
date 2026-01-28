@@ -12,13 +12,13 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "update", id: string, name: string): void;
-  (e: "duplicate", id: string): void;
-  (e: "delete", id: string): void;
-  (e: "add-exercise"): void;
-  (e: "update-exercise", id: string, data: Partial<PlanExercise>): void;
-  (e: "remove-exercise", id: string): void;
-  (e: "reorder", exercises: PlanExercise[]): void;
+  (_e: "update", _id: string, _name: string): void;
+  (_e: "duplicate", _id: string): void;
+  (_e: "delete", _id: string): void;
+  (_e: "add-exercise"): void;
+  (_e: "update-exercise", _id: string, _data: Partial<PlanExercise>): void;
+  (_e: "remove-exercise", _id: string): void;
+  (_e: "reorder", _exercises: PlanExercise[]): void;
 }>();
 
 const localName = ref(props.unit.name);
@@ -37,7 +37,7 @@ const debouncedUpdate = useDebounceFn((name: string) => {
 }, 500);
 
 const handleNameInput = (e: Event) => {
-  const val = (e.target as HTMLInputElement).value;
+  const val = (e.target as HTMLInputElement | null)?.value || "";
   localName.value = val;
   debouncedUpdate(val);
 };
@@ -53,8 +53,7 @@ const handleNameInput = (e: Event) => {
         @input="handleNameInput"
       />
       <div class="flex items-center gap-2">
-        <Button variant="outline"
-size="sm" @click="emit('duplicate', unit.id)">
+        <Button variant="outline" size="sm" @click="emit('duplicate', unit.id)">
           <Copy class="w-4 h-4 mr-2" />
           Duplikuj
         </Button>

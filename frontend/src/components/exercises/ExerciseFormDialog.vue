@@ -30,8 +30,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "update:open", value: boolean): void;
-  (e: "submit", values: CreateExerciseDto): void;
+  (_e: "update:open", _value: boolean): void;
+  (_e: "submit", _values: CreateExerciseDto): void;
 }>();
 
 const formSchema = toTypedSchema(
@@ -69,8 +69,7 @@ watch(
 </script>
 
 <template>
-  <Dialog :open="open"
-@update:open="$emit('update:open', $event)">
+  <Dialog :open="open" @update:open="$emit('update:open', $event)">
     <DialogContent class="sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle>Dodaj nowe ćwiczenie</DialogTitle>
@@ -89,8 +88,7 @@ watch(
             placeholder="np. Wyciskanie na ławce"
             :class="{ 'border-destructive': errors.name }"
           />
-          <span v-if="errors.name"
-class="text-sm text-destructive">
+          <span v-if="errors.name" class="text-sm text-destructive">
             {{ errors.name }}
           </span>
         </div>
@@ -107,19 +105,16 @@ class="text-sm text-destructive">
               </SelectItem>
             </SelectContent>
           </Select>
-          <span v-if="errors.muscleGroup"
-class="text-sm text-destructive">
+          <span v-if="errors.muscleGroup" class="text-sm text-destructive">
             {{ errors.muscleGroup }}
           </span>
         </div>
 
         <DialogFooter>
-          <Button type="button"
-variant="outline" @click="$emit('update:open', false)">
+          <Button type="button" variant="outline" @click="$emit('update:open', false)">
             Anuluj
           </Button>
-          <Button type="submit"
-:disabled="isSubmitting">
+          <Button type="submit" :disabled="isSubmitting">
             {{ isSubmitting ? "Zapisywanie..." : "Zapisz" }}
           </Button>
         </DialogFooter>

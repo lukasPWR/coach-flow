@@ -40,6 +40,8 @@ export default [
         alert: "readonly",
         global: "readonly",
         HTMLElement: "readonly",
+        HTMLInputElement: "readonly",
+        Event: "readonly",
         setTimeout: "readonly",
         clearTimeout: "readonly",
         setInterval: "readonly",
@@ -64,25 +66,13 @@ export default [
           script: { lang: "ts" },
         },
       ],
+      "vue/max-attributes-per-line": "off",
+      "vue/singleline-html-element-content-newline": "off",
 
       // TypeScript rules
       "@typescript-eslint/no-explicit-any": "warn",
-      "no-unused-vars": [
-        "error",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
-      ],
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
-      ],
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
 

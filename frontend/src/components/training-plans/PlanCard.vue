@@ -13,7 +13,7 @@ const props = defineProps<{
 }>();
 
 defineEmits<{
-  (e: "click"): void;
+  (_e: "click"): void;
 }>();
 
 const formattedDate = computed(() => {
@@ -51,7 +51,7 @@ const clientInitials = computed(() => {
         {{ plan.status }}
       </Badge>
     </CardHeader>
-    <CardContent class="flex-grow">
+    <CardContent class="grow">
       <div class="flex items-center space-x-2 text-sm text-muted-foreground mt-2">
         <Avatar class="h-6 w-6">
           <AvatarImage v-if="plan.clientAvatar" :src="plan.clientAvatar" />

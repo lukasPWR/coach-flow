@@ -14,7 +14,7 @@ const props = defineProps<{
 const formattedDate = computed(() => {
   try {
     return format(new Date(props.plan.updatedAt), "d MMM yyyy", { locale: pl });
-  } catch (e) {
+  } catch (_e) {
     return props.plan.updatedAt;
   }
 });
@@ -33,13 +33,11 @@ const formattedDate = computed(() => {
         {{ plan.status }}
       </Badge>
     </CardHeader>
-    <CardContent class="flex-grow">
-      <p v-if="plan.description"
-class="text-sm text-muted-foreground line-clamp-3">
+    <CardContent class="grow">
+      <p v-if="plan.description" class="text-sm text-muted-foreground line-clamp-3">
         {{ plan.description }}
       </p>
-      <p
-v-else class="text-sm text-muted-foreground italic">Brak opisu</p>
+      <p v-else class="text-sm text-muted-foreground italic">Brak opisu</p>
     </CardContent>
     <CardFooter class="text-xs text-muted-foreground pt-0 mt-auto">
       <div class="flex items-center">

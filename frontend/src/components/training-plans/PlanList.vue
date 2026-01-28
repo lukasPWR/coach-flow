@@ -10,21 +10,19 @@ defineProps<{
 }>();
 
 defineEmits<{
-  (e: "select-plan", id: string): void;
+  (_e: "select-plan", _id: string): void;
 }>();
 </script>
 
 <template>
-  <div v-if="isLoading"
-class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div v-for="n in 6"
-:key="n" class="h-full">
+  <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div v-for="n in 6" :key="n" class="h-full">
       <div class="flex flex-col space-y-3 h-full border rounded-xl p-6 bg-card">
         <div class="flex justify-between items-start">
           <Skeleton class="h-[24px] w-3/4 rounded-md" />
           <Skeleton class="h-[20px] w-[60px] rounded-full" />
         </div>
-        <div class="space-y-2 mt-4 flex-grow">
+        <div class="space-y-2 mt-4 grow">
           <Skeleton class="h-4 w-full" />
           <Skeleton class="h-4 w-5/6" />
         </div>
@@ -48,8 +46,7 @@ class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     </p>
   </div>
 
-  <div v-else
-class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <PlanTile
       v-for="plan in plans"
       :key="plan.id"
