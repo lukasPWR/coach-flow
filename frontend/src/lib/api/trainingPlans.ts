@@ -108,5 +108,16 @@ export async function deletePlanExercise(exerciseId: string): Promise<void> {
   await api.delete(`/plan-exercises/${exerciseId}`);
 }
 
+export async function toggleExerciseCompletion(
+  exerciseId: string,
+  isCompleted: boolean
+): Promise<PlanExercise> {
+  const response = await api.patch<PlanExercise>(
+    `/plan-exercises/${exerciseId}/completion`,
+    { isCompleted }
+  );
+  return response.data;
+}
+
 // Clients (helper for header) - REMOVED: Use getTrainerClients from @/lib/api/trainers instead
 // export async function getTrainerClients()...

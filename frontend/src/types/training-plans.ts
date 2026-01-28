@@ -4,6 +4,8 @@ export enum PlanStatus {
   DRAFT = "DRAFT",
 }
 
+export type ITrainingPlan = TrainingPlanDTO; // Alias for plan compliance
+
 export interface TrainingPlanDTO {
   id: string;
   trainerId: string;
@@ -48,6 +50,7 @@ export interface PlanExercise {
   sets: string | null;
   reps: string | null;
   weight: string | null;
+  rpe: string | null; // Opcjonalne
   tempo: string | null;
   rest: string | null;
   notes: string | null;
@@ -98,6 +101,7 @@ export interface AddExerciseDto {
   sets?: string;
   reps?: string;
   weight?: string;
+  rpe?: string;
   tempo?: string;
   rest?: string;
   notes?: string;
@@ -108,6 +112,7 @@ export interface UpdatePlanExerciseDto {
   sets?: string;
   reps?: string;
   weight?: string;
+  rpe?: string;
   tempo?: string;
   rest?: string;
   notes?: string;

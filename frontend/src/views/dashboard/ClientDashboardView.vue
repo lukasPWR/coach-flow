@@ -5,7 +5,11 @@
       <Button @click="goToTrainers"> Znajdź trenera </Button>
     </div>
 
+    <NotificationWidget :notifications="notifications" />
+
     <DashboardStats :upcoming-count="upcomingCount" :pending-count="pendingCount" />
+
+    <ActivePlanCard :active-plan="activePlan" :loading="trainingLoading" />
 
     <Tabs default-value="upcoming" class="space-y-4">
       <TabsList>
@@ -89,12 +93,23 @@ import DashboardStats from "@/components/dashboard/DashboardStats.vue";
 import BookingList from "@/components/bookings/BookingList.vue";
 import CancelBookingDialog from "@/components/bookings/modals/CancelBookingDialog.vue";
 import RescheduleBookingDialog from "@/components/bookings/modals/RescheduleBookingDialog.vue";
+import NotificationWidget from "@/components/dashboard/NotificationWidget.vue";
+import ActivePlanCard from "@/components/training-plans/ActivePlanCard.vue";
+import { useDashboardTrainingSummary } from "@/composables/useDashboardTrainingSummary";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 
 const router = useRouter();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
+
+// Training Summary Logic
+const {
+  activePlan,
+  notifications,
+  loading: trainingLoading,
+  loadTrainingSummary,
+} = useDashboardTrainingSummary();
 
 const showCancelDialog = ref(false);
 const showRescheduleDialog = ref(false);
@@ -167,9 +182,11 @@ onMounted(() => {
     authStore.fetchProfile();
   }
   loadStats();
+  loadTrainingSummary();
 });
 
 watch(refreshTrigger, () => {
   loadStats();
+  loadTrainingSummary();
 });
 </script>

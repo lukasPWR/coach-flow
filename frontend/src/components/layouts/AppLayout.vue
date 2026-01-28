@@ -25,6 +25,9 @@
             <Button v-if="isClient" variant="ghost" size="sm" as-child>
               <router-link to="/my-bookings"> Moje rezerwacje </router-link>
             </Button>
+            <Button v-if="isClient" variant="ghost" size="sm" as-child>
+              <router-link to="/client/plans"> Moje plany </router-link>
+            </Button>
             <Button v-if="isTrainer" variant="ghost" size="sm" as-child>
               <router-link to="/calendar"> Kalendarz </router-link>
             </Button>
@@ -134,6 +137,15 @@
                     @click="mobileMenuOpen = false"
                   >
                     <router-link to="/my-bookings"> Moje rezerwacje </router-link>
+                  </Button>
+                  <Button
+                    v-if="isClient"
+                    variant="ghost"
+                    class="justify-start"
+                    as-child
+                    @click="mobileMenuOpen = false"
+                  >
+                    <router-link to="/client/plans"> Moje plany </router-link>
                   </Button>
                   <Button
                     v-if="isTrainer"

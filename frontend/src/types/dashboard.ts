@@ -56,3 +56,16 @@ export interface QuickAction {
   route: string;
   color?: string;
 }
+
+/**
+ * Powiadomienie na dashboardzie
+ */
+export interface DashboardNotificationDTO {
+  id: string;
+  type: 'PLAN_ASSIGNED' | 'PLAN_UPDATED' | 'INFO';
+  title: string;
+  message: string;
+  date: string;
+  link?: string; // Np. link do planu
+  isRead: boolean;
+}
