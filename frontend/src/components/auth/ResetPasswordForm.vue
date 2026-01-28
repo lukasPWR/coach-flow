@@ -107,7 +107,8 @@ const clearError = (field: keyof FormErrors) => {
     </div>
 
     <!-- Success message -->
-    <Alert v-if="isSuccess" class="border-green-500 bg-green-50 dark:bg-green-950">
+    <Alert v-if="isSuccess"
+class="border-green-500 bg-green-50 dark:bg-green-950">
       <CheckCircle2 class="h-4 w-4 text-green-600 dark:text-green-400" />
       <AlertDescription class="text-green-800 dark:text-green-200">
         Hasło zostało pomyślnie zmienione. Możesz teraz zalogować się używając nowego hasła.
@@ -115,12 +116,14 @@ const clearError = (field: keyof FormErrors) => {
     </Alert>
 
     <!-- General error alert -->
-    <Alert v-if="errors.general" variant="destructive">
+    <Alert v-if="errors.general"
+variant="destructive">
       <AlertCircle class="h-4 w-4" />
       <AlertDescription>{{ errors.general }}</AlertDescription>
     </Alert>
 
-    <form v-if="!isSuccess && token" @submit.prevent="handleSubmit" class="space-y-4">
+    <form v-if="!isSuccess && token"
+@submit.prevent="handleSubmit" class="space-y-4">
       <!-- Password field -->
       <div class="space-y-2">
         <Label for="password">Nowe hasło</Label>
@@ -132,7 +135,8 @@ const clearError = (field: keyof FormErrors) => {
           :class="{ 'border-destructive': errors.password }"
           @input="clearError('password')"
         />
-        <p v-if="errors.password" class="text-sm text-destructive">
+        <p v-if="errors.password"
+class="text-sm text-destructive">
           {{ errors.password }}
         </p>
       </div>
@@ -148,21 +152,26 @@ const clearError = (field: keyof FormErrors) => {
           :class="{ 'border-destructive': errors.confirmPassword }"
           @input="clearError('confirmPassword')"
         />
-        <p v-if="errors.confirmPassword" class="text-sm text-destructive">
+        <p v-if="errors.confirmPassword"
+class="text-sm text-destructive">
           {{ errors.confirmPassword }}
         </p>
       </div>
 
       <!-- Submit button -->
-      <Button type="submit" class="w-full" :disabled="isLoading">
-        <Loader2 v-if="isLoading" class="mr-2 h-4 w-4 animate-spin" />
+      <Button type="submit"
+class="w-full" :disabled="isLoading">
+        <Loader2 v-if="isLoading"
+class="mr-2 h-4 w-4 animate-spin" />
         {{ isLoading ? "Resetowanie..." : "Zresetuj hasło" }}
       </Button>
     </form>
 
     <!-- Login link -->
-    <div v-if="isSuccess" class="text-center">
-      <a href="/login" class="text-primary hover:underline"> Przejdź do logowania </a>
+    <div v-if="isSuccess"
+class="text-center">
+      <a href="/login"
+class="text-primary hover:underline"> Przejdź do logowania </a>
     </div>
   </div>
 </template>

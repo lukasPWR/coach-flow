@@ -7,7 +7,8 @@
       </p>
     </div>
 
-    <Tabs v-model="activeTab" class="space-y-4">
+    <Tabs v-model="activeTab"
+class="space-y-4">
       <TabsList>
         <TabsTrigger value="upcoming"> Nadchodzące </TabsTrigger>
         <TabsTrigger value="pending"> Oczekujące </TabsTrigger>

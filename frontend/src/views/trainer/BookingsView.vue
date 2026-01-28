@@ -15,7 +15,8 @@
         <TabsList class="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
           <TabsTrigger value="pending">
             Oczekujące
-            <Badge v-if="pendingCount > 0" variant="secondary" class="ml-2">
+            <Badge v-if="pendingCount > 0"
+variant="secondary" class="ml-2">
               {{ pendingCount }}
             </Badge>
           </TabsTrigger>
@@ -24,8 +25,10 @@
           <TabsTrigger value="cancelled"> Anulowane </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="pending" class="mt-6">
-          <div v-if="isLoading" class="space-y-4">
+        <TabsContent value="pending"
+class="mt-6">
+          <div v-if="isLoading"
+class="space-y-4">
             <div
               v-for="i in 3"
               :key="i"
@@ -33,21 +36,24 @@
             />
           </div>
 
-          <div v-else-if="error" class="text-center py-12">
+          <div v-else-if="error"
+class="text-center py-12">
             <div class="bg-destructive/10 rounded-lg p-6 max-w-md mx-auto">
               <AlertCircle class="h-12 w-12 text-destructive mx-auto mb-4" />
               <p class="text-lg font-semibold mb-2">Wystąpił błąd</p>
               <p class="text-sm text-muted-foreground mb-4">
                 {{ error }}
               </p>
-              <Button variant="outline" @click="fetchBookings">
+              <Button variant="outline"
+@click="fetchBookings">
                 <RefreshCw class="h-4 w-4 mr-2" />
                 Spróbuj ponownie
               </Button>
             </div>
           </div>
 
-          <div v-else-if="bookings.length === 0" class="text-center py-12">
+          <div v-else-if="bookings.length === 0"
+class="text-center py-12">
             <div class="bg-muted/20 p-4 rounded-full w-fit mx-auto mb-4">
               <CalendarX class="h-12 w-12 text-muted-foreground" />
             </div>
@@ -55,7 +61,8 @@
             <p class="text-sm text-muted-foreground">Nowe rezerwacje pojawią się tutaj</p>
           </div>
 
-          <div v-else class="space-y-4">
+          <div v-else
+class="space-y-4">
             <TrainerBookingCard
               v-for="booking in bookings"
               :key="booking.id"
@@ -77,8 +84,10 @@
           </div>
         </TabsContent>
 
-        <TabsContent value="upcoming" class="mt-6">
-          <div v-if="isLoading" class="space-y-4">
+        <TabsContent value="upcoming"
+class="mt-6">
+          <div v-if="isLoading"
+class="space-y-4">
             <div
               v-for="i in 3"
               :key="i"
@@ -86,21 +95,24 @@
             />
           </div>
 
-          <div v-else-if="error" class="text-center py-12">
+          <div v-else-if="error"
+class="text-center py-12">
             <div class="bg-destructive/10 rounded-lg p-6 max-w-md mx-auto">
               <AlertCircle class="h-12 w-12 text-destructive mx-auto mb-4" />
               <p class="text-lg font-semibold mb-2">Wystąpił błąd</p>
               <p class="text-sm text-muted-foreground mb-4">
                 {{ error }}
               </p>
-              <Button variant="outline" @click="fetchBookings">
+              <Button variant="outline"
+@click="fetchBookings">
                 <RefreshCw class="h-4 w-4 mr-2" />
                 Spróbuj ponownie
               </Button>
             </div>
           </div>
 
-          <div v-else-if="bookings.length === 0" class="text-center py-12">
+          <div v-else-if="bookings.length === 0"
+class="text-center py-12">
             <div class="bg-muted/20 p-4 rounded-full w-fit mx-auto mb-4">
               <CalendarCheck class="h-12 w-12 text-muted-foreground" />
             </div>
@@ -108,7 +120,8 @@
             <p class="text-sm text-muted-foreground">Zaakceptowane rezerwacje pojawią się tutaj</p>
           </div>
 
-          <div v-else class="space-y-4">
+          <div v-else
+class="space-y-4">
             <TrainerBookingCard
               v-for="booking in bookings"
               :key="booking.id"
@@ -128,8 +141,10 @@
           </div>
         </TabsContent>
 
-        <TabsContent value="rejected" class="mt-6">
-          <div v-if="isLoading" class="space-y-4">
+        <TabsContent value="rejected"
+class="mt-6">
+          <div v-if="isLoading"
+class="space-y-4">
             <div
               v-for="i in 3"
               :key="i"
@@ -137,21 +152,24 @@
             />
           </div>
 
-          <div v-else-if="error" class="text-center py-12">
+          <div v-else-if="error"
+class="text-center py-12">
             <div class="bg-destructive/10 rounded-lg p-6 max-w-md mx-auto">
               <AlertCircle class="h-12 w-12 text-destructive mx-auto mb-4" />
               <p class="text-lg font-semibold mb-2">Wystąpił błąd</p>
               <p class="text-sm text-muted-foreground mb-4">
                 {{ error }}
               </p>
-              <Button variant="outline" @click="fetchBookings">
+              <Button variant="outline"
+@click="fetchBookings">
                 <RefreshCw class="h-4 w-4 mr-2" />
                 Spróbuj ponownie
               </Button>
             </div>
           </div>
 
-          <div v-else-if="bookings.length === 0" class="text-center py-12">
+          <div v-else-if="bookings.length === 0"
+class="text-center py-12">
             <div class="bg-muted/20 p-4 rounded-full w-fit mx-auto mb-4">
               <XCircle class="h-12 w-12 text-muted-foreground" />
             </div>
@@ -159,8 +177,10 @@
             <p class="text-sm text-muted-foreground">Odrzucone rezerwacje pojawią się tutaj</p>
           </div>
 
-          <div v-else class="space-y-4">
-            <TrainerBookingCard v-for="booking in bookings" :key="booking.id" :booking="booking" />
+          <div v-else
+class="space-y-4">
+            <TrainerBookingCard v-for="booking in bookings"
+:key="booking.id" :booking="booking" />
 
             <PaginationControls
               v-if="pagination.totalPages > 1"
@@ -173,8 +193,10 @@
           </div>
         </TabsContent>
 
-        <TabsContent value="cancelled" class="mt-6">
-          <div v-if="isLoading" class="space-y-4">
+        <TabsContent value="cancelled"
+class="mt-6">
+          <div v-if="isLoading"
+class="space-y-4">
             <div
               v-for="i in 3"
               :key="i"
@@ -182,21 +204,24 @@
             />
           </div>
 
-          <div v-else-if="error" class="text-center py-12">
+          <div v-else-if="error"
+class="text-center py-12">
             <div class="bg-destructive/10 rounded-lg p-6 max-w-md mx-auto">
               <AlertCircle class="h-12 w-12 text-destructive mx-auto mb-4" />
               <p class="text-lg font-semibold mb-2">Wystąpił błąd</p>
               <p class="text-sm text-muted-foreground mb-4">
                 {{ error }}
               </p>
-              <Button variant="outline" @click="fetchBookings">
+              <Button variant="outline"
+@click="fetchBookings">
                 <RefreshCw class="h-4 w-4 mr-2" />
                 Spróbuj ponownie
               </Button>
             </div>
           </div>
 
-          <div v-else-if="bookings.length === 0" class="text-center py-12">
+          <div v-else-if="bookings.length === 0"
+class="text-center py-12">
             <div class="bg-muted/20 p-4 rounded-full w-fit mx-auto mb-4">
               <Ban class="h-12 w-12 text-muted-foreground" />
             </div>
@@ -204,8 +229,10 @@
             <p class="text-sm text-muted-foreground">Anulowane rezerwacje pojawią się tutaj</p>
           </div>
 
-          <div v-else class="space-y-4">
-            <TrainerBookingCard v-for="booking in bookings" :key="booking.id" :booking="booking" />
+          <div v-else
+class="space-y-4">
+            <TrainerBookingCard v-for="booking in bookings"
+:key="booking.id" :booking="booking" />
 
             <PaginationControls
               v-if="pagination.totalPages > 1"
@@ -232,10 +259,13 @@
 
     <!-- Notification Toast -->
     <Transition name="toast">
-      <div v-if="notification" class="fixed bottom-4 right-4 z-50 w-full max-w-sm">
+      <div v-if="notification"
+class="fixed bottom-4 right-4 z-50 w-full max-w-sm">
         <Alert :variant="notification.type === 'error' ? 'destructive' : 'default'">
-          <CheckCircle v-if="notification.type === 'success'" class="h-4 w-4" />
-          <AlertCircle v-if="notification.type === 'error'" class="h-4 w-4" />
+          <CheckCircle v-if="notification.type === 'success'"
+class="h-4 w-4" />
+          <AlertCircle v-if="notification.type === 'error'"
+class="h-4 w-4" />
           <AlertTitle>{{ notification.type === "error" ? "Błąd" : "Sukces" }}</AlertTitle>
           <AlertDescription>{{ notification.message }}</AlertDescription>
         </Alert>

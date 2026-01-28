@@ -127,14 +127,16 @@ function handleOpenChange(open: boolean) {
 </script>
 
 <template>
-  <Dialog :open="isOpen" @update:open="handleOpenChange">
+  <Dialog :open="isOpen"
+@update:open="handleOpenChange">
     <DialogContent class="sm:max-w-md">
       <DialogHeader>
         <DialogTitle>{{ dialogTitle }}</DialogTitle>
         <DialogDescription>{{ dialogDescription }}</DialogDescription>
       </DialogHeader>
 
-      <form class="space-y-4" @submit.prevent="handleSave">
+      <form class="space-y-4"
+@submit.prevent="handleSave">
         <!-- Data i godzina rozpoczęcia -->
         <div class="space-y-2">
           <Label for="startTime">Rozpoczęcie</Label>
@@ -145,7 +147,8 @@ function handleOpenChange(open: boolean) {
             :class="{ 'border-destructive': errors.startTime }"
             :disabled="isLoading"
           />
-          <p v-if="errors.startTime" class="text-sm text-destructive">
+          <p v-if="errors.startTime"
+class="text-sm text-destructive">
             {{ errors.startTime }}
           </p>
         </div>
@@ -160,13 +163,15 @@ function handleOpenChange(open: boolean) {
             :class="{ 'border-destructive': errors.endTime }"
             :disabled="isLoading"
           />
-          <p v-if="errors.endTime" class="text-sm text-destructive">
+          <p v-if="errors.endTime"
+class="text-sm text-destructive">
             {{ errors.endTime }}
           </p>
         </div>
 
         <!-- Błąd ogólny -->
-        <p v-if="errors.general" class="text-sm text-destructive">
+        <p v-if="errors.general"
+class="text-sm text-destructive">
           {{ errors.general }}
         </p>
       </form>
@@ -184,10 +189,12 @@ function handleOpenChange(open: boolean) {
         </Button>
 
         <div class="flex gap-2">
-          <Button type="button" variant="outline" :disabled="isLoading" @click="handleClose">
+          <Button type="button"
+variant="outline" :disabled="isLoading" @click="handleClose">
             Anuluj
           </Button>
-          <Button type="submit" :disabled="isLoading" @click="handleSave">
+          <Button type="submit"
+:disabled="isLoading" @click="handleSave">
             {{ isLoading ? "Zapisywanie..." : "Zapisz" }}
           </Button>
         </div>

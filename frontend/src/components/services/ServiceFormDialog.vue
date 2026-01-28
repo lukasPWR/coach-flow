@@ -161,18 +161,21 @@ function handleOpenChange(open: boolean) {
 </script>
 
 <template>
-  <Dialog :open="open" @update:open="handleOpenChange">
+  <Dialog :open="open"
+@update:open="handleOpenChange">
     <DialogContent class="sm:max-w-md">
       <DialogHeader>
         <DialogTitle>{{ dialogTitle }}</DialogTitle>
         <DialogDescription>{{ dialogDescription }}</DialogDescription>
       </DialogHeader>
 
-      <form class="space-y-4" @submit.prevent="handleSubmit">
+      <form class="space-y-4"
+@submit.prevent="handleSubmit">
         <!-- Service Type Selection -->
         <div class="space-y-2">
           <Label for="serviceTypeId">Typ usługi</Label>
-          <Select v-model="formData.serviceTypeId" :disabled="isEditMode || isSubmitting">
+          <Select v-model="formData.serviceTypeId"
+:disabled="isEditMode || isSubmitting">
             <SelectTrigger
               id="serviceTypeId"
               :class="{ 'border-destructive': errors.serviceTypeId }"
@@ -180,12 +183,14 @@ function handleOpenChange(open: boolean) {
               <SelectValue placeholder="Wybierz typ usługi" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem v-for="type in serviceTypes" :key="type.id" :value="type.id">
+              <SelectItem v-for="type in serviceTypes"
+:key="type.id" :value="type.id">
                 {{ type.name }}
               </SelectItem>
             </SelectContent>
           </Select>
-          <p v-if="errors.serviceTypeId" class="text-sm text-destructive">
+          <p v-if="errors.serviceTypeId"
+class="text-sm text-destructive">
             {{ errors.serviceTypeId }}
           </p>
         </div>
@@ -203,7 +208,8 @@ function handleOpenChange(open: boolean) {
             :class="{ 'border-destructive': errors.price }"
             :disabled="isSubmitting"
           />
-          <p v-if="errors.price" class="text-sm text-destructive">
+          <p v-if="errors.price"
+class="text-sm text-destructive">
             {{ errors.price }}
           </p>
         </div>
@@ -222,25 +228,30 @@ function handleOpenChange(open: boolean) {
             :class="{ 'border-destructive': errors.durationMinutes }"
             :disabled="isSubmitting"
           />
-          <p v-if="errors.durationMinutes" class="text-sm text-destructive">
+          <p v-if="errors.durationMinutes"
+class="text-sm text-destructive">
             {{ errors.durationMinutes }}
           </p>
-          <p v-else class="text-xs text-muted-foreground">
+          <p v-else
+class="text-xs text-muted-foreground">
             Czas trwania sesji (15-180 min, wielokrotność 15)
           </p>
         </div>
 
         <!-- General error -->
-        <p v-if="errors.general" class="text-sm text-destructive">
+        <p v-if="errors.general"
+class="text-sm text-destructive">
           {{ errors.general }}
         </p>
       </form>
 
       <DialogFooter class="gap-2">
-        <Button type="button" variant="outline" :disabled="isSubmitting" @click="handleClose">
+        <Button type="button"
+variant="outline" :disabled="isSubmitting" @click="handleClose">
           Anuluj
         </Button>
-        <Button type="submit" :disabled="isSubmitting" @click="handleSubmit">
+        <Button type="submit"
+:disabled="isSubmitting" @click="handleSubmit">
           {{ isSubmitting ? "Zapisywanie..." : "Zapisz" }}
         </Button>
       </DialogFooter>

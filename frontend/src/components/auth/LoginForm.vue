@@ -99,12 +99,14 @@ const clearError = (field: keyof FormErrors) => {
     </div>
 
     <!-- General error alert -->
-    <Alert v-if="errors.general" variant="destructive">
+    <Alert v-if="errors.general"
+variant="destructive">
       <AlertCircle class="h-4 w-4" />
       <AlertDescription>{{ errors.general }}</AlertDescription>
     </Alert>
 
-    <form class="space-y-4" @submit.prevent="handleSubmit">
+    <form class="space-y-4"
+@submit.prevent="handleSubmit">
       <!-- Email field -->
       <div class="space-y-2">
         <Label for="email">Adres e-mail</Label>
@@ -116,7 +118,8 @@ const clearError = (field: keyof FormErrors) => {
           :class="{ 'border-destructive': errors.email }"
           @input="clearError('email')"
         />
-        <p v-if="errors.email" class="text-sm text-destructive">
+        <p v-if="errors.email"
+class="text-sm text-destructive">
           {{ errors.email }}
         </p>
       </div>
@@ -125,7 +128,8 @@ const clearError = (field: keyof FormErrors) => {
       <div class="space-y-2">
         <div class="flex items-center justify-between">
           <Label for="password">Hasło</Label>
-          <a href="/forgot-password" class="text-sm text-primary hover:underline">
+          <a href="/forgot-password"
+class="text-sm text-primary hover:underline">
             Zapomniałeś hasła?
           </a>
         </div>
@@ -137,14 +141,17 @@ const clearError = (field: keyof FormErrors) => {
           :class="{ 'border-destructive': errors.password }"
           @input="clearError('password')"
         />
-        <p v-if="errors.password" class="text-sm text-destructive">
+        <p v-if="errors.password"
+class="text-sm text-destructive">
           {{ errors.password }}
         </p>
       </div>
 
       <!-- Submit button -->
-      <Button type="submit" class="w-full" :disabled="isLoading">
-        <Loader2 v-if="isLoading" class="mr-2 h-4 w-4 animate-spin" />
+      <Button type="submit"
+class="w-full" :disabled="isLoading">
+        <Loader2 v-if="isLoading"
+class="mr-2 h-4 w-4 animate-spin" />
         {{ isLoading ? "Logowanie..." : "Zaloguj się" }}
       </Button>
     </form>
@@ -152,7 +159,8 @@ const clearError = (field: keyof FormErrors) => {
     <!-- Register link -->
     <div class="text-center text-sm">
       <span class="text-muted-foreground">Nie masz jeszcze konta?</span>
-      <a href="/register" class="text-primary hover:underline ml-1">Zarejestruj się</a>
+      <a href="/register"
+class="text-primary hover:underline ml-1">Zarejestruj się</a>
     </div>
   </div>
 </template>

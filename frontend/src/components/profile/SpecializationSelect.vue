@@ -68,7 +68,8 @@ const selectedCount = computed(() => props.modelValue.length);
         <DropdownMenuLabel>Dostępne specjalizacje</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <div v-if="isLoading" class="flex justify-center p-4">
+        <div v-if="isLoading"
+class="flex justify-center p-4">
           <Loader2 class="w-4 h-4 animate-spin" />
         </div>
 
@@ -93,8 +94,10 @@ const selectedCount = computed(() => props.modelValue.length);
     </DropdownMenu>
 
     <!-- Selected Badges -->
-    <div v-if="selectedCount > 0" class="flex flex-wrap gap-2">
-      <Badge v-for="id in modelValue" :key="id" variant="secondary" class="px-2 py-1">
+    <div v-if="selectedCount > 0"
+class="flex flex-wrap gap-2">
+      <Badge v-for="id in modelValue"
+:key="id" variant="secondary" class="px-2 py-1">
         {{ getSpecializationName(id) }}
         <button
           class="ml-2 hover:text-destructive focus:outline-none"
@@ -106,7 +109,8 @@ const selectedCount = computed(() => props.modelValue.length);
     </div>
 
     <!-- Error message -->
-    <p v-if="error" class="text-sm text-destructive">
+    <p v-if="error"
+class="text-sm text-destructive">
       {{ error }}
     </p>
   </div>

@@ -157,12 +157,14 @@ function clearError(field: keyof FormErrors) {
     <h2 class="text-xl font-semibold mb-6">Edytuj profil</h2>
 
     <!-- General error alert -->
-    <Alert v-if="errors.general" variant="destructive" class="mb-6">
+    <Alert v-if="errors.general"
+variant="destructive" class="mb-6">
       <AlertCircle class="h-4 w-4" />
       <AlertDescription>{{ errors.general }}</AlertDescription>
     </Alert>
 
-    <form class="space-y-6" @submit.prevent="handleSubmit">
+    <form class="space-y-6"
+@submit.prevent="handleSubmit">
       <!-- Profile Picture URL -->
       <div class="space-y-2">
         <Label for="profilePictureUrl">Zdjęcie profilowe (URL)</Label>
@@ -177,7 +179,8 @@ function clearError(field: keyof FormErrors) {
         <p class="text-xs text-muted-foreground">
           Wklej bezpośredni link do swojego zdjęcia profilowego
         </p>
-        <p v-if="errors.profilePictureUrl" class="text-sm text-destructive">
+        <p v-if="errors.profilePictureUrl"
+class="text-sm text-destructive">
           {{ errors.profilePictureUrl }}
         </p>
       </div>
@@ -193,7 +196,8 @@ function clearError(field: keyof FormErrors) {
           :class="{ 'border-destructive': errors.city }"
           @input="clearError('city')"
         />
-        <p v-if="errors.city" class="text-sm text-destructive">
+        <p v-if="errors.city"
+class="text-sm text-destructive">
           {{ errors.city }}
         </p>
       </div>
@@ -210,7 +214,8 @@ function clearError(field: keyof FormErrors) {
           @input="clearError('description')"
         />
         <p class="text-xs text-muted-foreground">{{ formData.description.length }} / 500 znaków</p>
-        <p v-if="errors.description" class="text-sm text-destructive">
+        <p v-if="errors.description"
+class="text-sm text-destructive">
           {{ errors.description }}
         </p>
       </div>
@@ -228,8 +233,10 @@ function clearError(field: keyof FormErrors) {
 
       <!-- Action buttons -->
       <div class="flex gap-3 pt-4 border-t">
-        <Button type="submit" :disabled="isSubmitting" class="flex-1">
-          <Loader2 v-if="isSubmitting" class="mr-2 h-4 w-4 animate-spin" />
+        <Button type="submit"
+:disabled="isSubmitting" class="flex-1">
+          <Loader2 v-if="isSubmitting"
+class="mr-2 h-4 w-4 animate-spin" />
           {{ isSubmitting ? "Zapisywanie..." : "Zapisz zmiany" }}
         </Button>
         <Button

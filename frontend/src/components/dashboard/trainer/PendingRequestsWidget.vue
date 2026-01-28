@@ -29,7 +29,8 @@ function handleReject(id: string) {
     <CardHeader class="pb-3">
       <div class="flex items-center justify-between">
         <CardTitle class="flex items-center gap-2 text-lg">
-          <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 text-amber-500"
+fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -51,7 +52,8 @@ function handleReject(id: string) {
     <CardContent class="space-y-3">
       <!-- Loading state -->
       <template v-if="isLoading">
-        <div v-for="i in 3" :key="i" class="space-y-2">
+        <div v-for="i in 3"
+:key="i" class="space-y-2">
           <Skeleton class="h-20 w-full rounded-lg" />
         </div>
       </template>
@@ -84,7 +86,8 @@ function handleReject(id: string) {
 
       <!-- Requests list -->
       <template v-else>
-        <TransitionGroup name="list" tag="div" class="space-y-3">
+        <TransitionGroup name="list"
+tag="div" class="space-y-3">
           <PendingRequestItem
             v-for="request in requests"
             :key="request.id"

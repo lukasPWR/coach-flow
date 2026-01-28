@@ -1,5 +1,6 @@
 <template>
-  <Dialog :open="open" @update:open="$emit('update:open', $event)">
+  <Dialog :open="open"
+@update:open="$emit('update:open', $event)">
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Zmień termin</DialogTitle>
@@ -8,14 +9,18 @@
 
       <div class="grid gap-4 py-4">
         <div class="grid grid-cols-4 items-center gap-4">
-          <Label for="datetime" class="text-right">Data</Label>
-          <Input id="datetime" type="datetime-local" v-model="newDate" class="col-span-3" />
+          <Label for="datetime"
+class="text-right">Data</Label>
+          <Input id="datetime"
+type="datetime-local" v-model="newDate" class="col-span-3" />
         </div>
       </div>
 
       <DialogFooter>
-        <Button variant="outline" @click="$emit('update:open', false)"> Anuluj </Button>
-        <Button :disabled="isLoading || !newDate" @click="handleConfirm">
+        <Button
+variant="outline" @click="$emit('update:open', false)"> Anuluj </Button>
+        <Button :disabled="isLoading || !newDate"
+@click="handleConfirm">
           {{ isLoading ? "Zapisywanie..." : "Zapisz zmiany" }}
         </Button>
       </DialogFooter>

@@ -151,8 +151,10 @@ const calendarOptions: CalendarOptions = {
 <template>
   <div class="calendar-wrapper relative">
     <!-- Kalendarz - zawsze renderowany -->
-    <div class="fc-custom" :class="{ 'opacity-50': isLoading }">
-      <FullCalendar ref="calendarRef" :options="calendarOptions" />
+    <div class="fc-custom"
+:class="{ 'opacity-50': isLoading }">
+      <FullCalendar ref="calendarRef"
+:options="calendarOptions" />
     </div>
 
     <!-- Loading overlay -->

@@ -71,7 +71,8 @@ const containerClass = computed(() => {
     </div>
 
     <!-- Status label for ongoing -->
-    <div v-if="isOngoing" class="shrink-0">
+    <div v-if="isOngoing"
+class="shrink-0">
       <span
         class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-emerald-500/10 text-emerald-600"
       >

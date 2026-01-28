@@ -201,7 +201,8 @@ onMounted(() => {
             class="ml-auto -mr-1 p-1 rounded hover:bg-black/5 dark:hover:bg-white/10"
             @click="notification.show = false"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4"
+fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -224,16 +225,20 @@ onMounted(() => {
           </p>
         </div>
         <div class="flex gap-2">
-          <Button variant="outline" size="sm" @click="() => router.push('/trainer/dashboard')">
+          <Button variant="outline"
+size="sm" @click="() => router.push('/trainer/dashboard')">
             Dashboard
           </Button>
-          <Button variant="outline" size="sm" @click="handleLogout"> Wyloguj się </Button>
+          <Button
+variant="outline" size="sm" @click="handleLogout"> Wyloguj się </Button>
         </div>
       </div>
 
       <!-- Error state -->
-      <Alert v-if="error && !isLoading" variant="destructive" class="mb-6">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <Alert v-if="error && !isLoading"
+variant="destructive" class="mb-6">
+        <svg class="w-4 h-4"
+fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -244,13 +249,15 @@ onMounted(() => {
         <AlertTitle>Wystąpił błąd</AlertTitle>
         <AlertDescription class="flex items-center justify-between">
           <span>{{ error }}</span>
-          <Button variant="outline" size="sm" @click="retry"> Spróbuj ponownie </Button>
+          <Button
+variant="outline" size="sm" @click="retry"> Spróbuj ponownie </Button>
         </AlertDescription>
       </Alert>
 
       <!-- Add Service Button -->
       <div class="mb-6">
-        <Button :disabled="isLoading" @click="handleAddService">
+        <Button :disabled="isLoading"
+@click="handleAddService">
           <Plus class="h-4 w-4 mr-2" />
           Dodaj usługę
         </Button>

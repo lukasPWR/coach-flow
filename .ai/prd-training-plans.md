@@ -136,6 +136,16 @@ Możliwość ręcznej zmiany statusu planu z Aktywny na Zarchiwizowany.
 
 Zarchiwizowane plany są przenoszone do osobnej sekcji/widoku u klienta.
 
+ID: US-012 Tytuł: Przeglądanie listy planów (Trener) Opis: Jako Trener, chcę widzieć zbiorczą listę wszystkich utworzonych planów, aby łatwo zarządzać nimi i nawigować do edycji. Kryteria akceptacji:
+
+Widok listy planów wyświetla kafelki lub wiersze z nazwą planu, przypisanym klientem i datą ostatniej modyfikacji.
+
+Dostępne są zakładki lub filtry pozwalające przełączać się między planami "Aktywnymi" a "Zarchiwizowanymi".
+
+Kliknięcie w plan przenosi do widoku edycji (Kreatora).
+
+Widok zawiera przycisk "Utwórz plan" inicjujący proces tworzenia nowego planu.
+
 Sekcja D: Odbiór Planu (Klient)
 ID: US-009 Tytuł: Powiadomienie o nowym planie Opis: Jako Klient, chcę widzieć powiadomienie na pulpicie aplikacji, gdy trener przydzieli mi nowy plan, aby nie przegapić aktualizacji. Kryteria akceptacji:
 

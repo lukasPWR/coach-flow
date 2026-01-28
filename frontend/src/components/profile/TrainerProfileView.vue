@@ -31,7 +31,8 @@ const userInitials = computed(() => {
   <div class="bg-card rounded-lg p-6 shadow-sm space-y-6">
     <!-- Header Section with Avatar and Basic Info -->
     <div class="flex items-start gap-6">
-      <Avatar size="lg" class="h-24 w-24">
+      <Avatar size="lg"
+class="h-24 w-24">
         <AvatarImage
           v-if="profile.profilePictureUrl"
           :src="profile.profilePictureUrl"
@@ -51,7 +52,8 @@ const userInitials = computed(() => {
         </p>
       </div>
 
-      <Button variant="outline" @click="emit('edit')"> Edytuj profil </Button>
+      <Button
+variant="outline" @click="emit('edit')"> Edytuj profil </Button>
     </div>
 
     <!-- Details Section -->
@@ -72,12 +74,15 @@ const userInitials = computed(() => {
 
       <div>
         <label class="text-sm font-medium text-muted-foreground mb-2 block"> Specjalizacje </label>
-        <div v-if="profile.specializations.length > 0" class="flex flex-wrap gap-2">
-          <Badge v-for="spec in profile.specializations" :key="spec.id" variant="secondary">
+        <div v-if="profile.specializations.length > 0"
+class="flex flex-wrap gap-2">
+          <Badge v-for="spec in profile.specializations"
+:key="spec.id" variant="secondary">
             {{ spec.name }}
           </Badge>
         </div>
-        <p v-else class="text-muted-foreground">Brak wybranych specjalizacji</p>
+        <p
+v-else class="text-muted-foreground">Brak wybranych specjalizacji</p>
       </div>
     </div>
   </div>

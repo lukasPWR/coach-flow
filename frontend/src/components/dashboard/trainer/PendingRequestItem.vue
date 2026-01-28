@@ -58,14 +58,16 @@ function handleReject() {
             <span class="font-medium text-foreground truncate">
               {{ request.clientName }}
             </span>
-            <Badge variant="outline" class="text-xs shrink-0">
+            <Badge variant="outline"
+class="text-xs shrink-0">
               {{ request.serviceName }}
             </Badge>
           </div>
 
           <div class="flex items-center gap-3 text-sm text-muted-foreground">
             <span class="flex items-center gap-1">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4"
+fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -76,7 +78,8 @@ function handleReject() {
               {{ request.formattedDate }}
             </span>
             <span class="flex items-center gap-1">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4"
+fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -92,7 +95,8 @@ function handleReject() {
         <!-- Timer and actions -->
         <div class="flex items-center gap-3 sm:flex-col sm:items-end lg:flex-row lg:items-center">
           <!-- Expiration timer -->
-          <Badge variant="outline" :class="['text-xs font-medium px-2.5 py-1', timerBadgeClass]">
+          <Badge variant="outline"
+:class="['text-xs font-medium px-2.5 py-1', timerBadgeClass]">
             <svg
               v-if="!request.isExpired"
               class="w-3.5 h-3.5 mr-1"
@@ -133,8 +137,10 @@ function handleReject() {
               class="text-muted-foreground hover:text-destructive hover:border-destructive/50"
               @click="handleReject"
             >
-              <span v-if="isLoading" class="mr-1">
-                <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <span v-if="isLoading"
+class="mr-1">
+                <svg class="w-4 h-4 animate-spin"
+fill="none" viewBox="0 0 24 24">
                   <circle
                     class="opacity-25"
                     cx="12"
@@ -158,8 +164,10 @@ function handleReject() {
               class="bg-emerald-600 hover:bg-emerald-700 text-white"
               @click="handleApprove"
             >
-              <span v-if="isLoading" class="mr-1">
-                <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <span v-if="isLoading"
+class="mr-1">
+                <svg class="w-4 h-4 animate-spin"
+fill="none" viewBox="0 0 24 24">
                   <circle
                     class="opacity-25"
                     cx="12"

@@ -1,5 +1,6 @@
 <template>
-  <Dialog :open="open" @update:open="handleOpenChange">
+  <Dialog :open="open"
+@update:open="handleOpenChange">
     <DialogContent class="sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle>{{ title }}</DialogTitle>
@@ -8,7 +9,8 @@
         </DialogDescription>
       </DialogHeader>
 
-      <div v-if="showLateCancelWarning" class="rounded-lg bg-destructive/10 p-4 my-4">
+      <div v-if="showLateCancelWarning"
+class="rounded-lg bg-destructive/10 p-4 my-4">
         <div class="flex gap-3">
           <AlertCircle class="h-5 w-5 text-destructive shrink-0 mt-0.5" />
           <div class="space-y-1">
@@ -22,13 +24,15 @@
       </div>
 
       <DialogFooter>
-        <Button variant="outline" @click="handleCancel" :disabled="isProcessing"> Anuluj </Button>
+        <Button
+variant="outline" @click="handleCancel" :disabled="isProcessing"> Anuluj </Button>
         <Button
           :variant="actionType === 'reject' || actionType === 'cancel' ? 'destructive' : 'default'"
           :disabled="isProcessing"
           @click="handleConfirm"
         >
-          <span v-if="isProcessing" class="flex items-center gap-2">
+          <span v-if="isProcessing"
+class="flex items-center gap-2">
             <span
               class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
             />

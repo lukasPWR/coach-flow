@@ -5,9 +5,16 @@
       <Button @click="goToTrainers"> Znajdź trenera </Button>
     </div>
 
-    <DashboardStats :upcoming-count="upcomingCount" :pending-count="pendingCount" />
+    <NotificationWidget :notifications="notifications" />
 
-    <Tabs default-value="upcoming" class="space-y-4">
+    <DashboardStats :upcoming-count="upcomingCount"
+:pending-count="pendingCount" />
+
+    <ActivePlanCard :active-plan="activePlan"
+:loading="trainingLoading" />
+
+    <Tabs default-value="upcoming"
+class="space-y-4">
       <TabsList>
         <TabsTrigger value="upcoming"> Nadchodzące </TabsTrigger>
         <TabsTrigger value="pending"> Oczekujące </TabsTrigger>
@@ -24,7 +31,8 @@
           @reschedule="openRescheduleDialog"
         >
           <template #empty-action>
-            <Button variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
+            <Button
+variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
           </template>
         </BookingList>
       </TabsContent>
@@ -38,7 +46,8 @@
           @reschedule="openRescheduleDialog"
         >
           <template #empty-action>
-            <Button variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
+            <Button
+variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
           </template>
         </BookingList>
       </TabsContent>
@@ -53,7 +62,8 @@
           @reschedule="openRescheduleDialog"
         >
           <template #empty-action>
-            <Button variant="link" class="mt-2" @click="goToTrainers">
+            <Button variant="link"
+class="mt-2" @click="goToTrainers">
               Umów pierwszy trening
             </Button>
           </template>
@@ -89,12 +99,23 @@ import DashboardStats from "@/components/dashboard/DashboardStats.vue";
 import BookingList from "@/components/bookings/BookingList.vue";
 import CancelBookingDialog from "@/components/bookings/modals/CancelBookingDialog.vue";
 import RescheduleBookingDialog from "@/components/bookings/modals/RescheduleBookingDialog.vue";
+import NotificationWidget from "@/components/dashboard/NotificationWidget.vue";
+import ActivePlanCard from "@/components/training-plans/ActivePlanCard.vue";
+import { useDashboardTrainingSummary } from "@/composables/useDashboardTrainingSummary";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 
 const router = useRouter();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
+
+// Training Summary Logic
+const {
+  activePlan,
+  notifications,
+  loading: trainingLoading,
+  loadTrainingSummary,
+} = useDashboardTrainingSummary();
 
 const showCancelDialog = ref(false);
 const showRescheduleDialog = ref(false);
@@ -167,9 +188,11 @@ onMounted(() => {
     authStore.fetchProfile();
   }
   loadStats();
+  loadTrainingSummary();
 });
 
 watch(refreshTrigger, () => {
   loadStats();
+  loadTrainingSummary();
 });
 </script>

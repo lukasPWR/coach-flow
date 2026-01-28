@@ -68,6 +68,18 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/client/plans",
+      name: "client-plans",
+      component: () => import("@/views/client/ClientPlansView.vue"),
+      meta: { requiresAuth: true, requiresRole: "CLIENT" },
+    },
+    {
+      path: "/client/plans/:id",
+      name: "client-plan-execution",
+      component: () => import("@/views/client/ClientPlanExecutionView.vue"),
+      meta: { requiresAuth: true, requiresRole: "CLIENT" },
+    },
+    {
       path: "/onboarding",
       name: "trainer-onboarding",
       component: () => import("@/views/TrainerOnboardingView.vue"),
@@ -83,6 +95,24 @@ const router = createRouter({
       path: "/trainer/services",
       name: "trainer-services",
       component: () => import("@/views/trainer/ServicesView.vue"),
+      meta: { requiresAuth: true, requiresRole: "TRAINER" },
+    },
+    {
+      path: "/trainer/exercises",
+      name: "trainer-exercises",
+      component: () => import("@/views/trainer/ExerciseLibraryView.vue"),
+      meta: { requiresAuth: true, requiresRole: "TRAINER" },
+    },
+    {
+      path: "/trainer/plans",
+      name: "trainer-plans",
+      component: () => import("@/views/trainer/TrainingPlansView.vue"),
+      meta: { requiresAuth: true, requiresRole: "TRAINER" },
+    },
+    {
+      path: "/trainer/plans/:id/edit",
+      name: "trainer-plan-edit",
+      component: () => import("@/views/trainer/TrainingPlanBuilderView.vue"),
       meta: { requiresAuth: true, requiresRole: "TRAINER" },
     },
     {

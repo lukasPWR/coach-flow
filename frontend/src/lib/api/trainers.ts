@@ -8,6 +8,7 @@ import type {
   UpdateTrainerProfileDto,
   Specialization,
 } from "@/types/trainer";
+import type { ClientSimpleDTO } from "@/types/training-plans";
 
 /**
  * Fetch trainers list with optional filters and pagination
@@ -94,5 +95,13 @@ export async function getSpecializations(): Promise<SpecializationOption[]> {
  */
 export async function getAllSpecializations(): Promise<Specialization[]> {
   const response = await api.get<Specialization[]>("/specializations");
+  return response.data;
+}
+
+/**
+ * Fetch trainer's clients
+ */
+export async function getTrainerClients(): Promise<ClientSimpleDTO[]> {
+  const response = await api.get<ClientSimpleDTO[]>("/trainer/clients");
   return response.data;
 }

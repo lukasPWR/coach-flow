@@ -14,7 +14,8 @@ defineProps<Props>();
 <template>
   <div class="flex flex-col gap-6 md:flex-row md:items-start md:gap-8">
     <Avatar class="h-32 w-32 shadow-sm md:h-40 md:w-40">
-      <AvatarImage :src="trainer.profilePictureUrl" :alt="trainer.name" />
+      <AvatarImage :src="trainer.profilePictureUrl"
+:alt="trainer.name" />
       <AvatarFallback class="text-2xl">
         {{ trainer.initials }}
       </AvatarFallback>
@@ -32,7 +33,8 @@ defineProps<Props>();
       </div>
 
       <div class="flex flex-wrap gap-2">
-        <Badge v-for="spec in trainer.specializations" :key="spec.id" variant="secondary">
+        <Badge v-for="spec in trainer.specializations"
+:key="spec.id" variant="secondary">
           {{ spec.name }}
         </Badge>
       </div>

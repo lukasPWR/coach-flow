@@ -7,7 +7,7 @@ const props = defineProps<{
   description: string;
   icon: string;
   to: string;
-  color?: "default" | "primary" | "success" | "warning";
+  color?: "default" | "primary" | "success" | "warning" | "secondary";
 }>();
 
 const colorClasses = computed(() => {
@@ -16,13 +16,15 @@ const colorClasses = computed(() => {
     primary: "bg-primary/10 text-primary group-hover:bg-primary/20",
     success: "bg-emerald-500/10 text-emerald-600 group-hover:bg-emerald-500/20",
     warning: "bg-amber-500/10 text-amber-600 group-hover:bg-amber-500/20",
+    secondary: "bg-blue-500/10 text-blue-600 group-hover:bg-blue-500/20",
   };
   return colors[props.color ?? "default"];
 });
 </script>
 
 <template>
-  <RouterLink :to="to" class="block group">
+  <RouterLink :to="to"
+class="block group">
     <Card
       class="h-full transition-all duration-200 hover:shadow-md hover:border-primary/30 cursor-pointer"
     >

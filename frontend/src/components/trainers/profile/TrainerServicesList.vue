@@ -22,11 +22,13 @@ const emit = defineEmits<{
   <div class="space-y-4">
     <h2 class="text-2xl font-semibold tracking-tight">Usługi i cennik</h2>
 
-    <div v-if="services.length === 0" class="text-muted-foreground">
+    <div v-if="services.length === 0"
+class="text-muted-foreground">
       Trener nie zdefiniował jeszcze żadnych usług.
     </div>
 
-    <div v-else class="grid gap-4 sm:grid-cols-2">
+    <div v-else
+class="grid gap-4 sm:grid-cols-2">
       <Card
         v-for="service in services"
         :key="service.id"
