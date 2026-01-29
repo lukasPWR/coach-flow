@@ -33,28 +33,24 @@ describe("BookingsService", () => {
   const SERVICE_ID = "service-uuid-789";
   const BOOKING_ID = "booking-uuid-abc";
 
-  const mockUser: User = {
+  const mockUser = {
     id: TRAINER_ID,
     email: "trainer@example.com",
     name: "Test Trainer",
-    role: null,
-    password: null,
     createdAt: new Date(),
     updatedAt: new Date(),
-  };
+  } as User;
 
-  const mockService: Service = {
+  const mockService = {
     id: SERVICE_ID,
     trainerId: TRAINER_ID,
     serviceTypeId: "service-type-uuid",
     durationMinutes: 60,
-    priceAmount: 100,
-    description: "Test service",
+    price: 100,
     createdAt: new Date(),
     updatedAt: new Date(),
     trainer: mockUser,
-    serviceType: null,
-  };
+  } as Service;
 
   beforeEach(async () => {
     // Create mock repository functions
@@ -167,15 +163,13 @@ describe("BookingsService", () => {
 
     describe("client ban check", () => {
       it("should throw ForbiddenException when client has active ban", async () => {
-        const activeBan: BookingBan = {
+        const activeBan = {
           id: "ban-uuid",
           clientId: CLIENT_ID,
           trainerId: TRAINER_ID,
           bannedUntil: new Date(Date.now() + 86400000),
           createdAt: new Date(),
-          client: null,
-          trainer: null,
-        };
+        } as BookingBan;
 
         bookingBanRepository.findOne.mockResolvedValue(activeBan);
 
@@ -378,7 +372,7 @@ describe("BookingsService", () => {
   });
 
   describe("approveBooking", () => {
-    const mockBooking: Booking = {
+    const mockBooking = {
       id: BOOKING_ID,
       clientId: CLIENT_ID,
       trainerId: TRAINER_ID,
@@ -386,13 +380,9 @@ describe("BookingsService", () => {
       startTime: new Date(),
       endTime: new Date(),
       status: BookingStatus.PENDING,
-      reminderSentAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
-      client: null,
-      trainer: null,
-      service: null,
-    };
+    } as Booking;
 
     it("should successfully approve a pending booking", async () => {
       bookingRepository.findOne.mockResolvedValue(mockBooking);
@@ -445,7 +435,7 @@ describe("BookingsService", () => {
   });
 
   describe("rejectBooking", () => {
-    const mockBooking: Booking = {
+    const mockBooking = {
       id: BOOKING_ID,
       clientId: CLIENT_ID,
       trainerId: TRAINER_ID,
@@ -453,13 +443,9 @@ describe("BookingsService", () => {
       startTime: new Date(),
       endTime: new Date(),
       status: BookingStatus.PENDING,
-      reminderSentAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
-      client: null,
-      trainer: null,
-      service: null,
-    };
+    } as Booking;
 
     it("should successfully reject a pending booking", async () => {
       bookingRepository.findOne.mockResolvedValue(mockBooking);
@@ -506,7 +492,7 @@ describe("BookingsService", () => {
   describe("cancelBooking", () => {
     // 24 hours from now
     const futureDate = new Date(Date.now() + 86400000);
-    const mockBooking: Booking = {
+    const mockBooking = {
       id: BOOKING_ID,
       clientId: CLIENT_ID,
       trainerId: TRAINER_ID,
@@ -514,13 +500,9 @@ describe("BookingsService", () => {
       startTime: futureDate,
       endTime: new Date(futureDate.getTime() + 3600000),
       status: BookingStatus.ACCEPTED,
-      reminderSentAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
-      client: null,
-      trainer: null,
-      service: null,
-    };
+    } as Booking;
 
     afterEach(() => {
       // Restore all mocks after each test
@@ -807,7 +789,7 @@ describe("BookingsService", () => {
   });
 
   describe("getBookingById", () => {
-    const mockBooking: Booking = {
+    const mockBooking = {
       id: BOOKING_ID,
       clientId: CLIENT_ID,
       trainerId: TRAINER_ID,
@@ -815,7 +797,6 @@ describe("BookingsService", () => {
       startTime: new Date(),
       endTime: new Date(),
       status: BookingStatus.ACCEPTED,
-      reminderSentAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
       client: {
@@ -829,7 +810,7 @@ describe("BookingsService", () => {
         email: "trainer@test.com",
       } as User,
       service: mockService,
-    };
+    } as Booking;
 
     it("should retrieve booking details for client", async () => {
       bookingRepository.findOne.mockResolvedValue(mockBooking);
