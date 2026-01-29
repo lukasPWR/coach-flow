@@ -12,8 +12,8 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME || "postgres",
   password: process.env.DB_PASSWORD || "1StrongPwd!",
   database: process.env.DB_DATABASE || "CoachFlow_DEV",
-  entities: ["dist/**/*.entity.js"],
-  migrations: ["dist/database/migrations/*{.js,.ts}"],
+  entities: [join(__dirname, "..", "**", "*.entity.{ts,js}")],
+  migrations: [join(__dirname, "migrations", "*{.ts,.js}")],
   synchronize: false,
   logging: true,
 });
