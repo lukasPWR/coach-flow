@@ -51,7 +51,7 @@ services:
     networks:
       - coachflow-network
     command: >
-      sh -c "ls -la dist/database/ && npx typeorm -d dist/database/data-source.js migration:run && npm run start:prod"
+      sh -c "npx typeorm -d dist/database/data-source.js migration:run && npm run seed:prod && npm run start:prod"
 
   frontend:
     build:
