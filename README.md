@@ -1,18 +1,29 @@
 # CoachFlow
 
+![alt text](image.png)
+
 Platform for managing coaching sessions.
 
 ## 🚀 Szybki Start (Docker)
 
 To najprostszy sposób na uruchomienie całej aplikacji (Frontend + Backend + Baza Danych) za pomocą jednej komendy.
 
-1.  **Skopiuj plik konfiguracyjny:**
+1.  **Skopiuj plik konfiguracyjny i wygeneruj klucze JWT:**
 
     ```bash
     cp .env.example .env
     ```
 
     _(W systemie Windows użyj: `copy .env.example .env`)_
+
+    Następnie edytuj plik `.env` i **wygeneruj własne klucze JWT**:
+    
+    ```env
+    JWT_ACCESS_SECRET=wygeneruj_bezpieczny_klucz_64_znaki
+    JWT_REFRESH_SECRET=wygeneruj_inny_bezpieczny_klucz_64_znaki
+    ```
+    
+    > 💡 Użyj generatora: [jwtsecret.com/generate](https://jwtsecret.com/generate) lub zobacz sekcję [Environment Variables](#environment-variables)
 
 2.  **Uruchom aplikację:**
 
@@ -25,6 +36,123 @@ To najprostszy sposób na uruchomienie całej aplikacji (Frontend + Backend + Ba
 3.  **Gotowe! Otwórz w przeglądarce:**
     - **Aplikacja:** [http://localhost](http://localhost)
     - API bezpośrednio: [http://localhost/api](http://localhost/api) (proxy do backendu)
+
+### 🔐 Konta Demo
+
+Po uruchomieniu aplikacji możesz zalogować się na jedno z poniższych kont testowych:
+
+| Rola   | Email               | Hasło      |
+| ------ | ------------------- | ---------- |
+| Admin  | admin@coachflow.pl  | Admin123!  |
+| Trener | trener@coachflow.pl | Trener123! |
+| Klient | klient@coachflow.pl | Klient123! |
+
+---
+
+## 🛠️ Uruchomienie Lokalne (bez Dockera)
+
+Jeśli preferujesz uruchomić aplikację lokalnie bez Dockera, postępuj zgodnie z poniższymi krokami.
+
+### Wymagania
+
+- Node.js 18+
+- PostgreSQL 14+ (zainstalowany lokalnie lub jako kontener Docker)
+- npm
+
+### Krok 1: Baza danych PostgreSQL
+
+#### Opcja A: PostgreSQL jako kontener Docker (zalecane)
+
+Uruchom tylko bazę danych w kontenerze:
+
+```bash
+docker run -d \
+  --name coachflow-postgres \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=1StrongPwd! \
+  -e POSTGRES_DB=CoachFlow_DEV \
+  -p 5432:5432 \
+  postgres:16-alpine
+```
+
+_(W systemie Windows użyj PowerShell lub zamień `\` na `` ` ``)_
+
+#### Opcja B: Lokalna instalacja PostgreSQL
+
+1. Zainstaluj PostgreSQL 14+ na swoim systemie
+2. Utwórz bazę danych:
+   ```sql
+   CREATE DATABASE "CoachFlow_DEV";
+   ```
+
+### Krok 2: Konfiguracja środowiska
+
+```bash
+# Skopiuj plik konfiguracyjny
+cp .env.example .env
+```
+
+Dla uruchomienia lokalnego upewnij się, że plik `.env` zawiera:
+
+```env
+DB_HOST=localhost
+DB_DATABASE=CoachFlow_DEV
+```
+
+> 💡 Pozostałe zmienne możesz zostawić z wartościami domyślnymi. Szczegóły w sekcji [Environment Variables](#environment-variables).
+
+### Krok 3: Instalacja zależności
+
+```bash
+# Z głównego katalogu projektu
+npm install
+
+# Backend
+cd backend && npm install
+
+# Frontend
+cd ../frontend && npm install
+```
+
+### Krok 4: Migracje i seed bazy danych
+
+```bash
+cd backend
+
+# Uruchom migracje
+npm run migration:run
+
+# Załaduj dane początkowe (użytkownicy demo, typy usług, ćwiczenia, itp.)
+npm run seed
+```
+
+### Krok 5: Uruchomienie aplikacji
+
+Otwórz **dwa terminale**:
+
+**Terminal 1 - Backend:**
+
+```bash
+cd backend
+npm run start:dev
+```
+
+**Terminal 2 - Frontend:**
+
+```bash
+cd frontend
+npm run dev
+```
+
+### Krok 6: Gotowe!
+
+- **Frontend:** [http://localhost:5173](http://localhost:5173)
+- **Backend API:** [http://localhost:3000](http://localhost:3000)
+- **Swagger API Docs:** [http://localhost:3000/api](http://localhost:3000/api)
+
+Zaloguj się używając [kont demo](#-konta-demo) utworzonych podczas seedowania.
+
+---
 
 ## Tech Stack
 
@@ -52,44 +180,7 @@ To najprostszy sposób na uruchomienie całej aplikacji (Frontend + Backend + Ba
 - **Framework**: Playwright
 - **Browser**: Chromium
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- PostgreSQL 14+
-- npm or yarn
-
-### Installation
-
-```bash
-# Install dependencies for all workspaces
-npm install
-
-# Install backend dependencies
-cd backend && npm install
-
-# Install frontend dependencies
-cd frontend && npm install
-```
-
-### Running the Application
-
-```bash
-# Start backend (from backend directory)
-cd backend
-npm run start:dev
-
-# Start frontend (from frontend directory)
-cd frontend
-npm run dev
-```
-
-The application will be available at:
-
-- Frontend: http://localhost:5173
-- Backend: http://localhost:3000
-- API Documentation: http://localhost:3000/api
+---
 
 ## Testing
 
@@ -131,89 +222,83 @@ coachflow/
 └── package.json     # Root workspace configuration
 ```
 
-## Development
+## Environment Variables
 
-### Code Style
+**Ważne:** Cały projekt używa jednego wspólnego pliku `.env` w głównym katalogu projektu.
 
-- Use ESLint and Prettier for code formatting
-- Follow conventional commits for commit messages
-- Use TypeScript strict mode
+### Konfiguracja
 
-### Conventional Commits
+1. Skopiuj plik przykładowy:
 
-```
-feat: add new feature
-fix: bug fix
-docs: documentation changes
-style: formatting changes
-refactor: code refactoring
-test: add or update tests
-chore: maintenance tasks
-```
+   ```bash
+   cp .env.example .env
+   ```
+
+   _(W systemie Windows użyj: `copy .env.example .env`)_
+
+2. **Wygeneruj bezpieczne klucze JWT** (wymagane dla środowiska produkcyjnego):
+
+   Możesz użyć generatora online: [https://jwtsecret.com/generate](https://jwtsecret.com/generate) lub wygenerować lokalnie:
+
+   ```bash
+   # Linux/macOS
+   openssl rand -base64 64
+
+   # PowerShell (Windows)
+   [Convert]::ToBase64String((1..64 | ForEach-Object { Get-Random -Maximum 256 }) -as [byte[]])
+   ```
+
+   Wygeneruj **dwa różne** klucze - jeden dla `JWT_ACCESS_SECRET`, drugi dla `JWT_REFRESH_SECRET`.
+
+### Zmienne środowiskowe
+
+| Zmienna                       | Opis                            | Wartość domyślna                             |
+| ----------------------------- | ------------------------------- | -------------------------------------------- |
+| `DB_HOST`                     | Host bazy danych                | `localhost` (lokalnie) / `postgres` (Docker) |
+| `DB_PORT`                     | Port PostgreSQL                 | `5432`                                       |
+| `DB_USERNAME`                 | Użytkownik bazy danych          | `postgres`                                   |
+| `DB_PASSWORD`                 | Hasło do bazy danych            | `1StrongPwd!`                                |
+| `DB_DATABASE`                 | Nazwa bazy danych               | `CoachFlow_DEV`                              |
+| `NODE_ENV`                    | Środowisko Node.js              | `development`                                |
+| `PORT`                        | Port backendu                   | `3000`                                       |
+| `BCRYPT_SALT_ROUNDS`          | Rundy hashowania bcrypt         | `12`                                         |
+| `JWT_ACCESS_SECRET`           | 🔐 Klucz do tokenów dostępu     | **Wygeneruj własny!**                        |
+| `JWT_REFRESH_SECRET`          | 🔐 Klucz do tokenów odświeżania | **Wygeneruj własny!**                        |
+| `JWT_ACCESS_EXPIRATION_TIME`  | Czas życia tokenu dostępu       | `30m`                                        |
+| `JWT_REFRESH_EXPIRATION_TIME` | Czas życia tokenu odświeżania   | `7d`                                         |
+| `VITE_API_URL`                | URL API dla frontendu           | `http://localhost:3000/api`                  |
+
+> ⚠️ **Uwaga:** Dla środowiska produkcyjnego **zawsze** zmień domyślne hasła i wygeneruj własne klucze JWT!
+
+---
 
 ## Scripts
 
-### Root Level
-
-```bash
-npm run test:e2e          # Run E2E tests
-npm run test:e2e:ui       # Run E2E tests in UI mode
-npm run test:e2e:headed   # Run E2E tests in headed mode
-npm run test:e2e:debug    # Debug E2E tests
-npm run test:e2e:report   # View E2E test report
-npm run test:all          # Run all tests (backend + frontend + e2e)
-```
-
 ### Backend
 
 ```bash
-npm run start:dev         # Start in development mode
-npm run build             # Build for production
-npm run start:prod        # Start production server
-npm test                  # Run unit tests
-npm run test:watch        # Run tests in watch mode
-npm run test:cov          # Run tests with coverage
-npm run test:e2e          # Run backend E2E tests
-npm run lint              # Lint code
-npm run format            # Format code
+npm run start:dev         # Uruchom w trybie development
+npm run build             # Zbuduj do produkcji
+npm run start:prod        # Uruchom serwer produkcyjny
+npm run migration:run     # Uruchom migracje bazy danych
+npm run seed              # Załaduj dane początkowe
+npm test                  # Uruchom testy jednostkowe
+npm run test:cov          # Testy z pokryciem kodu
+npm run lint              # Sprawdź kod lintera
 ```
 
 ### Frontend
 
 ```bash
-npm run dev               # Start development server
-npm run build             # Build for production
-npm run preview           # Preview production build
-npm test                  # Run unit tests
-npm run test:ui           # Run tests in UI mode
-npm run test:coverage     # Run tests with coverage
-npm run lint              # Lint code
-npm run format            # Format code
+npm run dev               # Uruchom serwer developerski
+npm run build             # Zbuduj do produkcji
+npm run preview           # Podgląd buildu produkcyjnego
+npm test                  # Uruchom testy jednostkowe
+npm run test:coverage     # Testy z pokryciem kodu
+npm run lint              # Sprawdź kod lintera
 ```
 
-## Environment Variables
-
-### Backend
-
-Create `.env` file in `backend/` directory:
-
-```env
-NODE_ENV=development
-PORT=3000
-DATABASE_URL=postgresql://user:password@localhost:5432/coachflow
-JWT_SECRET=your-secret-key
-JWT_EXPIRES_IN=15m
-JWT_REFRESH_SECRET=your-refresh-secret
-JWT_REFRESH_EXPIRES_IN=7d
-```
-
-### Frontend
-
-Create `.env` file in `frontend/` directory:
-
-```env
-VITE_API_URL=http://localhost:3000
-```
+---
 
 ## Documentation
 

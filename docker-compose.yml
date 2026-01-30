@@ -33,7 +33,7 @@ services:
         condition: service_healthy
     environment:
       DB_HOST: postgres
-      DB_PORT: 5432
+      DB_PORT: ${DB_PORT:-5432}
       DB_USERNAME: ${DB_USERNAME:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-1StrongPwd!}
       DB_DATABASE: ${DB_DATABASE:-coachflow}
@@ -41,23 +41,32 @@ services:
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-refreshSecretKey}
       JWT_ACCESS_EXPIRATION_TIME: ${JWT_ACCESS_EXPIRATION_TIME:-30m}
       JWT_REFRESH_EXPIRATION_TIME: ${JWT_REFRESH_EXPIRATION_TIME:-7d}
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${PORT:-3000}
+      BCRYPT_SALT_ROUNDS: ${BCRYPT_SALT_ROUNDS:-12}
     ports:
-      - "3000:3000"
+      - "${PORT:-3000}:3000"
+    env_file:
+      - .env
     networks:
       - coachflow-network
     command: >
-      sh -c "ls -la dist/database/ && npx typeorm -d dist/database/data-source.js migration:run && npm run start:prod"
+      sh -c "npx typeorm -d dist/database/data-source.js migration:run && npm run seed:prod && npm run start:prod"
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-/api}
     container_name: coachflow-frontend
     restart: unless-stopped
     depends_on:
       - backend
     ports:
       - "80:80"
+    env_file:
+      - .env
     networks:
       - coachflow-network
 
