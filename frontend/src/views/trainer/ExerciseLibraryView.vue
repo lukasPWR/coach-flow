@@ -52,7 +52,7 @@ const handleDelete = async () => {
 </script>
 
 <template>
-  <div class="container py-6 space-y-6">
+  <div class="container mx-auto py-6 space-y-6">
     <div class="flex items-center justify-between">
       <h1 class="text-3xl font-bold tracking-tight">Biblioteka ćwiczeń</h1>
       <Button @click="isCreateModalOpen = true">

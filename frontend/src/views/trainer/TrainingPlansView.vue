@@ -62,7 +62,7 @@ const navigateToPlan = (planId: string) => {
 </script>
 
 <template>
-  <div class="container py-6 space-y-6">
+  <div class="container mx-auto py-6 space-y-6">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div>
