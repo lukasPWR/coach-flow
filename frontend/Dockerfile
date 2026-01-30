@@ -3,14 +3,14 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Accept build argument for API URL
+ARG VITE_API_URL=/api
+ENV VITE_API_URL=${VITE_API_URL}
+
 COPY package*.json ./
 RUN npm install
 
 COPY . .
-
-# Set API URL for the build
-# Since we use Nginx proxy, we can use relative path
-ENV VITE_API_URL=/api
 
 RUN npm run build
 

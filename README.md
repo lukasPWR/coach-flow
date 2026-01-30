@@ -193,27 +193,54 @@ npm run format            # Format code
 
 ## Environment Variables
 
-### Backend
+**Ważne:** Cały projekt używa jednego wspólnego pliku `.env` w głównym katalogu projektu.
 
-Create `.env` file in `backend/` directory:
+### Konfiguracja
+
+1. Skopiuj plik przykładowy:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   _(W systemie Windows użyj: `copy .env.example .env`)_
+
+2. Edytuj plik `.env` i uzupełnij odpowiednie wartości dla swojego środowiska.
+
+### Zmienne środowiskowe
+
+Plik `.env` zawiera wszystkie niezbędne zmienne dla:
+
+- **Backend** (NestJS): konfiguracja bazy danych, JWT, port, itp.
+- **Frontend** (Vue.js): URL do API
+- **Docker Compose**: zmienne używane przez wszystkie serwisy
+
+Struktura pliku `.env` (szczegóły w `.env.example`):
 
 ```env
+# Database Configuration
+DB_HOST=postgres
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=1StrongPwd!
+DB_DATABASE=coachflow
+
+# Backend Application
 NODE_ENV=development
 PORT=3000
-DATABASE_URL=postgresql://user:password@localhost:5432/coachflow
-JWT_SECRET=your-secret-key
-JWT_EXPIRES_IN=15m
-JWT_REFRESH_SECRET=your-refresh-secret
-JWT_REFRESH_EXPIRES_IN=7d
+BCRYPT_SALT_ROUNDS=12
+
+# JWT Configuration
+JWT_ACCESS_SECRET=your_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+JWT_ACCESS_EXPIRATION_TIME=30m
+JWT_REFRESH_EXPIRATION_TIME=7d
+
+# Frontend Configuration
+VITE_API_URL=http://localhost:3000/api
 ```
 
-### Frontend
-
-Create `.env` file in `frontend/` directory:
-
-```env
-VITE_API_URL=http://localhost:3000
-```
+**Uwaga:** Nie twórz lokalnych plików `.env` w katalogach `backend/` ani `frontend/`. Wszystkie zmienne są centralizowane w głównym pliku `.env`.
 
 ## Documentation
 
