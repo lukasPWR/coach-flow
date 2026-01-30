@@ -17,13 +17,13 @@ To najprostszy sposób na uruchomienie całej aplikacji (Frontend + Backend + Ba
     _(W systemie Windows użyj: `copy .env.example .env`)_
 
     Następnie edytuj plik `.env` i **wygeneruj własne klucze JWT**:
-    
+
     ```env
     JWT_ACCESS_SECRET=wygeneruj_bezpieczny_klucz_64_znaki
     JWT_REFRESH_SECRET=wygeneruj_inny_bezpieczny_klucz_64_znaki
     ```
-    
-    > 💡 Użyj generatora: [jwtsecret.com/generate](https://jwtsecret.com/generate) lub zobacz sekcję [Environment Variables](#environment-variables)
+
+    > 💡 Użyj generatora: [https://jwtsecretkeygenerator.com](https://jwtsecretkeygenerator.com) lub zobacz sekcję [Environment Variables](#environment-variables)
 
 2.  **Uruchom aplikację:**
 
@@ -238,7 +238,7 @@ coachflow/
 
 2. **Wygeneruj bezpieczne klucze JWT** (wymagane dla środowiska produkcyjnego):
 
-   Możesz użyć generatora online: [https://jwtsecret.com/generate](https://jwtsecret.com/generate) lub wygenerować lokalnie:
+   Możesz użyć generatora online: [https://jwtsecretkeygenerator.com](https://jwtsecretkeygenerator.com) lub wygenerować lokalnie:
 
    ```bash
    # Linux/macOS
