@@ -1,5 +1,5 @@
 <template>
-  <div class="container py-8 space-y-8">
+  <div class="container mx-auto py-8 space-y-8">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <DashboardHeader :user-name="user?.name || 'Użytkowniku'" />
       <Button @click="goToTrainers"> Znajdź trenera </Button>
@@ -7,14 +7,11 @@
 
     <NotificationWidget :notifications="notifications" />
 
-    <DashboardStats :upcoming-count="upcomingCount"
-:pending-count="pendingCount" />
+    <DashboardStats :upcoming-count="upcomingCount" :pending-count="pendingCount" />
 
-    <ActivePlanCard :active-plan="activePlan"
-:loading="trainingLoading" />
+    <ActivePlanCard :active-plan="activePlan" :loading="trainingLoading" />
 
-    <Tabs default-value="upcoming"
-class="space-y-4">
+    <Tabs default-value="upcoming" class="space-y-4">
       <TabsList>
         <TabsTrigger value="upcoming"> Nadchodzące </TabsTrigger>
         <TabsTrigger value="pending"> Oczekujące </TabsTrigger>
@@ -31,8 +28,7 @@ class="space-y-4">
           @reschedule="openRescheduleDialog"
         >
           <template #empty-action>
-            <Button
-variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
+            <Button variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
           </template>
         </BookingList>
       </TabsContent>
@@ -46,8 +42,7 @@ variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
           @reschedule="openRescheduleDialog"
         >
           <template #empty-action>
-            <Button
-variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
+            <Button variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
           </template>
         </BookingList>
       </TabsContent>
@@ -62,8 +57,7 @@ variant="outline" class="mt-4" @click="goToTrainers"> Znajdź trenera </Button>
           @reschedule="openRescheduleDialog"
         >
           <template #empty-action>
-            <Button variant="link"
-class="mt-2" @click="goToTrainers">
+            <Button variant="link" class="mt-2" @click="goToTrainers">
               Umów pierwszy trening
             </Button>
           </template>

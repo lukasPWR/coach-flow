@@ -1,5 +1,5 @@
 <template>
-  <div class="container py-8 space-y-8">
+  <div class="container mx-auto py-8 space-y-8">
     <div class="flex flex-col gap-2">
       <h1 class="text-3xl font-bold tracking-tight">Moje Rezerwacje</h1>
       <p class="text-muted-foreground">
@@ -7,8 +7,7 @@
       </p>
     </div>
 
-    <Tabs v-model="activeTab"
-class="space-y-4">
+    <Tabs v-model="activeTab" class="space-y-4">
       <TabsList>
         <TabsTrigger value="upcoming"> Nadchodzące </TabsTrigger>
         <TabsTrigger value="pending"> Oczekujące </TabsTrigger>

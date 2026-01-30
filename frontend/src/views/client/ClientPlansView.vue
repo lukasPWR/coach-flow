@@ -29,7 +29,7 @@ const handlePlanSelect = (planId: string) => {
 </script>
 
 <template>
-  <div class="container py-8 space-y-8">
+  <div class="container mx-auto py-8 space-y-8">
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div>
         <h1 class="text-3xl font-bold tracking-tight">Moje Plany</h1>
@@ -40,14 +40,12 @@ const handlePlanSelect = (planId: string) => {
       <PlanStatusTabs v-model="activeTab" />
     </div>
 
-    <Alert v-if="error"
-variant="destructive">
+    <Alert v-if="error" variant="destructive">
       <AlertCircle class="h-4 w-4" />
       <AlertTitle>Błąd</AlertTitle>
       <AlertDescription> {{ error }}. Spróbuj odświeżyć stronę. </AlertDescription>
     </Alert>
 
-    <PlanList :plans="plans"
-:is-loading="isLoading" @select-plan="handlePlanSelect" />
+    <PlanList :plans="plans" :is-loading="isLoading" @select-plan="handlePlanSelect" />
   </div>
 </template>

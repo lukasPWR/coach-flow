@@ -14,7 +14,6 @@ const noLayoutRoutes = [
   "forgot-password",
   "reset-password",
   "home",
-  "trainers-list",
   "trainer-profile",
 ];
 
