@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
 import { useTrainers } from "@/composables/useTrainers";
-import { useAuthStore } from "@/stores/auth";
 import TrainerCard from "@/components/trainers/TrainerCard.vue";
 import TrainerCardSkeleton from "@/components/trainers/TrainerCardSkeleton.vue";
 import TrainerFiltersSidebar from "@/components/trainers/TrainerFiltersSidebar.vue";
@@ -10,19 +8,6 @@ import InfiniteScrollTrigger from "@/components/trainers/InfiniteScrollTrigger.v
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
-const router = useRouter();
-const authStore = useAuthStore();
-
-const isAuthenticated = computed(() => authStore.isAuthenticated);
-
-const goToDashboard = () => {
-  if (authStore.isTrainer) {
-    router.push("/trainer/dashboard");
-  } else {
-    router.push("/dashboard");
-  }
-};
 
 // Use trainers composable
 const {
