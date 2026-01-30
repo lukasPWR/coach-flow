@@ -551,12 +551,24 @@ describe("BookingsService", () => {
       );
     });
 
-    it("should throw ConflictException when booking is not in ACCEPTED status", async () => {
+    it("should successfully cancel a PENDING booking by client", async () => {
       const pendingBooking = { ...mockBooking, status: BookingStatus.PENDING };
       bookingRepository.findOne.mockResolvedValue(pendingBooking);
+      const cancelledBooking = { ...pendingBooking, status: BookingStatus.CANCELLED };
+      bookingRepository.save.mockResolvedValue(cancelledBooking);
+
+      const result = await service.cancelBooking(BOOKING_ID, CLIENT_ID);
+
+      expect(result.status).toBe(BookingStatus.CANCELLED);
+      expect(bookingRepository.save).toHaveBeenCalled();
+    });
+
+    it("should throw ConflictException when booking is REJECTED", async () => {
+      const rejectedBooking = { ...mockBooking, status: BookingStatus.REJECTED };
+      bookingRepository.findOne.mockResolvedValue(rejectedBooking);
 
       await expect(service.cancelBooking(BOOKING_ID, CLIENT_ID)).rejects.toThrow(
-        new ConflictException("Booking is not in ACCEPTED status")
+        new ConflictException("Booking is not in ACCEPTED or PENDING status")
       );
     });
 
@@ -601,6 +613,43 @@ describe("BookingsService", () => {
         const expectedBanDate = new RealDate(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
         expect(bannedUntil.getTime()).toBe(expectedBanDate.getTime());
+
+        // Restore Date
+        global.Date = RealDate;
+      });
+
+      it("should NOT apply ban when client cancels a PENDING booking less than 12 hours before start", async () => {
+        const now = new Date("2024-01-01T10:00:00Z");
+        // 10 hours from now
+        const startTime = new Date("2024-01-01T20:00:00Z");
+        const latePendingBooking = {
+          ...mockBooking,
+          startTime,
+          clientId: CLIENT_ID,
+          status: BookingStatus.PENDING,
+        };
+
+        // Mock Date constructor only for this test
+        const RealDate = Date;
+        const mockDate = jest.fn((dateStr?: any) => {
+          if (dateStr !== undefined) {
+            return new RealDate(dateStr);
+          }
+          return now;
+        }) as any;
+        mockDate.now = () => now.getTime();
+        mockDate.prototype = RealDate.prototype;
+        global.Date = mockDate;
+
+        bookingRepository.findOne.mockResolvedValue(latePendingBooking);
+        bookingRepository.save.mockResolvedValue({
+          ...latePendingBooking,
+          status: BookingStatus.CANCELLED,
+        });
+
+        await service.cancelBooking(BOOKING_ID, CLIENT_ID);
+
+        expect(bookingBansService.create).not.toHaveBeenCalled();
 
         // Restore Date
         global.Date = RealDate;

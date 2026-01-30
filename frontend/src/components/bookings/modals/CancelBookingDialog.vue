@@ -49,7 +49,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import type { BookingViewModel } from "@/types/bookings";
+import { BookingStatus, type BookingViewModel } from "@/types/bookings";
 
 const props = defineProps<{
   open: boolean;
@@ -65,6 +65,9 @@ const isLoading = ref(false);
 
 const isLateCancellation = computed(() => {
   if (!props.booking) return false;
+  // Penalty applies only if booking was already accepted
+  if (props.booking.status !== BookingStatus.ACCEPTED) return false;
+
   const now = new Date();
   const start = new Date(props.booking.startTime);
   const diffHours = (start.getTime() - now.getTime()) / (1000 * 60 * 60);
