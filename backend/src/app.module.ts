@@ -22,7 +22,7 @@ import { RolesGuard } from "./common/guards/roles.guard";
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: "../.env", // Use parent directory .env file
+      envFilePath: "../.env",
     }),
     DatabaseModule,
     AuthModule,
@@ -50,4 +50,4 @@ import { RolesGuard } from "./common/guards/roles.guard";
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
