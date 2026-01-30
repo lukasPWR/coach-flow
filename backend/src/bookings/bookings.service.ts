@@ -460,15 +460,22 @@ export class BookingsService {
         throw new NotFoundException("Booking not found");
       }
 
-      // Step 4: Verify booking is in ACCEPTED status
-      if (booking.status !== BookingStatus.ACCEPTED) {
-        throw new ConflictException("Booking is not in ACCEPTED status");
+      // Step 4: Verify booking is in ACCEPTED or PENDING status
+      if (
+        booking.status !== BookingStatus.ACCEPTED &&
+        booking.status !== BookingStatus.PENDING
+      ) {
+        throw new ConflictException("Booking is not in ACCEPTED or PENDING status");
       }
 
       // Step 5: Check if this is a late cancellation by client (less than 12 hours before start)
+      // Only applies if the booking was already accepted
       const now = new Date();
       const twelveHoursFromNow = new Date(now.getTime() + 12 * 60 * 60 * 1000);
-      const isLateCancellation = booking.clientId === userId && booking.startTime <= twelveHoursFromNow;
+      const isLateCancellation =
+        booking.status === BookingStatus.ACCEPTED &&
+        booking.clientId === userId &&
+        booking.startTime <= twelveHoursFromNow;
 
       // Step 6: Update booking status to CANCELLED
       booking.status = BookingStatus.CANCELLED;
