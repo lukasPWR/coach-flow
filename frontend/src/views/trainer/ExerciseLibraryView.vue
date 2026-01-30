@@ -91,16 +91,8 @@ const handleDelete = async () => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline"
-@click="isDeleteModalOpen = false"
->
-Anuluj
-</Button>
-          <Button variant="destructive"
-@click="handleDelete"
->
-Usuń
-</Button>
+          <Button variant="outline" @click="isDeleteModalOpen = false"> Anuluj </Button>
+          <Button variant="destructive" @click="handleDelete"> Usuń </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
